@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Screener & Ranking System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-mesh"></div>
+    <div class="container">
+        <header>
+            <h1>AI Resume Screener</h1>
+            <p>Intelligent Candidate Ranking System</p>
+        </header>
+
+        <main>
+            <section class="glass-card input-section">
+                <div class="form-group">
+                    <label for="job-description">Job Description</label>
+                    <textarea id="job-description" placeholder="Paste the full job description here..."></textarea>
+                </div>
+
+                <div class="form-group file-upload-wrapper">
+                    <label for="resumes">Upload Candidates (PDF/DOCX)</label>
+                    <div class="file-upload-box" id="drop-zone">
+                        <span class="upload-icon">📂</span>
+                        <p>Drag and drop files here, or click to browse</p>
+                        <input type="file" id="resumes" name="resumes" accept=".pdf,.doc,.docx" multiple hidden>
+                        <ul id="file-list" class="file-list"></ul>
+                    </div>
+                </div>
+
+                <button id="process-btn" class="glow-btn">
+                    <span>Rank Candidates</span>
+                    <div class="loader hidden"></div>
+                </button>
+            </section>
+
+            <section class="glass-card results-section hidden" id="results-container">
+                <h2>Ranking Results</h2>
+                <div class="table-responsive">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Candidate Info</th>
+                                <th>Match Score</th>
+                                <th>Matched Skills</th>
+                                <th>Missing Skills</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Results go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js?v=2.1"></script>
+</body>
+
+</html>

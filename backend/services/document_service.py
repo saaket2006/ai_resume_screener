@@ -1,0 +1,41 @@
+import io
+import PyPDF2
+import docx
+
+def extract_text_from_pdf(file_bytes: bytes) -> str:
+    """Extract text from a PDF file."""
+    text = ""
+    try:
+        reader = PyPDF2.PdfReader(io.BytesIO(file_bytes))
+        for page in reader.pages:
+            extracted = page.extract_text()
+            if extracted:
+                text += extracted + "\n"
+    except Exception as e:
+        print(f"Error reading PDF: {e}")
+    return text.strip()
+
+def extract_text_from_docx(file_bytes: bytes) -> str:
+    """Extract text from a DOCX file."""
+    text = ""
+    try:
+        doc = docx.Document(io.BytesIO(file_bytes))
+        for para in doc.paragraphs:
+            text += para.text + "\n"
+    except Exception as e:
+        print(f"Error reading DOCX: {e}")
+    return text.strip()
+
+def extract_text(file_bytes: bytes, filename: str) -> str:
+    """Route to appropriate extractor based on extension."""
+    filename_lower = filename.lower()
+    if filename_lower.endswith('.pdf'):
+        return extract_text_from_pdf(file_bytes)
+    elif filename_lower.endswith('.docx') or filename_lower.endswith('.doc'):
+        return extract_text_from_docx(file_bytes)
+    else:
+        # Fallback for plain text or unsupported formats
+        try:
+            return file_bytes.decode('utf-8')
+        except UnicodeDecodeError:
+            return ""
