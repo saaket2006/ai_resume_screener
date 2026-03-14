@@ -16,7 +16,7 @@ from backend.services.document_service import extract_text
 from backend.services.nlp_service import preprocess_text
 from backend.services.skill_extractor import extract_skills
 from backend.services.scoring_service import rank_candidates
-from backend.services.info_extractor import extract_name, extract_email, extract_phone
+from backend.services.info_extractor import extract_name, extract_email, extract_phone, extract_linkedin, extract_github
 
 app = FastAPI(title="AI Resume Screener API")
 
@@ -55,18 +55,32 @@ async def process_resumes(
         filename = resume.filename
         
         # Extract text based on file type
-        raw_text = extract_text(contents, filename)
+        try:
+            raw_text = extract_text(contents, filename)
+        except ValueError as e:
+            logging.error(f"Skipping {filename}: {e}")
+            processed_resumes.append({
+                "filename": filename,
+                "name": "Unreadable File",
+                "email": "N/A",
+                "phone": "N/A",
+                "matched_skills": [],
+                "missing_skills": sorted(jd_skills)
+            })
+            continue
         
         # Extract candidate details directly from raw text before preprocessing
         candidate_name = extract_name(raw_text)
         candidate_email = extract_email(raw_text)
         candidate_phone = extract_phone(raw_text)
+        candidate_linkedin = extract_linkedin(raw_text)
+        candidate_github = extract_github(raw_text)
         
         # Preprocess text
         clean_text = preprocess_text(raw_text)
         
         # Resolve broad conceptual requirements using Semantic Expansions
-        from backend.services.skill_expander import get_related_skills
+        from backend.services.skill_expander import get_related_skills, is_skill_in_text
         import re
         
         raw_text_lower = raw_text.lower()
@@ -77,17 +91,14 @@ async def process_resumes(
             related_skills, is_broad = get_related_skills(skill)
             
             # Check if the JD skill itself is explicitly in the resume
-            escaped_skill = re.escape(skill)
-            pattern = r'(?<![a-zA-Z0-9\-])' + escaped_skill + r'(?![a-zA-Z0-9\-])'
-            has_exact = bool(re.search(pattern, raw_text_lower))
+            has_exact = is_skill_in_text(skill, raw_text_lower)
             
             if is_broad and related_skills:
                 # It's a broad category (e.g., 'Frontend')
                 found_related = []
                 
                 for rs in related_skills:
-                    rs_pattern = r'(?<![a-zA-Z0-9\-])' + re.escape(rs) + r'(?![a-zA-Z0-9\-])'
-                    if re.search(rs_pattern, raw_text_lower):
+                    if is_skill_in_text(rs, raw_text_lower):
                         found_related.append(rs)
                         
                 # Real-world inference: If they have the exact broad term OR at least 1 related technology
@@ -112,6 +123,8 @@ async def process_resumes(
             "name": candidate_name,
             "email": candidate_email,
             "phone": candidate_phone,
+            "linkedin": candidate_linkedin,
+            "github": candidate_github,
             "text": clean_text,
             "matched_skills": sorted(list(set(matched))),
             "missing_skills": sorted(list(set(missing)))
@@ -128,6 +141,8 @@ async def process_resumes(
             "name": cand["name"],
             "email": cand["email"],
             "phone": cand["phone"],
+            "linkedin": cand.get("linkedin", "Not Provided"),
+            "github": cand.get("github", "Not Provided"),
             "similarity_score": cand["similarity_score"],
             "rank": cand["rank"],
             "matched_skills": cand["matched_skills"],

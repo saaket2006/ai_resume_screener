@@ -5,9 +5,7 @@ from typing import List, Dict
 def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
     """
     Ranks resumes against a job description using TF-IDF and Cosine Similarity.
-    To prevent generic English filler (like 'team' or 'motivated') from artificially 
-    inflating candidate scores, the TF-IDF vectorizer only evaluates the extracted 
-    technical skills list rather than the full unstructred document text.
+    To prevent generic English filler (like 'team' or 'motivated') from artificially inflating candidate scores, the TF-IDF vectorizer only evaluates the extracted technical skills list rather than the full unstructred document text.
     """
     if not jd_skills or not resumes:
         return []
@@ -23,8 +21,7 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
         if len(vectorizer.vocabulary_) == 0:
             return resumes
             
-        # For the resumes, ONLY serialize the technical skills that the system 
-        # explicitly validated they possessed against the JD.
+        # For the resumes, ONLY serialize the technical skills that the system explicitly validated they possessed against the JD.
         resume_texts = [" ".join(r.get("matched_skills", [])) for r in resumes]
         tfidf_resumes = vectorizer.transform(resume_texts)
         

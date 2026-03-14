@@ -84,9 +84,12 @@ def extract_skills(text: str) -> List[str]:
                 skills.add(skill)
                 
     # 2. Extract Acronyms dynamically using Regex (e.g., API, HTTP)
+    # Filter out common non-skill acronyms and overly long acronyms
+    NON_SKILL_ACRONYMS = {"CEO", "CTO", "CFO", "COO", "GPA", "LLC", "INC", "USA", "UK", "PDF", "CV", "ROI", "KPI", "B2B", "B2C", "PMP", "MBA", "PHD", "MS", "BS", "BA", "MA", "HR", "PR", "HTTP", "HTTPS", "QA", "VP", "SME"}
+    
     for token in doc:
         is_acronym = bool(re.match(r'^[A-Z]{2,}(/[A-Z]{2,})?$', token.text))
-        if is_acronym:
+        if is_acronym and token.text not in NON_SKILL_ACRONYMS and len(token.text) <= 6:
             skills.add(token.text.lower())
             
     return sorted(list(skills))

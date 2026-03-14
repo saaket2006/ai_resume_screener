@@ -12,7 +12,7 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
             if extracted:
                 text += extracted + "\n"
     except Exception as e:
-        print(f"Error reading PDF: {e}")
+        raise ValueError(f"Failed to read PDF file format: {e}")
     return text.strip()
 
 def extract_text_from_docx(file_bytes: bytes) -> str:
@@ -23,7 +23,7 @@ def extract_text_from_docx(file_bytes: bytes) -> str:
         for para in doc.paragraphs:
             text += para.text + "\n"
     except Exception as e:
-        print(f"Error reading DOCX: {e}")
+        raise ValueError(f"Failed to read DOCX file format: {e}")
     return text.strip()
 
 def extract_text(file_bytes: bytes, filename: str) -> str:
@@ -38,4 +38,4 @@ def extract_text(file_bytes: bytes, filename: str) -> str:
         try:
             return file_bytes.decode('utf-8')
         except UnicodeDecodeError:
-            return ""
+            raise ValueError("Unsupported file format or unreadable text encoding.")

@@ -125,9 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><span class="rank-badge ${rankClass}">#${cand.rank}</span></td>
                 <td>
                     <strong>${cand.name}</strong><br>
-                    <small style="color:var(--text-secondary)">📧 ${cand.email}</small><br>
-                    <small style="color:var(--text-secondary)">📞 ${cand.phone}</small><br>
-                    <small style="opacity: 0.6; font-size: 0.75rem;">File: ${cand.filename}</small>
+                    <small style="color:var(--text-secondary); display:block; margin-top:2px;">📧 ${cand.email !== 'Not Provided' ? cand.email : '<span style="opacity:0.6">Not Provided</span>'}</small>
+                    <small style="color:var(--text-secondary); display:block; margin-top:2px;">📞 ${cand.phone !== 'Not Provided' ? cand.phone : '<span style="opacity:0.6">Not Provided</span>'}</small>
+                    <small style="color:var(--text-secondary); display:block; margin-top:2px;">🔗 ${cand.linkedin !== 'Not Provided' ? `<a href="${cand.linkedin.startsWith('http') ? cand.linkedin : 'https://' + cand.linkedin}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.linkedin}</a>` : '<span style="opacity:0.6">LinkedIn Not Provided</span>'}</small>
+                    <small style="color:var(--text-secondary); display:block; margin-top:2px;">💻 ${cand.github !== 'Not Provided' ? `<a href="${cand.github.startsWith('http') ? cand.github : 'https://' + cand.github}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.github}</a>` : '<span style="opacity:0.6">GitHub Not Provided</span>'}</small>
+                    <small style="opacity: 0.6; font-size: 0.75rem; display:block; margin-top:4px;">File: ${cand.filename}</small>
                 </td>
                 <td><span class="score-badge ${scoreClass}">${cand.similarity_score}%</span></td>
                 <td>${matchedHtml || '<span style="color:#666">-</span>'}</td>
