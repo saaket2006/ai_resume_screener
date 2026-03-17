@@ -64,7 +64,7 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 
 1. Open the UI.
 2. Paste **any** Job Description (e.g., "Looking for a Python backend engineer with FastAPI and NLP experience..."). The pipeline mathematically reacts to whatever keywords you provide. Keep the Job Description as descriptive as possible about the role to increase the accuracy and efficiency of the process.
-3. Upload the highly structured, realistic mock resumes found in the `data/` folder.
+3. Upload the resumes of candidates which are to be ranked.
 4. Click **Rank Candidates** and observe the highly accurate similarities and highlighted skill gaps, along with the dynamically acquired candidate contact information!
 
 ## Evaluation
