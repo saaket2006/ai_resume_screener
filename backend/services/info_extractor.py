@@ -58,3 +58,54 @@ def extract_name(text: str) -> str:
            return clean_line
            
     return "Not Provided"
+
+def extract_experience(text: str) -> int:
+    """
+    Heuristically extract total years of experience.
+    Looks for phrases like "5 years of experience", "10+ years", etc.
+    """
+    pattern = r'(\d+)(?:\+|[\+ \w]*)\s*(?:years?|yrs?|yr)\s*(?:of\s*)?experience'
+    matches = re.finditer(pattern, text, flags=re.IGNORECASE)
+    years = [int(match.group(1)) for match in matches]
+    return max(years) if years else 0
+
+def extract_education(text: str) -> str:
+    """
+    Heuristically extract highest degree level.
+    Returns standard labels for weighting.
+    """
+    text_lower = text.lower()
+    
+    # Check highest levels first
+    if re.search(r'\b(ph\.?d|doctorate)\b', text_lower):
+        return "PhD"
+    if re.search(r'\b(master|m\.?s|m\.?a|mba|m\.?tech|m\.?e)\b', text_lower):
+        return "Master"
+    if re.search(r'\b(bachelor|b\.?s|b\.?a|b\.?tech|b\.?e|undergraduate)\b', text_lower):
+        return "Bachelor"
+        
+    return "None"
+
+def extract_projects(text: str) -> int:
+    """
+    Very crude heuristic to determine the scale or presence of personal/academic projects.
+    Returns a score from 0 to 5 based on occurrences of 'project' or presence of a 'Projects' section.
+    """
+    text_lower = text.lower()
+    # Check if there is a literal line that looks like a "Projects" header
+    has_section = bool(re.search(r'^\s*(?:personal |academic )?projects?\s*$', text_lower, flags=re.MULTILINE))
+    
+    # Count the word project(s)
+    project_count = len(re.findall(r'\bprojects?\b', text_lower))
+    
+    score = 0
+    if has_section:
+        score += 3
+        
+    # Give some points for generally talking about projects
+    if project_count >= 5:
+        score += 2
+    elif project_count >= 2:
+        score += 1
+        
+    return min(score, 5)  # Cap at 5 points

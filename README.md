@@ -5,27 +5,33 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 ## Features
 
 - **Multi-Format Document Parsing:** Automatically extracts text from uploaded PDF and DOCX files.
-- **Candidate Information Extraction:** Uses Regex and NLP heuristics to dynamically mine Candidate Names, Emails, and Phone Numbers directly from unstructured resume text.
-- **NLP Preprocessing:** Utilizes `spaCy` to process text (lowercasing, stopword removal, lemmatization).
-- **Skill Extraction:** Basic Keyword Extraction system identifying technical skills and highlighting missing/matched skills.
-- **TF-IDF & Cosine Similarity:** Employs `scikit-learn`'s `TfidfVectorizer` to map documents into vector space and `cosine_similarity` to calculate highly accurate match scores against the provided Job Description.
+- **Candidate Information Extraction:** Uses Regex and NLP heuristics to dynamically mine Candidate Names, Emails, Phone Numbers, and Social Links directly from unstructured resume text.
+- **Advanced Weighted Scoring:** A sophisticated ranking engine that goes beyond simple keyword matching:
+    - **Skill Relevance (50%):** TF-IDF and Cosine Similarity for deep technical overlap.
+    - **Experience (25%):** Automated years-of-experience detection and scaling.
+    - **Education (15%):** Heuristic degree level analysis (PhD, Master, Bachelor).
+    - **Projects (10%):** Evaluation of practical portfolio and project prevalence.
+- **Dynamic Visual Dashboard:** Premium UI featuring:
+    - **Animated Score Bars:** Horizontal charts with dynamic color grading (Green/Yellow/Red).
+    - **Attribute Badges:** Instant visibility into Experience, Education, and Project scale.
+    - **Glowing Highlights:** Visual differentiation of Matched vs. Missing technical skills.
 - **FastAPI Backend:** High-performance, async-ready REST API.
-- **Modern Web Interface:** A pristine vanilla HTML/CSS/JS frontend featuring drag-and-drop file uploads, dynamic ranking tables, and glassmorphism UI.
+- **Modern Web Interface:** A pristine vanilla HTML/CSS/JS frontend with glassmorphism, background mesh animations, and responsive design.
 
 ## Project Structure
 
 ```text
 ├── backend/
-│   ├── main.py                 # FastAPI Application
-│   └── services/               # Core logic (Document extraction, NLP, Scoring)
+│   ├── main.py                 # FastAPI Application Handlers
+│   └── services/               # Core NLP, Extraction, and Scoring Logic
 ├── frontend/
 │   ├── index.html              # UI Structure
-│   ├── style.css               # Styling
-│   └── script.js               # API Integration Logic
-├── data/                       # Sample Resumes (DOCX)
-├── notebooks/
-│   └── evaluation.ipynb        # Jupyter Notebook demonstrating scoring math
-└── requirements.txt            # Python Dependencies
+│   ├── style.css               # Premium Styling & Animations
+│   └── app.js                  # Frontend State & API Integration
+├── requirements.txt            # Python Dependencies
+├── README.md                   # Project Documentation
+└── notebooks/
+    └── evaluation.ipynb        # Jupyter Notebook for scoring evaluation
 ```
 
 ## Setup & Local Development

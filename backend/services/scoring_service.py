@@ -34,9 +34,35 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
     
     ranked_results = []
     for idx, resume in enumerate(resumes):
-        score = float(cosine_similarities[idx])
+        # 1. Base TF-IDF Skill Score (0 to 100)
+        skill_score = float(cosine_similarities[idx]) * 100
+        
+        # 2. Experience Score (Max 10 years for 100%)
+        exp_years = resume.get("experience", 0)
+        exp_score = min((exp_years / 10.0) * 100, 100)
+        
+        # 3. Education Score
+        education = resume.get("education", "None")
+        if education == "PhD":
+            edu_score = 100
+        elif education == "Master":
+            edu_score = 80
+        elif education == "Bachelor":
+            edu_score = 60
+        else:
+            edu_score = 20
+            
+        # 4. Projects Score (extract_projects returns 0-5)
+        proj_score = (resume.get("projects", 0) / 5.0) * 100
+        
+        # Apply Weights
+        # Skills: 50%, Experience: 25%, Education: 15%, Projects: 10%
+        final_score = (skill_score * 0.50) + (exp_score * 0.25) + (edu_score * 0.15) + (proj_score * 0.10)
+        
         result = resume.copy()
-        result["similarity_score"] = round(score * 100, 2)
+        result["similarity_score"] = round(final_score, 2)
+        result["skill_score"] = round(skill_score, 2)
+        
         ranked_results.append(result)
         
     # Sort by score descending (TF-IDF Cosine natively resolves ties using matrix weights)

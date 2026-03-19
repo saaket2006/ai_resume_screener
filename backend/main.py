@@ -16,7 +16,7 @@ from backend.services.document_service import extract_text
 from backend.services.nlp_service import preprocess_text
 from backend.services.skill_extractor import extract_skills
 from backend.services.scoring_service import rank_candidates
-from backend.services.info_extractor import extract_name, extract_email, extract_phone, extract_linkedin, extract_github
+from backend.services.info_extractor import extract_name, extract_email, extract_phone, extract_linkedin, extract_github, extract_experience, extract_education, extract_projects
 
 app = FastAPI(title="AI Resume Screener API")
 
@@ -75,6 +75,9 @@ async def process_resumes(
         candidate_phone = extract_phone(raw_text)
         candidate_linkedin = extract_linkedin(raw_text)
         candidate_github = extract_github(raw_text)
+        candidate_experience = extract_experience(raw_text)
+        candidate_education = extract_education(raw_text)
+        candidate_projects = extract_projects(raw_text)
         
         # Preprocess text
         clean_text = preprocess_text(raw_text)
@@ -125,6 +128,9 @@ async def process_resumes(
             "phone": candidate_phone,
             "linkedin": candidate_linkedin,
             "github": candidate_github,
+            "experience": candidate_experience,
+            "education": candidate_education,
+            "projects": candidate_projects,
             "text": clean_text,
             "matched_skills": sorted(list(set(matched))),
             "missing_skills": sorted(list(set(missing)))
@@ -143,6 +149,9 @@ async def process_resumes(
             "phone": cand["phone"],
             "linkedin": cand.get("linkedin", "Not Provided"),
             "github": cand.get("github", "Not Provided"),
+            "experience": cand.get("experience", 0),
+            "education": cand.get("education", "None"),
+            "projects": cand.get("projects", 0),
             "similarity_score": cand["similarity_score"],
             "rank": cand["rank"],
             "matched_skills": cand["matched_skills"],

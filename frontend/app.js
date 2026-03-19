@@ -115,8 +115,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const rankClass = cand.rank <= 3 ? `rank-${cand.rank}` : '';
 
             let scoreClass = 'low-score';
-            if (cand.similarity_score >= 15) scoreClass = 'high-score';
-            else if (cand.similarity_score >= 5) scoreClass = 'med-score';
+            let fillClass = 'score-fill-low';
+            if (cand.similarity_score >= 15) { 
+                scoreClass = 'high-score'; 
+                fillClass = 'score-fill-high'; 
+            } else if (cand.similarity_score >= 5) { 
+                scoreClass = 'med-score'; 
+                fillClass = 'score-fill-med'; 
+            }
 
             const matchedHtml = cand.matched_skills.map(s => `<span class="skill-tag matched">${s}</span>`).join('');
             const missingHtml = cand.missing_skills.map(s => `<span class="skill-tag missing">${s}</span>`).join('');
@@ -129,9 +135,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     <small style="color:var(--text-secondary); display:block; margin-top:2px;">📞 ${cand.phone !== 'Not Provided' ? cand.phone : '<span style="opacity:0.6">Not Provided</span>'}</small>
                     <small style="color:var(--text-secondary); display:block; margin-top:2px;">🔗 ${cand.linkedin !== 'Not Provided' ? `<a href="${cand.linkedin.startsWith('http') ? cand.linkedin : 'https://' + cand.linkedin}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.linkedin}</a>` : '<span style="opacity:0.6">LinkedIn Not Provided</span>'}</small>
                     <small style="color:var(--text-secondary); display:block; margin-top:2px;">💻 ${cand.github !== 'Not Provided' ? `<a href="${cand.github.startsWith('http') ? cand.github : 'https://' + cand.github}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.github}</a>` : '<span style="opacity:0.6">GitHub Not Provided</span>'}</small>
-                    <small style="opacity: 0.6; font-size: 0.75rem; display:block; margin-top:4px;">File: ${cand.filename}</small>
+                    <div class="candidate-stats">
+                        <span class="stat-badge">🎓 ${cand.education || 'None'}</span>
+                        <span class="stat-badge">💼 ${cand.experience || 0} Yrs</span>
+                        <span class="stat-badge">🚀 Proj: ${cand.projects || 0}/5</span>
+                    </div>
                 </td>
-                <td><span class="score-badge ${scoreClass}">${cand.similarity_score}%</span></td>
+                <td style="min-width: 150px;">
+                    <span class="score-badge ${scoreClass}">${cand.similarity_score}%</span>
+                    <div class="score-container">
+                        <div class="score-bar-fill ${fillClass}" style="width: 0%" data-target="${Math.min(cand.similarity_score, 100)}%"></div>
+                    </div>
+                </td>
                 <td>${matchedHtml || '<span style="color:#666">-</span>'}</td>
                 <td>${missingHtml || '<span style="color:#666">-</span>'}</td>
             `;
@@ -140,5 +155,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultsContainer.classList.remove('hidden');
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
+
+        // Trigger chart animations after standard reflow
+        setTimeout(() => {
+            const bars = document.querySelectorAll('.score-bar-fill');
+            bars.forEach(bar => {
+                bar.style.width = bar.getAttribute('data-target');
+            });
+        }, 100);
     }
 });
