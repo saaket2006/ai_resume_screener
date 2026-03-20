@@ -1,6 +1,9 @@
 import spacy
 from typing import List
 import re
+import logging
+
+logger = logging.getLogger("resume_screener")
 
 try:
     nlp = spacy.load("en_core_web_sm")
@@ -82,6 +85,8 @@ def extract_skills(text: str) -> List[str]:
             pattern = r'(?<![a-zA-Z0-9\-])' + re.escape(skill) + r'(?![a-zA-Z0-9\-])'
             if re.search(pattern, text_lower):
                 skills.add(skill)
+    
+    logger.debug("Dictionary skills found: %d", len(skills))
                 
     # 2. Extract Acronyms dynamically using Regex (e.g., API, HTTP)
     # Filter out common non-skill acronyms and overly long acronyms
@@ -91,5 +96,7 @@ def extract_skills(text: str) -> List[str]:
         is_acronym = bool(re.match(r'^[A-Z]{2,}(/[A-Z]{2,})?$', token.text))
         if is_acronym and token.text not in NON_SKILL_ACRONYMS and len(token.text) <= 6:
             skills.add(token.text.lower())
+    
+    logger.debug("Total skills extracted after acronym check: %d", len(skills))
             
     return sorted(list(skills))

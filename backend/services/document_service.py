@@ -1,6 +1,9 @@
 import io
 import PyPDF2
 import docx
+import logging
+
+logger = logging.getLogger("resume_screener")
 
 def extract_text_from_pdf(file_bytes: bytes) -> str:
     """Extract text from a PDF file."""
@@ -12,7 +15,9 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
             if extracted:
                 text += extracted + "\n"
     except Exception as e:
+        logger.error("Failed to read PDF: %s", e)
         raise ValueError(f"Failed to read PDF file format: {e}")
+    logger.debug("Successfully extracted %d characters from PDF", len(text))
     return text.strip()
 
 def extract_text_from_docx(file_bytes: bytes) -> str:
@@ -23,7 +28,9 @@ def extract_text_from_docx(file_bytes: bytes) -> str:
         for para in doc.paragraphs:
             text += para.text + "\n"
     except Exception as e:
+        logger.error("Failed to read DOCX: %s", e)
         raise ValueError(f"Failed to read DOCX file format: {e}")
+    logger.debug("Successfully extracted %d characters from DOCX", len(text))
     return text.strip()
 
 def extract_text(file_bytes: bytes, filename: str) -> str:

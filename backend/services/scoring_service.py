@@ -1,6 +1,9 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import List, Dict
+import logging
+
+logger = logging.getLogger("resume_screener")
 
 def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
     """
@@ -26,7 +29,7 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
         tfidf_resumes = vectorizer.transform(resume_texts)
         
     except Exception as e:
-        print(f"Error in vectorization: {e}")
+        logger.error("TF-IDF vectorization failed: %s", e)
         return resumes
         
     # Calculate cosine similarity
@@ -58,10 +61,15 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
         # Apply Weights
         # Skills: 50%, Experience: 25%, Education: 15%, Projects: 10%
         final_score = (skill_score * 0.50) + (exp_score * 0.25) + (edu_score * 0.15) + (proj_score * 0.10)
+        logger.debug("  Scoring '%s': Skill=%.1f Exp=%.1f Edu=%.1f Proj=%.1f → Final=%.1f",
+                     resume.get("name", "Unknown"), skill_score, exp_score, edu_score, proj_score, final_score)
         
         result = resume.copy()
         result["similarity_score"] = round(final_score, 2)
         result["skill_score"] = round(skill_score, 2)
+        result["experience_score"] = round(exp_score, 2)
+        result["education_score"] = round(edu_score, 2)
+        result["projects_score"] = round(proj_score, 2)
         
         ranked_results.append(result)
         

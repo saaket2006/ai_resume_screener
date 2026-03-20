@@ -3,6 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import spacy
 import logging
+import time
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-7s | %(message)s",
+    datefmt="%H:%M:%S"
+)
+logger = logging.getLogger("resume_screener")
 
 # Ensure spacy model is present early
 try:
@@ -38,6 +47,10 @@ async def process_resumes(
     job_description: str = Form(...),
     resumes: List[UploadFile] = File(...)
 ):
+    start_time = time.time()
+    logger.info("=" * 60)
+    logger.info("New screening request: %d resume(s) uploaded", len(resumes))
+
     if not job_description:
         raise HTTPException(status_code=400, detail="Job description is required")
         
@@ -47,6 +60,7 @@ async def process_resumes(
     # Process Job Description
     clean_jd = preprocess_text(job_description)
     jd_skills = extract_skills(job_description) # raw is often better for exact matching
+    logger.info("JD skills extracted (%d): %s", len(jd_skills), ", ".join(jd_skills))
     
     processed_resumes = []
     
@@ -58,7 +72,7 @@ async def process_resumes(
         try:
             raw_text = extract_text(contents, filename)
         except ValueError as e:
-            logging.error(f"Skipping {filename}: {e}")
+            logger.error("  Skipping '%s': %s", filename, e)
             processed_resumes.append({
                 "filename": filename,
                 "name": "Unreadable File",
@@ -121,6 +135,12 @@ async def process_resumes(
                     missing.append(skill)
                     
         # Remove duplicates
+        matched_unique = sorted(list(set(matched)))
+        missing_unique = sorted(list(set(missing)))
+        logger.info("  '%s' | %s | %d yrs exp | Skills: %d matched, %d missing",
+                    candidate_name, candidate_education, candidate_experience,
+                    len(matched_unique), len(missing_unique))
+
         processed_resumes.append({
             "filename": filename,
             "name": candidate_name,
@@ -132,12 +152,13 @@ async def process_resumes(
             "education": candidate_education,
             "projects": candidate_projects,
             "text": clean_text,
-            "matched_skills": sorted(list(set(matched))),
-            "missing_skills": sorted(list(set(missing)))
+            "matched_skills": matched_unique,
+            "missing_skills": missing_unique
         })
         
     # Rank candidates using Percentage Fulfillment Math
     ranked_candidates = rank_candidates(jd_skills, processed_resumes)
+    logger.info("Ranking complete — %d candidates scored", len(ranked_candidates))
     
     # Clean up output (remove large text payload)
     final_response = []
@@ -153,12 +174,25 @@ async def process_resumes(
             "education": cand.get("education", "None"),
             "projects": cand.get("projects", 0),
             "similarity_score": cand["similarity_score"],
+            "skill_score": cand.get("skill_score", 0),
+            "experience_score": cand.get("experience_score", 0),
+            "education_score": cand.get("education_score", 0),
+            "projects_score": cand.get("projects_score", 0),
             "rank": cand["rank"],
             "matched_skills": cand["matched_skills"],
             "missing_skills": cand["missing_skills"]
         }
         final_response.append(cand_dict)
         
+    elapsed = round(time.time() - start_time, 2)
+    for cand in final_response:
+        logger.info("  #%d %-20s → Final: %.1f%% (Skill: %.1f | Exp: %.1f | Edu: %.1f | Proj: %.1f)",
+                    cand["rank"], cand["name"], cand["similarity_score"],
+                    cand["skill_score"], cand["experience_score"],
+                    cand["education_score"], cand["projects_score"])
+    logger.info("Request completed in %.2fs", elapsed)
+    logger.info("=" * 60)
+
     return {
         "results": final_response, 
         "jd_skills": sorted(jd_skills)

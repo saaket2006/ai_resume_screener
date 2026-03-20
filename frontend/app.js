@@ -110,7 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsBody.innerHTML = '';
 
         results.forEach(cand => {
+            // --- Main Row ---
             const tr = document.createElement('tr');
+            tr.classList.add('candidate-row');
 
             const rankClass = cand.rank <= 3 ? `rank-${cand.rank}` : '';
 
@@ -123,9 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 scoreClass = 'med-score'; 
                 fillClass = 'score-fill-med'; 
             }
-
-            const matchedHtml = cand.matched_skills.map(s => `<span class="skill-tag matched">${s}</span>`).join('');
-            const missingHtml = cand.missing_skills.map(s => `<span class="skill-tag missing">${s}</span>`).join('');
 
             tr.innerHTML = `
                 <td><span class="rank-badge ${rankClass}">#${cand.rank}</span></td>
@@ -147,18 +146,98 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="score-bar-fill ${fillClass}" style="width: 0%" data-target="${Math.min(cand.similarity_score, 100)}%"></div>
                     </div>
                 </td>
-                <td>${matchedHtml || '<span style="color:#666">-</span>'}</td>
-                <td>${missingHtml || '<span style="color:#666">-</span>'}</td>
+                <td class="expand-hint-cell"><span class="expand-chevron">▶</span></td>
             `;
             resultsBody.appendChild(tr);
+
+            // --- Expandable Detail Row ---
+            const detailTr = document.createElement('tr');
+            detailTr.classList.add('detail-row');
+
+            const matchedHtml = cand.matched_skills.map(s => `<span class="skill-tag matched">${s}</span>`).join('');
+            const missingHtml = cand.missing_skills.map(s => `<span class="skill-tag missing">${s}</span>`).join('');
+
+            // Build score breakdown bars
+            const breakdownItems = [
+                { label: 'Skill Match',  value: cand.skill_score  || 0, weight: '50%' },
+                { label: 'Experience',   value: cand.experience_score || 0, weight: '25%' },
+                { label: 'Education',    value: cand.education_score  || 0, weight: '15%' },
+                { label: 'Projects',     value: cand.projects_score   || 0, weight: '10%' },
+            ];
+
+            let breakdownHtml = breakdownItems.map(item => {
+                const val = Math.round(item.value);
+                let barClass = 'score-fill-low';
+                if (val >= 60) barClass = 'score-fill-high';
+                else if (val >= 30) barClass = 'score-fill-med';
+                return `
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">
+                            <span>${item.label}</span>
+                            <span class="breakdown-weight">(${item.weight})</span>
+                            <span class="breakdown-value">${val}%</span>
+                        </div>
+                        <div class="score-container breakdown-bar">
+                            <div class="score-bar-fill ${barClass}" style="width: 0%" data-target="${val}%"></div>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            // Final score summary line
+            breakdownHtml += `
+                <div class="breakdown-final">
+                    <span>Final Score</span>
+                    <span class="final-score-value">${cand.similarity_score}%</span>
+                </div>`;
+
+            detailTr.innerHTML = `
+                <td colspan="4" class="detail-cell">
+                    <div class="detail-panel">
+                        <div class="detail-section">
+                            <h4>📊 Score Breakdown</h4>
+                            <div class="breakdown-grid">${breakdownHtml}</div>
+                        </div>
+                        <div class="detail-section">
+                            <h4>✅ Matched Skills</h4>
+                            <div class="skills-list">${matchedHtml || '<span style="color:#666">None</span>'}</div>
+                        </div>
+                        <div class="detail-section">
+                            <h4>❌ Missing Skills</h4>
+                            <div class="skills-list">${missingHtml || '<span style="color:#666">None</span>'}</div>
+                        </div>
+                    </div>
+                </td>
+            `;
+            resultsBody.appendChild(detailTr);
+
+            // Toggle detail row on main row click
+            tr.addEventListener('click', (e) => {
+                // Don't toggle if clicking a link
+                if (e.target.tagName === 'A') return;
+                const isOpen = detailTr.classList.toggle('open');
+                tr.querySelector('.expand-chevron').textContent = isOpen ? '▼' : '▶';
+
+                // Animate breakdown bars when opening
+                if (isOpen) {
+                    setTimeout(() => {
+                        detailTr.querySelectorAll('.score-bar-fill').forEach(bar => {
+                            bar.style.width = bar.getAttribute('data-target');
+                        });
+                    }, 50);
+                } else {
+                    detailTr.querySelectorAll('.score-bar-fill').forEach(bar => {
+                        bar.style.width = '0%';
+                    });
+                }
+            });
         });
 
         resultsContainer.classList.remove('hidden');
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
 
-        // Trigger chart animations after standard reflow
+        // Trigger main score bar animations
         setTimeout(() => {
-            const bars = document.querySelectorAll('.score-bar-fill');
+            const bars = resultsBody.querySelectorAll('.candidate-row .score-bar-fill');
             bars.forEach(bar => {
                 bar.style.width = bar.getAttribute('data-target');
             });
