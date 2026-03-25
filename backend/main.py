@@ -1,9 +1,14 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import spacy
 import logging
 import time
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 # Configure logging
 logging.basicConfig(
@@ -29,6 +34,11 @@ from backend.services.info_extractor import extract_name, extract_email, extract
 
 app = FastAPI(title="AI Resume Screener API")
 
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
 # Setup CORS to allow frontend connections
 app.add_middleware(
     CORSMiddleware,
@@ -43,7 +53,9 @@ def read_root():
     return {"message": "AI Resume Screener API running."}
 
 @app.post("/api/process")
+@limiter.limit("5/minute")
 async def process_resumes(
+    request: Request,
     job_description: str = Form(...),
     resumes: List[UploadFile] = File(...)
 ):
@@ -64,9 +76,42 @@ async def process_resumes(
     
     processed_resumes = []
     
+    MAX_FILE_SIZE = 5 * 1024 * 1024 # 5 MB
+    ALLOWED_EXTENSIONS = {".pdf", ".docx", ".doc"}
+    
     for resume in resumes:
-        contents = await resume.read()
         filename = resume.filename
+        
+        if not filename:
+            continue
+            
+        # File type validation
+        if not any(filename.lower().endswith(ext) for ext in ALLOWED_EXTENSIONS):
+            logger.error("  Skipping '%s': Unsupported file extension", filename)
+            processed_resumes.append({
+                "filename": filename,
+                "name": "Unsupported/Invalid File",
+                "email": "N/A",
+                "phone": "N/A",
+                "matched_skills": [],
+                "missing_skills": sorted(jd_skills)
+            })
+            continue
+
+        contents = await resume.read()
+        
+        # File size validation
+        if len(contents) > MAX_FILE_SIZE:
+            logger.error("  Skipping '%s': File size exceeds 5MB limit", filename)
+            processed_resumes.append({
+                "filename": filename,
+                "name": "File Too Large (>5MB)",
+                "email": "N/A",
+                "phone": "N/A",
+                "matched_skills": [],
+                "missing_skills": sorted(jd_skills)
+            })
+            continue
         
         # Extract text based on file type
         try:
