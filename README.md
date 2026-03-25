@@ -46,7 +46,7 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
    git clone <https://github.com/saaket2006/ai_resume_screener.git>
    cd ai_resume_screener
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   venv\Scripts\activate
    ```
 
 2. **Install Dependencies:**
