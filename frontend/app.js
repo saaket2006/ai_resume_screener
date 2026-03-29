@@ -1,11 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { 
-    getAuth, 
-    signInWithEmailAndPassword, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
-    onAuthStateChanged, 
-    signOut 
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 import { firebaseConfig } from "./firebase-config.js";
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = emailInput.value.trim();
         const password = passwordInput.value;
         const btnText = emailLoginBtn.querySelector('span');
-        
+
         btnText.textContent = "Signing in...";
         emailLoginBtn.disabled = true;
         authErrorMsg.classList.add('hidden');
@@ -166,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/process', {
+            const BASE_URL = window.location.hostname === "https://ai-resume-screener-production-2bb2.up.railway.app";
+            const response = await fetch(BASE_URL + '/api/process', {
                 method: 'POST',
                 body: formData
             });
@@ -200,12 +201,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let scoreClass = 'low-score';
             let fillClass = 'score-fill-low';
-            if (cand.similarity_score >= 15) { 
-                scoreClass = 'high-score'; 
-                fillClass = 'score-fill-high'; 
-            } else if (cand.similarity_score >= 5) { 
-                scoreClass = 'med-score'; 
-                fillClass = 'score-fill-med'; 
+            if (cand.similarity_score >= 15) {
+                scoreClass = 'high-score';
+                fillClass = 'score-fill-high';
+            } else if (cand.similarity_score >= 5) {
+                scoreClass = 'med-score';
+                fillClass = 'score-fill-med';
             }
 
             tr.innerHTML = `
@@ -241,10 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Build score breakdown bars
             const breakdownItems = [
-                { label: 'Skill Match',  value: cand.skill_score  || 0, weight: '50%' },
-                { label: 'Experience',   value: cand.experience_score || 0, weight: '25%' },
-                { label: 'Education',    value: cand.education_score  || 0, weight: '15%' },
-                { label: 'Projects',     value: cand.projects_score   || 0, weight: '10%' },
+                { label: 'Skill Match', value: cand.skill_score || 0, weight: '50%' },
+                { label: 'Experience', value: cand.experience_score || 0, weight: '25%' },
+                { label: 'Education', value: cand.education_score || 0, weight: '15%' },
+                { label: 'Projects', value: cand.projects_score || 0, weight: '10%' },
             ];
 
             let breakdownHtml = breakdownItems.map(item => {

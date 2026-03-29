@@ -57,7 +57,7 @@ def read_root():
 async def process_resumes(
     request: Request,
     job_description: str = Form(...),
-    resumes: List[UploadFile] = File(...)
+    resumes: list[UploadFile] = File(...)
 ):
     start_time = time.time()
     logger.info("=" * 60)
