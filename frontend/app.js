@@ -7,7 +7,8 @@ import {
     onAuthStateChanged,
     signOut,
     setPersistence,
-    browserSessionPersistence
+    browserSessionPersistence,
+    inMemoryPersistence
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 import { firebaseConfig } from "./firebase-config.js";
@@ -15,8 +16,8 @@ import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Forces authentication to clear when the window/tab is closed
-setPersistence(auth, browserSessionPersistence)
+// Use inMemoryPersistence to ensure logout on any page refresh or tab close
+setPersistence(auth, inMemoryPersistence)
     .catch((error) => {
         console.error("Auth persistence error:", error);
     });
