@@ -2,6 +2,12 @@
 
 An end-to-end AI-powered system designed to analyze candidate resumes against a job description and automatically rank them based on skill relevance, experience, and keyword similarity using Natural Language Processing (NLP) and Machine Learning techniques.
 
+---
+
+### 🌐 Live Website: [Insert Your Website Link Here]
+
+---
+
 ## Features
 
 - **Multi-Format Document Parsing:** Automatically extracts text from uploaded PDF and DOCX files.
@@ -20,13 +26,16 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
     - **Animated Score Bars:** Horizontal charts with dynamic color grading (Green/Yellow/Red).
     - **Attribute Badges:** Instant visibility into Experience, Education, and Project scale.
     - **Glowing Highlights:** Visual differentiation of Matched vs. Missing technical skills.
-- **FastAPI Backend:** High-performance, async-ready REST API.
-- **Modern Web Interface:** A pristine vanilla HTML/CSS/JS frontend with glassmorphism, background mesh animations, and responsive design.
 - **Firebase Authentication:** Secure user access with:
-    - **Email/Password Sign-In:** Standard credential-based login.
+    - **Email/Password Sign-In:** Standard credential-based login with real-time password complexity validation.
     - **Google Sign-In:** One-click OAuth authentication.
-    - **Persistent Sessions:** State-aware UI that hides the core application until the user is verified.
-    - **Sign Out:** Dedicated global sign-out functionality.
+    - **Secure Session Management:** Uses `browserSessionPersistence` for session-based security (auto-logout on tab close).
+- **Profile Management:** Dynamic user profile menu with hover/click support and the ability to update display names instantly.
+- **Mobile & Tablet Friendly:** Fully responsive design:
+    - **Table-to-Card Layout:** On mobile, dense results tables are converted into beautiful, digestible candidate cards.
+    - **Optimized Touch Targets:** All buttons and inputs meet the 48px touch-friendly standard.
+    - **Fluid Scaling:** Viewport-aware layout ensures a premium experience across all device sizes.
+- **FastAPI Backend:** High-performance, async-ready REST API.
 
 ## Project Structure
 
@@ -36,8 +45,8 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 │   └── services/               # Core NLP, Extraction, and Scoring Logic
 ├── frontend/
 │   ├── index.html              # UI Structure & Auth Modal
-│   ├── style.css               # Premium Styling, Animations & Auth UI
-│   └── app.js                  # Firebase Integration & Frontend Logic
+│   ├── style.css               # Premium Styling, Animations & Responsive UI
+│   └── app.js                  # Firebase Integration, UI Logic & Animations
 ├── firebase.json               # Firebase Hosting Configuration
 ├── .firebaserc                 # Firebase Project Link
 ├── requirements.txt            # Python Dependencies
@@ -80,11 +89,11 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 
 ## Demonstration
 
-1. Open the UI.
-2. Paste **any** Job Description (e.g., "Looking for a Python backend engineer with FastAPI and NLP experience..."). The pipeline mathematically reacts to whatever keywords you provide. Keep the Job Description as descriptive as possible about the role to increase the accuracy and efficiency of the process.
-3. Upload the resumes of candidates which are to be ranked.
-4. Click **Rank Candidates** and observe the highly accurate similarities and highlighted skill gaps, along with the dynamically acquired candidate contact information!
-5. **Click any candidate row** to expand the score breakdown panel, revealing per-component scores (Skill Match, Experience, Education, Projects) and matched/missing skill highlights.
+1. Open the UI and complete the **Security Login**.
+2. Paste **any** Job Description (e.g., "Looking for a Python backend engineer with FastAPI and NLP experience..."). The pipeline mathematically reacts to whatever keywords you provide.
+3. Upload the resumes (PDF/DOCX) of candidates to be ranked.
+4. Click **Rank Candidates** and observe the highly accurate similarities and highlighted skill gaps!
+5. **Click any candidate row** to expand the score breakdown panel.
 6. Check the **backend terminal** for detailed structured logs showing the full scoring pipeline and timing.
 
 ## Evaluation
@@ -95,34 +104,16 @@ Examine `notebooks/evaluation.ipynb` to explore the vector space model, demonstr
 
 ### Frontend (Firebase Hosting)
 
-Since the frontend is already configured for Firebase, you can deploy it globally in seconds:
-
-1.  **Install Firebase CLI:**
-    ```bash
-    npm install -g firebase-tools
-    ```
-2.  **Login to Firebase:**
-    ```bash
-    firebase login
-    ```
-3.  **Initialize (Optional - already configured):**
-    ```bash
-    firebase init hosting
-    ```
-4.  **Deploy:**
-    ```bash
-    firebase deploy --only hosting
-    ```
+1.  **Install Firebase CLI:** `npm install -g firebase-tools`
+2.  **Login to Firebase:** `firebase login`
+3.  **Deploy:** `firebase deploy --only hosting`
     Your app will be live at `https://<your-project-id>.web.app`.
 
 ### Backend (Railway / Render / Google Cloud Run)
 
-The FastAPI backend can be deployed to any cloud provider that supports Python or Docker:
+The FastAPI backend can be deployed to any cloud provider that supports Python/Uvicorn:
 
 1.  **Prepare for Deployment:** Ensure your `requirements.txt` contains all dependencies.
-2.  **Environment Variables:** If you add any sensitive keys (though currently it uses local NLP), set them in your provider's dashboard.
-3.  **CORS:** Update the `allow_origins` in `backend/main.py` to include your production frontend URL once it's deployed.
-4.  **Deploy Command:** Use Gunicorn with Uvicorn workers for production:
-    ```bash
-    gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
-    ```
+2.  **Environment Variables:** Configure necessary environment variables in your cloud dashboard.
+3.  **CORS:** Update the `allow_origins` in `backend/main.py` with your production frontend URL.
+4.  **Deploy Command:** `gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app`
