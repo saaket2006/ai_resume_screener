@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auth Elements
     const authModal = document.getElementById('auth-modal');
     const appContainer = document.getElementById('app-container');
+    const userProfileDropdown = document.getElementById('user-profile-dropdown');
+    const userTrigger = document.getElementById('user-trigger');
     
     // Tabs
     const tabLogin = document.getElementById('tab-login');
@@ -227,6 +229,21 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error signing out: ", error);
         }
     });
+
+    // Profile Dropdown Click Handler
+    if (userTrigger && userProfileDropdown) {
+        userTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userProfileDropdown.classList.toggle('active');
+        });
+
+        // Global click listener to close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userProfileDropdown.contains(e.target)) {
+                userProfileDropdown.classList.remove('active');
+            }
+        });
+    }
 
     // Profile Management
     changeNameBtn.addEventListener('click', () => {
