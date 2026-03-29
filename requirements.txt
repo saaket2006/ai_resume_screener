@@ -10,3 +10,4 @@ pytest
 python-multipart
 jinja2
 slowapi
+gunicorn
