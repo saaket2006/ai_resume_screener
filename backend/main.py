@@ -243,9 +243,3 @@ async def process_resumes(
         "jd_skills": sorted(jd_skills)
     }
 
-import os
-
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
