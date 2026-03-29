@@ -8,6 +8,7 @@ import {
     onAuthStateChanged,
     signOut,
     setPersistence,
+    updateProfile,
     browserSessionPersistence,
     inMemoryPersistence
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -17,8 +18,8 @@ import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Use inMemoryPersistence to ensure logout on any page refresh or tab close
-setPersistence(auth, inMemoryPersistence)
+// Use browserSessionPersistence to keep login on refresh but clear on tab close
+setPersistence(auth, browserSessionPersistence)
     .catch((error) => {
         console.error("Auth persistence error:", error);
     });
@@ -53,11 +54,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const signOutBtn = document.getElementById('sign-out-btn');
     const authErrorMsg = document.getElementById('auth-error');
 
+    const userDisplayNameElem = document.getElementById('user-display-name');
+    const nameModal = document.getElementById('name-modal');
+    const changeNameBtn = document.getElementById('change-name-btn');
+    const updateNameForm = document.getElementById('update-name-form');
+    const cancelNameBtn = document.getElementById('cancel-name-btn');
+    const newDisplayNameInput = document.getElementById('new-display-name');
+
     // Authentication Listeners
     onAuthStateChanged(auth, (user) => {
         if (user) {
             authModal.classList.add('hidden');
             appContainer.classList.remove('hidden');
+            
+            // Set display name or email if name is missing
+            userDisplayNameElem.textContent = user.displayName || user.email.split('@')[0];
         } else {
             authModal.classList.remove('hidden');
             appContainer.classList.add('hidden');
@@ -110,6 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Clear Password Text (Handles both fields)
+    const clearBtns = document.querySelectorAll('.clear-password-btn');
+    clearBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const inputElement = document.getElementById(targetId);
+            inputElement.value = '';
+            inputElement.focus();
+            
+            // If it's the signup field, trigger the validation to clear greens
+            if (targetId === 'signup-password') {
+                validatePassword('');
+            }
+        });
+    });
+
     // Password Validation Real-time (Only for Sign Up)
     const validatePassword = (pass) => {
         const hasLength = pass.length >= 8;
@@ -140,14 +167,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            loginForm.reset();
+            // We don't reset immediately to allow browser password manager to catch the submit
+            // loginForm.reset(); 
         } catch (error) {
             let msg = error.message;
             if (error.code === 'auth/invalid-credential') msg = "Incorrect email or password.";
             showError("Login failed: " + msg);
+            emailLoginBtn.disabled = false;
         } finally {
             btnText.textContent = "Sign In";
-            emailLoginBtn.disabled = false;
+            // Button re-enabled in catch or onAuthStateChanged will hide form
         }
     });
 
@@ -196,6 +225,36 @@ document.addEventListener('DOMContentLoaded', () => {
             await signOut(auth);
         } catch (error) {
             console.error("Error signing out: ", error);
+        }
+    });
+
+    // Profile Management
+    changeNameBtn.addEventListener('click', () => {
+        const user = auth.currentUser;
+        if (user) {
+            newDisplayNameInput.value = user.displayName || "";
+            nameModal.classList.remove('hidden');
+        }
+    });
+
+    cancelNameBtn.addEventListener('click', () => {
+        nameModal.classList.add('hidden');
+    });
+
+    updateNameForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newName = newDisplayNameInput.value.trim();
+        const user = auth.currentUser;
+        
+        if (user && newName) {
+            try {
+                await updateProfile(user, { displayName: newName });
+                userDisplayNameElem.textContent = newName;
+                nameModal.classList.add('hidden');
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                alert("Failed to update name: " + error.message);
+            }
         }
     });
 

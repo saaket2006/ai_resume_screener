@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Resume Screener & Ranking System</title>
+    <!-- App Icon / Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -20,7 +22,17 @@
                     <h1>AI Resume Screener</h1>
                     <p>Intelligent Candidate Ranking System</p>
                 </div>
-                <button id="sign-out-btn" class="glow-btn log-out-btn">Sign Out</button>
+                
+                <div class="user-profile-dropdown" id="user-profile-dropdown">
+                    <div class="user-info-trigger" id="user-trigger">
+                        <span id="user-display-name">Loading...</span>
+                        <span class="dropdown-chevron">▼</span>
+                    </div>
+                    <div class="dropdown-content">
+                        <button id="change-name-btn">✒️ Change Display Name</button>
+                        <button id="sign-out-btn" class="sign-out-dropdown-btn"><span style="color: #ef4444;">⏻</span> Sign Out</button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -82,14 +94,17 @@
                 <p>Sign in to access the AI Resume Screener</p>
                 <form id="login-form">
                     <div class="form-group">
-                        <input type="email" id="login-email" required placeholder="Email Address" class="auth-input">
+                        <input type="email" id="login-email" name="email" autocomplete="username" required placeholder="Email Address" class="auth-input">
                     </div>
                     <div class="form-group">
                         <div class="password-input-wrapper">
-                            <input type="password" id="login-password" required placeholder="Password"
+                            <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="Password"
                                 class="auth-input">
                             <button type="button" class="toggle-password-btn" data-target="login-password">
                                 <span>👁️</span>
+                            </button>
+                            <button type="button" class="clear-password-btn" data-target="login-password">
+                                <span>✕</span>
                             </button>
                         </div>
                     </div>
@@ -105,14 +120,17 @@
                 <p>Register to dynamically rank your candidates</p>
                 <form id="signup-form">
                     <div class="form-group">
-                        <input type="email" id="signup-email" required placeholder="Email Address" class="auth-input">
+                        <input type="email" id="signup-email" name="email" autocomplete="username" required placeholder="Email Address" class="auth-input">
                     </div>
                     <div class="form-group">
                         <div class="password-input-wrapper">
-                            <input type="password" id="signup-password" required placeholder="Create Password"
+                            <input type="password" id="signup-password" name="password" autocomplete="new-password" required placeholder="Create Password"
                                 class="auth-input">
                             <button type="button" class="toggle-password-btn" data-target="signup-password">
                                 <span>👁️</span>
+                            </button>
+                            <button type="button" class="clear-password-btn" data-target="signup-password">
+                                <span>✕</span>
                             </button>
                         </div>
                         <div class="password-constraints">
@@ -137,6 +155,23 @@
                 Continue with Google
             </button>
             <p id="auth-error" class="auth-error-message hidden"></p>
+        </div>
+    </div>
+
+    <!-- Name Change Modal -->
+    <div id="name-modal" class="auth-modal-overlay hidden">
+        <div class="glass-card auth-card">
+            <h2>Update Profile</h2>
+            <p>Set how your name appears in the system</p>
+            <form id="update-name-form">
+                <div class="form-group">
+                    <input type="text" id="new-display-name" required placeholder="Enter your name" class="auth-input">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="glow-btn secondary" id="cancel-name-btn">Cancel</button>
+                    <button type="submit" class="glow-btn">Update</button>
+                </div>
+            </form>
         </div>
     </div>
 
