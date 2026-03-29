@@ -5,13 +5,22 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     onAuthStateChanged,
-    signOut
+    signOut,
+    setPersistence,
+    browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+// Forces authentication to clear when the window/tab is closed
+setPersistence(auth, browserSessionPersistence)
+    .catch((error) => {
+        console.error("Auth persistence error:", error);
+    });
+
 const googleProvider = new GoogleAuthProvider();
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,18 +175,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            const BASE_URL = window.location.hostname === "https://ai-resume-screener-production-2bb2.up.railway.app";
-            const response = await fetch(BASE_URL + '/api/process', {
-                method: 'POST',
+            const response = await fetch("https://ai-resume-screener-production-2bb2.up.railway.app/api/process", {
+                method: "POST",
                 body: formData
             });
 
+            const text = await response.text();
+
+            console.log("RAW RESPONSE:", text);
+
             if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.detail || "Error processing resumes.");
+                alert("Server Error:\n" + text);
+                throw new Error("Request failed");
             }
 
-            const data = await response.json();
+            const data = JSON.parse(text);
             renderResults(data.results);
 
         } catch (error) {
