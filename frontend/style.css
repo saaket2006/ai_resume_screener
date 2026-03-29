@@ -496,7 +496,7 @@ th {
 
 .auth-input {
     width: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     border: 1px solid var(--card-border);
     border-radius: 10px;
     padding: 0.8rem 1rem;
@@ -504,11 +504,76 @@ th {
     font-family: inherit;
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.3s;
+    transition: all 0.3s;
 }
 
 .auth-input:focus {
     border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Chrome/Safari Autofill fix */
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover,
+.auth-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #fff;
+    -webkit-box-shadow: 0 0 0px 1000px #1a1a24 inset; /* Match theme color */
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+    z-index: 10;
+}
+
+.toggle-password-btn:hover {
+    color: var(--text-primary);
+}
+
+.password-constraints {
+    text-align: left;
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    padding-left: 5px;
+}
+
+.password-constraints p {
+    margin: 2px 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s;
+}
+
+.password-constraints p::before {
+    content: '○';
+    font-size: 0.8rem;
+}
+
+.password-constraints p.valid {
+    color: var(--success);
+}
+
+.password-constraints p.valid::before {
+    content: '●';
 }
 
 .auth-divider {

@@ -80,7 +80,17 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required placeholder="••••••••" class="auth-input">
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" required placeholder="••••••••" class="auth-input">
+                        <button type="button" id="toggle-password" class="toggle-password-btn">
+                            <span id="toggle-icon">👁️</span>
+                        </button>
+                    </div>
+                    <div class="password-constraints">
+                        <p id="constraint-length">Min 8 characters</p>
+                        <p id="constraint-number">At least 1 number</p>
+                        <p id="constraint-special">At least 1 special character (@$!%*?&)</p>
+                    </div>
                 </div>
                 <button type="submit" class="glow-btn" id="email-login-btn">
                     <span>Sign In</span>

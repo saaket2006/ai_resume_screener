@@ -52,12 +52,50 @@ document.addEventListener('DOMContentLoaded', () => {
         authErrorMsg.classList.remove('hidden');
     };
 
+    const passwordConstraints = {
+        length: document.getElementById('constraint-length'),
+        number: document.getElementById('constraint-number'),
+        special: document.getElementById('constraint-special')
+    };
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const toggleIcon = document.getElementById('toggle-icon');
+
+    // Toggle Password Visibility
+    togglePasswordBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        toggleIcon.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Password Validation Real-time
+    const validatePassword = (pass) => {
+        const hasLength = pass.length >= 8;
+        const hasNumber = /\d/.test(pass);
+        const hasSpecial = /[@$!%*?&]/.test(pass);
+
+        if (passwordConstraints.length) passwordConstraints.length.className = hasLength ? 'valid' : '';
+        if (passwordConstraints.number) passwordConstraints.number.className = hasNumber ? 'valid' : '';
+        if (passwordConstraints.special) passwordConstraints.special.className = hasSpecial ? 'valid' : '';
+
+        return hasLength && hasNumber && hasSpecial;
+    };
+
+    passwordInput.addEventListener('input', () => {
+        validatePassword(passwordInput.value);
+    });
+
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = emailInput.value.trim();
         const password = passwordInput.value;
-        const btnText = emailLoginBtn.querySelector('span');
+        
+        if (!validatePassword(password)) {
+            showError("Please meet all password requirements.");
+            return;
+        }
 
+        const btnText = emailLoginBtn.querySelector('span');
+        
         btnText.textContent = "Signing in...";
         emailLoginBtn.disabled = true;
         authErrorMsg.classList.add('hidden');
@@ -65,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             loginForm.reset();
+            // Reset constraint styles
+            Object.values(passwordConstraints).forEach(c => { if(c) c.className = ''; });
         } catch (error) {
             showError("Authentication failed: " + error.message);
         } finally {
