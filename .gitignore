@@ -20,6 +20,7 @@ ENV/
 
 # Environment variables
 .env
+frontend/firebase-config.js
 
 # IDEs
 .vscode/

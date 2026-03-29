@@ -8,15 +8,7 @@ import {
     signOut 
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "***REMOVED***",
-    authDomain: "ai-resume-screener-69d23.firebaseapp.com",
-    projectId: "ai-resume-screener-69d23",
-    storageBucket: "ai-resume-screener-69d23.firebasestorage.app",
-    messagingSenderId: "678651505721",
-    appId: "1:678651505721:web:b7f9ddc7ae57e2d99531e8",
-    measurementId: "G-X8GL26ZEF6"
-};
+import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
