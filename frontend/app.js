@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebas
 import {
     getAuth,
     signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
     signInWithPopup,
     GoogleAuthProvider,
     onAuthStateChanged,
@@ -28,10 +29,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auth Elements
     const authModal = document.getElementById('auth-modal');
     const appContainer = document.getElementById('app-container');
+    
+    // Tabs
+    const tabLogin = document.getElementById('tab-login');
+    const tabSignup = document.getElementById('tab-signup');
+    const loginPlane = document.getElementById('login-plane');
+    const signupPlane = document.getElementById('signup-plane');
+
+    // Login Form
     const loginForm = document.getElementById('login-form');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
+    const loginEmailInput = document.getElementById('login-email');
+    const loginPasswordInput = document.getElementById('login-password');
     const emailLoginBtn = document.getElementById('email-login-btn');
+
+    // Signup Form
+    const signupForm = document.getElementById('signup-form');
+    const signupEmailInput = document.getElementById('signup-email');
+    const signupPasswordInput = document.getElementById('signup-password');
+    const emailSignupBtn = document.getElementById('email-signup-btn');
+
+    // Shared
     const googleLoginBtn = document.getElementById('google-login-btn');
     const signOutBtn = document.getElementById('sign-out-btn');
     const authErrorMsg = document.getElementById('auth-error');
@@ -52,22 +69,48 @@ document.addEventListener('DOMContentLoaded', () => {
         authErrorMsg.classList.remove('hidden');
     };
 
+    // Tab Switching Logic
+    tabLogin.addEventListener('click', () => {
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        loginPlane.classList.remove('hidden');
+        loginPlane.classList.add('active-plane');
+        signupPlane.classList.add('hidden');
+        signupPlane.classList.remove('active-plane');
+        authErrorMsg.classList.add('hidden');
+    });
+
+    tabSignup.addEventListener('click', () => {
+        tabSignup.classList.add('active');
+        tabLogin.classList.remove('active');
+        signupPlane.classList.remove('hidden');
+        signupPlane.classList.add('active-plane');
+        loginPlane.classList.add('hidden');
+        loginPlane.classList.remove('active-plane');
+        authErrorMsg.classList.add('hidden');
+    });
+
     const passwordConstraints = {
         length: document.getElementById('constraint-length'),
         number: document.getElementById('constraint-number'),
         special: document.getElementById('constraint-special')
     };
-    const togglePasswordBtn = document.getElementById('toggle-password');
-    const toggleIcon = document.getElementById('toggle-icon');
 
-    // Toggle Password Visibility
-    togglePasswordBtn.addEventListener('click', () => {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        toggleIcon.textContent = type === 'password' ? '👁️' : '🙈';
+    // Toggle Password Visibility (Handles both fields)
+    const toggleBtns = document.querySelectorAll('.toggle-password-btn');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const inputElement = document.getElementById(targetId);
+            const iconElement = btn.querySelector('span');
+            
+            const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputElement.setAttribute('type', type);
+            iconElement.textContent = type === 'password' ? '👁️' : '🙈';
+        });
     });
 
-    // Password Validation Real-time
+    // Password Validation Real-time (Only for Sign Up)
     const validatePassword = (pass) => {
         const hasLength = pass.length >= 8;
         const hasNumber = /\d/.test(pass);
@@ -80,20 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return hasLength && hasNumber && hasSpecial;
     };
 
-    passwordInput.addEventListener('input', () => {
-        validatePassword(passwordInput.value);
+    signupPasswordInput.addEventListener('input', () => {
+        validatePassword(signupPasswordInput.value);
     });
 
+    // Login Submit
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        
-        if (!validatePassword(password)) {
-            showError("Please meet all password requirements.");
-            return;
-        }
-
+        const email = loginEmailInput.value.trim();
+        const password = loginPasswordInput.value;
         const btnText = emailLoginBtn.querySelector('span');
         
         btnText.textContent = "Signing in...";
@@ -103,13 +141,44 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             loginForm.reset();
-            // Reset constraint styles
-            Object.values(passwordConstraints).forEach(c => { if(c) c.className = ''; });
         } catch (error) {
-            showError("Authentication failed: " + error.message);
+            let msg = error.message;
+            if (error.code === 'auth/invalid-credential') msg = "Incorrect email or password.";
+            showError("Login failed: " + msg);
         } finally {
             btnText.textContent = "Sign In";
             emailLoginBtn.disabled = false;
+        }
+    });
+
+    // Signup Submit
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = signupEmailInput.value.trim();
+        const password = signupPasswordInput.value;
+        
+        if (!validatePassword(password)) {
+            showError("Please meet all password requirements.");
+            return;
+        }
+
+        const btnText = emailSignupBtn.querySelector('span');
+        
+        btnText.textContent = "Creating Account...";
+        emailSignupBtn.disabled = true;
+        authErrorMsg.classList.add('hidden');
+
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            signupForm.reset();
+            Object.values(passwordConstraints).forEach(c => { if(c) c.className = ''; });
+        } catch (error) {
+            let msg = error.message;
+            if (error.code === 'auth/email-already-in-use') msg = "Email is already registered. Please login.";
+            showError("Sign Up failed: " + msg);
+        } finally {
+            btnText.textContent = "Sign Up";
+            emailSignupBtn.disabled = false;
         }
     });
 

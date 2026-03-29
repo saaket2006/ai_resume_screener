@@ -71,38 +71,69 @@
     <!-- Auth Modal -->
     <div id="auth-modal" class="auth-modal-overlay">
         <div class="glass-card auth-card">
-            <h2>Welcome Back</h2>
-            <p>Sign in to access the AI Resume Screener</p>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required placeholder="name@example.com" class="auth-input">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-input-wrapper">
-                        <input type="password" id="password" required placeholder="••••••••" class="auth-input">
-                        <button type="button" id="toggle-password" class="toggle-password-btn">
-                            <span id="toggle-icon">👁️</span>
-                        </button>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login">Login</button>
+                <button class="auth-tab" id="tab-signup">Sign Up</button>
+            </div>
+
+            <!-- LOGIN CONTENT -->
+            <div id="login-plane" class="auth-plane active-plane">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access the AI Resume Screener</p>
+                <form id="login-form">
+                    <div class="form-group">
+                        <input type="email" id="login-email" required placeholder="Email Address" class="auth-input">
                     </div>
-                    <div class="password-constraints">
-                        <p id="constraint-length">Min 8 characters</p>
-                        <p id="constraint-number">At least 1 number</p>
-                        <p id="constraint-special">At least 1 special character (@$!%*?&)</p>
+                    <div class="form-group">
+                        <div class="password-input-wrapper">
+                            <input type="password" id="login-password" required placeholder="Password"
+                                class="auth-input">
+                            <button type="button" class="toggle-password-btn" data-target="login-password">
+                                <span>👁️</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" class="glow-btn" id="email-login-btn">
-                    <span>Sign In</span>
-                </button>
-            </form>
-            
+                    <button type="submit" class="glow-btn" id="email-login-btn">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- SIGN UP CONTENT -->
+            <div id="signup-plane" class="auth-plane hidden">
+                <h2>Create Account</h2>
+                <p>Register to dynamically rank your candidates</p>
+                <form id="signup-form">
+                    <div class="form-group">
+                        <input type="email" id="signup-email" required placeholder="Email Address" class="auth-input">
+                    </div>
+                    <div class="form-group">
+                        <div class="password-input-wrapper">
+                            <input type="password" id="signup-password" required placeholder="Create Password"
+                                class="auth-input">
+                            <button type="button" class="toggle-password-btn" data-target="signup-password">
+                                <span>👁️</span>
+                            </button>
+                        </div>
+                        <div class="password-constraints">
+                            <p id="constraint-length">Min 8 characters</p>
+                            <p id="constraint-number">At least 1 number</p>
+                            <p id="constraint-special">At least 1 special character (@$!%*?&)</p>
+                        </div>
+                    </div>
+                    <button type="submit" class="glow-btn" id="email-signup-btn">
+                        <span>Sign Up</span>
+                    </button>
+                </form>
+            </div>
+
             <div class="auth-divider">
                 <span>OR</span>
             </div>
-            
+
             <button id="google-login-btn" class="google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" class="google-icon">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"
+                    class="google-icon">
                 Continue with Google
             </button>
             <p id="auth-error" class="auth-error-message hidden"></p>

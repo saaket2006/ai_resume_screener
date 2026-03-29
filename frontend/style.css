@@ -475,6 +475,48 @@ th {
     animation: authSlideUp 0.4s ease;
 }
 
+/* Auth Tabs */
+.auth-tabs {
+    display: flex;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    padding: 4px;
+    position: relative;
+    border: 1px solid var(--card-border);
+}
+
+.auth-tab {
+    flex: 1;
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    position: relative;
+    z-index: 2;
+}
+
+.auth-tab.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.auth-plane {
+    animation: planeFadeIn 0.4s ease;
+}
+
+@keyframes planeFadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 @keyframes authSlideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
