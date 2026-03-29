@@ -22,6 +22,11 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
     - **Glowing Highlights:** Visual differentiation of Matched vs. Missing technical skills.
 - **FastAPI Backend:** High-performance, async-ready REST API.
 - **Modern Web Interface:** A pristine vanilla HTML/CSS/JS frontend with glassmorphism, background mesh animations, and responsive design.
+- **Firebase Authentication:** Secure user access with:
+    - **Email/Password Sign-In:** Standard credential-based login.
+    - **Google Sign-In:** One-click OAuth authentication.
+    - **Persistent Sessions:** State-aware UI that hides the core application until the user is verified.
+    - **Sign Out:** Dedicated global sign-out functionality.
 
 ## Project Structure
 
@@ -30,9 +35,11 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 │   ├── main.py                 # FastAPI Application Handlers
 │   └── services/               # Core NLP, Extraction, and Scoring Logic
 ├── frontend/
-│   ├── index.html              # UI Structure
-│   ├── style.css               # Premium Styling & Animations
-│   └── app.js                  # Frontend State & API Integration
+│   ├── index.html              # UI Structure & Auth Modal
+│   ├── style.css               # Premium Styling, Animations & Auth UI
+│   └── app.js                  # Firebase Integration & Frontend Logic
+├── firebase.json               # Firebase Hosting Configuration
+├── .firebaserc                 # Firebase Project Link
 ├── requirements.txt            # Python Dependencies
 ├── README.md                   # Project Documentation
 └── notebooks/
@@ -83,3 +90,39 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 ## Evaluation
 
 Examine `notebooks/evaluation.ipynb` to explore the vector space model, demonstrating how the raw text data is transformed into TF-IDF numerical matrices and how Cosine Similarity calculates spatial relevance between document vectors.
+
+## Deployment Guide
+
+### Frontend (Firebase Hosting)
+
+Since the frontend is already configured for Firebase, you can deploy it globally in seconds:
+
+1.  **Install Firebase CLI:**
+    ```bash
+    npm install -g firebase-tools
+    ```
+2.  **Login to Firebase:**
+    ```bash
+    firebase login
+    ```
+3.  **Initialize (Optional - already configured):**
+    ```bash
+    firebase init hosting
+    ```
+4.  **Deploy:**
+    ```bash
+    firebase deploy --only hosting
+    ```
+    Your app will be live at `https://<your-project-id>.web.app`.
+
+### Backend (Railway / Render / Google Cloud Run)
+
+The FastAPI backend can be deployed to any cloud provider that supports Python or Docker:
+
+1.  **Prepare for Deployment:** Ensure your `requirements.txt` contains all dependencies.
+2.  **Environment Variables:** If you add any sensitive keys (though currently it uses local NLP), set them in your provider's dashboard.
+3.  **CORS:** Update the `allow_origins` in `backend/main.py` to include your production frontend URL once it's deployed.
+4.  **Deploy Command:** Use Gunicorn with Uvicorn workers for production:
+    ```bash
+    gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
+    ```

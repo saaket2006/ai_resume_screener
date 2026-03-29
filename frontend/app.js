@@ -1,4 +1,94 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    onAuthStateChanged, 
+    signOut 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "***REMOVED***",
+    authDomain: "ai-resume-screener-69d23.firebaseapp.com",
+    projectId: "ai-resume-screener-69d23",
+    storageBucket: "ai-resume-screener-69d23.firebasestorage.app",
+    messagingSenderId: "678651505721",
+    appId: "1:678651505721:web:b7f9ddc7ae57e2d99531e8",
+    measurementId: "G-X8GL26ZEF6"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Auth Elements
+    const authModal = document.getElementById('auth-modal');
+    const appContainer = document.getElementById('app-container');
+    const loginForm = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const emailLoginBtn = document.getElementById('email-login-btn');
+    const googleLoginBtn = document.getElementById('google-login-btn');
+    const signOutBtn = document.getElementById('sign-out-btn');
+    const authErrorMsg = document.getElementById('auth-error');
+
+    // Authentication Listeners
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            authModal.classList.add('hidden');
+            appContainer.classList.remove('hidden');
+        } else {
+            authModal.classList.remove('hidden');
+            appContainer.classList.add('hidden');
+        }
+    });
+
+    const showError = (message) => {
+        authErrorMsg.textContent = message;
+        authErrorMsg.classList.remove('hidden');
+    };
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const btnText = emailLoginBtn.querySelector('span');
+        
+        btnText.textContent = "Signing in...";
+        emailLoginBtn.disabled = true;
+        authErrorMsg.classList.add('hidden');
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            loginForm.reset();
+        } catch (error) {
+            showError("Authentication failed: " + error.message);
+        } finally {
+            btnText.textContent = "Sign In";
+            emailLoginBtn.disabled = false;
+        }
+    });
+
+    googleLoginBtn.addEventListener('click', async () => {
+        authErrorMsg.classList.add('hidden');
+        try {
+            await signInWithPopup(auth, googleProvider);
+        } catch (error) {
+            showError("Google Sign-In failed: " + error.message);
+        }
+    });
+
+    signOutBtn.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error("Error signing out: ", error);
+        }
+    });
+
+    // Original app elements
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('resumes');
     const fileList = document.getElementById('file-list');
