@@ -18,13 +18,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("resume_screener")
 
-# Ensure spacy model is present early
-try:
-    spacy.load("en_core_web_sm")
-except OSError:
-    logging.warning("Downloading en_core_web_sm model for spaCy")
-    from spacy.cli import download
-    download("en_core_web_sm")
+nlp = spacy.load("en_core_web_sm")
 
 from backend.services.document_service import extract_text
 from backend.services.nlp_service import preprocess_text
