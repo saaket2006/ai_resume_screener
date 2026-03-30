@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const appContainer = document.getElementById('app-container');
     const userProfileDropdown = document.getElementById('user-profile-dropdown');
     const userTrigger = document.getElementById('user-trigger');
-    
+
     // Tabs
     const tabLogin = document.getElementById('tab-login');
     const tabSignup = document.getElementById('tab-signup');
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (user) {
             authModal.classList.add('hidden');
             appContainer.classList.remove('hidden');
-            
+
             // Set display name or email if name is missing
             userDisplayNameElem.textContent = user.displayName || user.email.split('@')[0];
         } else {
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetId = btn.getAttribute('data-target');
             const inputElement = document.getElementById(targetId);
             const iconElement = btn.querySelector('span');
-            
+
             const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
             inputElement.setAttribute('type', type);
             iconElement.textContent = type === 'password' ? '👁️' : '🙈';
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputElement = document.getElementById(targetId);
             inputElement.value = '';
             inputElement.focus();
-            
+
             // If it's the signup field, trigger the validation to clear greens
             if (targetId === 'signup-password') {
                 validatePassword('');
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = loginEmailInput.value.trim();
         const password = loginPasswordInput.value;
         const btnText = emailLoginBtn.querySelector('span');
-        
+
         btnText.textContent = "Signing in...";
         emailLoginBtn.disabled = true;
         authErrorMsg.classList.add('hidden');
@@ -187,14 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const email = signupEmailInput.value.trim();
         const password = signupPasswordInput.value;
-        
+
         if (!validatePassword(password)) {
             showError("Please meet all password requirements.");
             return;
         }
 
         const btnText = emailSignupBtn.querySelector('span');
-        
+
         btnText.textContent = "Creating Account...";
         emailSignupBtn.disabled = true;
         authErrorMsg.classList.add('hidden');
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
             signupForm.reset();
-            Object.values(passwordConstraints).forEach(c => { if(c) c.className = ''; });
+            Object.values(passwordConstraints).forEach(c => { if (c) c.className = ''; });
         } catch (error) {
             let msg = error.message;
             if (error.code === 'auth/email-already-in-use') msg = "Email is already registered. Please login.";
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const newName = newDisplayNameInput.value.trim();
         const user = auth.currentUser;
-        
+
         if (user && newName) {
             try {
                 await updateProfile(user, { displayName: newName });
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            const response = await fetch("https://ai-resume-screener-production-2bb2.up.railway.app/api/process", {
+            const response = await fetch("https://ai-resume-screener-production-8175.up.railway.app/api/process", {
                 method: "POST",
                 body: formData
             });
