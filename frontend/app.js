@@ -275,6 +275,108 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Contact Modal Elements
+    const contactModal = document.getElementById('contact-modal');
+    const contactTriggerBtn = document.getElementById('contact-trigger-btn');
+    const closeContactBtn = document.getElementById('close-contact-btn');
+    const contactForm = document.getElementById('contact-form');
+    const contactMessage = document.getElementById('contact-message');
+    const contactAttachment = document.getElementById('contact-attachment');
+    const contactFileList = document.getElementById('contact-file-list');
+
+    // Show/Hide Contact Modal
+    contactTriggerBtn.addEventListener('click', () => {
+        contactModal.classList.remove('hidden');
+    });
+
+    closeContactBtn.addEventListener('click', () => {
+        contactModal.classList.add('hidden');
+    });
+
+    contactModal.addEventListener('click', (e) => {
+        if (e.target === contactModal) {
+            contactModal.classList.add('hidden');
+        }
+    });
+
+    // Handle Contact Attachments
+    let contactFiles = [];
+    contactAttachment.addEventListener('change', (e) => {
+        for (let file of e.target.files) {
+            contactFiles.push(file.name);
+        }
+        renderContactFiles();
+    });
+
+    function renderContactFiles() {
+        contactFileList.innerHTML = '';
+        contactFiles.forEach((fileName, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${fileName}</span>
+                <span style="color: #ef4444; cursor:pointer;" onclick="removeContactFile(${index})">✕</span>
+            `;
+            contactFileList.appendChild(li);
+        });
+    }
+
+    window.removeContactFile = (index) => {
+        contactFiles.splice(index, 1);
+        renderContactFiles();
+    };
+
+    // Send Contact Message via Backend
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const user = auth.currentUser;
+        if (!user) {
+            alert("Session expired. Please log in again.");
+            return;
+        }
+
+        const sendBtn = document.getElementById('send-contact-btn');
+        const btnSpan = sendBtn.querySelector('span');
+        const originalText = btnSpan.textContent;
+        
+        btnSpan.textContent = "Sending...";
+        sendBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append('message', contactMessage.value);
+        formData.append('email', user.email);
+        
+        // Note: For now, we only send names of intended attachments since 
+        // mailto backend needs simple handling. Real file upload can be added if needed.
+        if (contactFiles.length > 0) {
+            formData.set('message', contactMessage.value + "\n\n[Wants to attach: " + contactFiles.join(", ") + "]");
+        }
+
+        try {
+            const response = await fetch("https://ai-resume-screener-backend-t2e0.onrender.com/api/contact", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Thank you! Your message has been sent successfully.");
+                contactForm.reset();
+                contactFiles = [];
+                contactFileList.innerHTML = '';
+                contactModal.classList.add('hidden');
+            } else {
+                const err = await response.text();
+                throw new Error(err || "Failed to send message.");
+            }
+        } catch (error) {
+            console.error("Contact Error:", error);
+            alert("Error: " + error.message);
+        } finally {
+            btnSpan.textContent = originalText;
+            sendBtn.disabled = false;
+        }
+    });
+
     // Original app elements
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('resumes');
