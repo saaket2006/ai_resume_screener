@@ -240,3 +240,56 @@ async def process_resumes(
         "results": final_response, 
         "jd_skills": sorted(jd_skills)
     }
+
+import smtplib
+import os
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+@app.post("/api/contact")
+@limiter.limit("3/minute")
+async def contact_form(
+    message: str = Form(...),
+    email: str = Form(...)
+):
+    """
+    Handle contact form submissions by sending an email.
+    Note: Requires SMTP_EMAIL and SMTP_PASSWORD environment variables.
+    """
+    logger.info("New contact request from: %s", email)
+    
+    sender_email = os.getenv("SMTP_EMAIL")
+    sender_password = os.getenv("SMTP_PASSWORD")
+    recipient_email = "airesumescreener@gmail.com"
+    
+    if not sender_email or not sender_password:
+        logger.error("SMTP credentials not configured. Email not sent.")
+        # We don't want to fail the request, we just log it.
+        # But for the user to "directly get it", we should return an error if not configured.
+        raise HTTPException(
+            status_code=500, 
+            detail="Contact service not configured. Please set SMTP_EMAIL and SMTP_PASSWORD environment variables."
+        )
+
+    try:
+        # Create the email
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = f"Support Request: AI Resume Screener (from {email})"
+        msg.add_header('Reply-To', email)
+        
+        body = f"User Email: {email}\n\nMessage:\n{message}"
+        msg.attach(MIMEText(body, 'plain'))
+        
+        # Connect and send
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+            
+        logger.info("Successfully sent contact email from %s", email)
+        return {"status": "success", "message": "Your message was sent successfully."}
+        
+    except Exception as e:
+        logger.error("Failed to send email: %s", str(e))
+        raise HTTPException(status_code=500, detail="Failed to send email. Please try again later.")
