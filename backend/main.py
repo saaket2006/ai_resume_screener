@@ -52,6 +52,10 @@ app.add_middleware(
 def read_root():
     return {"message": "AI Resume Screener API running."}
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 @app.post("/api/process")
 @limiter.limit("5/minute")
 async def process_resumes(
