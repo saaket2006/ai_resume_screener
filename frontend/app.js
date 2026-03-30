@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            const response = await fetch("https://ai-resume-screener-production-8175.up.railway.app/api/process", {
+            const response = await fetch("https://ai-resume-screener-backend-t2e0.onrender.com/api/process", {
                 method: "POST",
                 body: formData
             });
