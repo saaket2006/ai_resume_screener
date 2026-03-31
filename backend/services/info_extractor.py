@@ -69,6 +69,30 @@ def extract_experience(text: str) -> int:
     years = [int(match.group(1)) for match in matches]
     return max(years) if years else 0
 
+def extract_relevant_internships(text: str, jd_skills: list[str]) -> int:
+    """
+    Heuristically extract the number of internships that match the JD skills.
+    We split text by lines/paragraphs and if an internship is mentioned near a JD skill, we count it.
+    """
+    if not jd_skills:
+        return 0
+        
+    text_lower = text.lower()
+    
+    # Split text into rough chunks (paragraphs or large bullet blocks)
+    chunks = re.split(r'\n\s*\n', text_lower)
+    
+    internship_count = 0
+    jd_skills_lower = [skill.lower() for skill in jd_skills]
+    
+    for chunk in chunks:
+        if re.search(r'\bintern(?:s|ship|ships)?\b', chunk):
+            # Check if any JD skill is in this chunk
+            if any(skill in chunk for skill in jd_skills_lower):
+                internship_count += 1
+                
+    return internship_count
+
 def extract_education(text: str) -> str:
     """
     Heuristically extract highest degree level.

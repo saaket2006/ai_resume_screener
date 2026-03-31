@@ -41,8 +41,13 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
         skill_score = float(cosine_similarities[idx]) * 100
         
         # 2. Experience Score (Max 10 years for 100%)
+        # Add 0.5 years equivalent for each relevant internship (matching JD skills)
         exp_years = resume.get("experience", 0)
-        exp_score = min((exp_years / 10.0) * 100, 100)
+        internships = resume.get("internships", 0)
+        
+        effective_exp_years = exp_years + (internships * 0.5)
+        
+        exp_score = min((effective_exp_years / 10.0) * 100, 100)
         
         # 3. Education Score
         education = resume.get("education", "None")

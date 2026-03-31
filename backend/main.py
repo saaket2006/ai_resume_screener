@@ -24,7 +24,7 @@ from backend.services.document_service import extract_text
 from backend.services.nlp_service import preprocess_text
 from backend.services.skill_extractor import extract_skills
 from backend.services.scoring_service import rank_candidates
-from backend.services.info_extractor import extract_name, extract_email, extract_phone, extract_linkedin, extract_github, extract_experience, extract_education, extract_projects
+from backend.services.info_extractor import extract_name, extract_email, extract_phone, extract_linkedin, extract_github, extract_experience, extract_relevant_internships, extract_education, extract_projects
 
 app = FastAPI(title="AI Resume Screener API")
 
@@ -133,6 +133,7 @@ async def process_resumes(
         candidate_linkedin = extract_linkedin(raw_text)
         candidate_github = extract_github(raw_text)
         candidate_experience = extract_experience(raw_text)
+        candidate_internships = extract_relevant_internships(raw_text, jd_skills)
         candidate_education = extract_education(raw_text)
         candidate_projects = extract_projects(raw_text)
         
@@ -180,8 +181,8 @@ async def process_resumes(
         # Remove duplicates
         matched_unique = sorted(list(set(matched)))
         missing_unique = sorted(list(set(missing)))
-        logger.info("  '%s' | %s | %d yrs exp | Skills: %d matched, %d missing",
-                    candidate_name, candidate_education, candidate_experience,
+        logger.info("  '%s' | %s | %d yrs exp | %d internships | Skills: %d matched, %d missing",
+                    candidate_name, candidate_education, candidate_experience, candidate_internships,
                     len(matched_unique), len(missing_unique))
 
         processed_resumes.append({
@@ -192,6 +193,7 @@ async def process_resumes(
             "linkedin": candidate_linkedin,
             "github": candidate_github,
             "experience": candidate_experience,
+            "internships": candidate_internships,
             "education": candidate_education,
             "projects": candidate_projects,
             "text": clean_text,
