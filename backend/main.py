@@ -249,6 +249,7 @@ from email.mime.multipart import MIMEMultipart
 @app.post("/api/contact")
 @limiter.limit("3/minute")
 async def contact_form(
+    request: Request,
     message: str = Form(...),
     email: str = Form(...)
 ):
