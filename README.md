@@ -10,6 +10,7 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 
 ## Features
 
+- **Professional Footer**: Persistent footer on the main dashboard with copyright info and developer credit.
 - **Multi-Format Document Parsing:** Automatically extracts text from uploaded PDF and DOCX files.
 - **Candidate Information Extraction:** Uses Regex and NLP heuristics to dynamically mine Candidate Names, Emails, Phone Numbers, and Social Links directly from unstructured resume text.
 - **Advanced Weighted Scoring:** A sophisticated ranking engine that goes beyond simple keyword matching:
@@ -17,10 +18,7 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
     - **Experience (25%):** Automated years-of-experience detection and scaling.
     - **Education (15%):** Heuristic degree level analysis (PhD, Master, Bachelor).
     - **Projects (10%):** Evaluation of practical portfolio and project prevalence.
-- **Explainability & Score Breakdown:** Click any candidate row to expand a detail panel showing:
-    - **Per-Component Score Bars:** Visual breakdown of Skill Match, Experience, Education, and Projects scores with animated progress bars and weight labels.
-    - **Final Score Summary:** Weighted composite score displayed prominently.
-    - **Skill Match Highlights:** Matched skills (green) and Missing skills (red) tags for instant gap analysis.
+- **Explainability & Score Breakdown:** Click any candidate row to expand a detail panel showing animated progress bars for each score component and weighted weight labels.
 - **Backend Logging:** Structured request lifecycle logging with timestamps — tracks JD skill extraction, per-resume processing, score breakdowns, ranking results, and total processing time.
 - **Dynamic Visual Dashboard:** Premium UI featuring:
     - **Animated Score Bars:** Horizontal charts with dynamic color grading (Green/Yellow/Red).
@@ -59,7 +57,7 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 
 1. **Clone and Setup Virtual Environment:**
    ```bash
-   git clone <https://github.com/saaket2006/ai_resume_screener.git>
+   git clone https://github.com/saaket2006/ai_resume_screener.git
    cd ai_resume_screener
    python -m venv venv
    venv\Scripts\activate
@@ -94,7 +92,6 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 3. Upload the resumes (PDF/DOCX) of candidates to be ranked.
 4. Click **Rank Candidates** and observe the highly accurate similarities and highlighted skill gaps!
 5. **Click any candidate row** to expand the score breakdown panel.
-6. Check the **backend terminal** for detailed structured logs showing the full scoring pipeline and timing.
 
 ## Evaluation
 
