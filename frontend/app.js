@@ -18,6 +18,9 @@ import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// --- CONFIGURATION ---
+const API_BASE = "https://ai-resume-screener-backend-t2e0.onrender.com";
+
 // Use browserSessionPersistence to keep login on refresh but clear on tab close
 setPersistence(auth, browserSessionPersistence)
     .catch((error) => {
@@ -346,34 +349,44 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('message', contactMessage.value);
         formData.append('email', user.email);
         
-        // Note: For now, we only send names of intended attachments since 
-        // mailto backend needs simple handling. Real file upload can be added if needed.
         if (contactFiles.length > 0) {
             formData.set('message', contactMessage.value + "\n\n[Wants to attach: " + contactFiles.join(", ") + "]");
         }
 
+        // --- FIXED 3.5s TIMER LOGIC ---
+        // We start a timer to close the modal after 3.5s regardless of backend speed
+        const closeTimer = setTimeout(() => {
+            contactModal.classList.add('hidden');
+            contactForm.reset();
+            contactFiles = [];
+            contactFileList.innerHTML = '';
+            btnSpan.textContent = originalText;
+            sendBtn.disabled = false;
+        }, 3500);
+
         try {
-            const response = await fetch("https://ai-resume-screener-backend-t2e0.onrender.com/api/contact", {
+            const response = await fetch(`${API_BASE}/api/contact`, {
                 method: "POST",
                 body: formData
             });
 
             if (response.ok) {
-                alert("Thank you! Your message has been sent successfully.");
-                contactForm.reset();
-                contactFiles = [];
-                contactFileList.innerHTML = '';
-                contactModal.classList.add('hidden');
+                // Success! The timer will close the modal smoothly.
+                console.log("Contact email sent successfully.");
             } else {
+                // If it fails quickly, we cancel the timer and show error
                 const err = await response.text();
+                clearTimeout(closeTimer);
+                btnSpan.textContent = originalText;
+                 sendBtn.disabled = false;
                 throw new Error(err || "Failed to send message.");
             }
         } catch (error) {
             console.error("Contact Error:", error);
-            alert("Error: " + error.message);
-        } finally {
+            clearTimeout(closeTimer);
             btnSpan.textContent = originalText;
             sendBtn.disabled = false;
+            alert("Error: " + error.message);
         }
     });
 
@@ -463,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            const response = await fetch("https://ai-resume-screener-backend-t2e0.onrender.com/api/process", {
+            const response = await fetch(`${API_BASE}/api/process`, {
                 method: "POST",
                 body: formData
             });
