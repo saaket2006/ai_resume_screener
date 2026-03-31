@@ -282,10 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactModal = document.getElementById('contact-modal');
     const contactTriggerBtn = document.getElementById('contact-trigger-btn');
     const closeContactBtn = document.getElementById('close-contact-btn');
-    const contactForm = document.getElementById('contact-form');
-    const contactMessage = document.getElementById('contact-message');
-    const contactAttachment = document.getElementById('contact-attachment');
-    const contactFileList = document.getElementById('contact-file-list');
+
 
     // Show/Hide Contact Modal
     contactTriggerBtn.addEventListener('click', () => {
@@ -302,102 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle Contact Attachments
-    let contactFiles = [];
-    contactAttachment.addEventListener('change', (e) => {
-        for (let file of e.target.files) {
-            contactFiles.push(file.name);
-        }
-        renderContactFiles();
-    });
 
-    function renderContactFiles() {
-        contactFileList.innerHTML = '';
-        contactFiles.forEach((fileName, index) => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <span>${fileName}</span>
-                <span style="color: #ef4444; cursor:pointer;" onclick="removeContactFile(${index})">✕</span>
-            `;
-            contactFileList.appendChild(li);
-        });
-    }
-
-    window.removeContactFile = (index) => {
-        contactFiles.splice(index, 1);
-        renderContactFiles();
-    };
-
-    // Send Contact Message via Backend
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const user = auth.currentUser;
-        if (!user) {
-            alert("Session expired. Please log in again.");
-            return;
-        }
-
-        const sendBtn = document.getElementById('send-contact-btn');
-        const btnSpan = sendBtn.querySelector('span');
-        const originalText = btnSpan.textContent;
-        
-        btnSpan.textContent = "Sending...";
-        sendBtn.disabled = true;
-
-        let finalMessage = contactMessage.value;
-        if (contactFiles.length > 0) {
-            finalMessage += "\n\n[Wants to attach: " + contactFiles.join(", ") + "]";
-        }
-
-        const payload = {
-            user_email: user.email,
-            message: finalMessage
-        };
-
-        // --- FIXED 3.5s TIMER LOGIC ---
-        // We start a timer to close the modal after 3.5s regardless of backend speed
-        const closeTimer = setTimeout(() => {
-            contactModal.classList.add('hidden');
-            contactForm.reset();
-            contactFiles = [];
-            contactFileList.innerHTML = '';
-            btnSpan.textContent = originalText;
-            btnSpan.style.color = "";
-            sendBtn.disabled = false;
-        }, 3500);
-
-        try {
-            const response = await fetch(`${API_BASE}/contact`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-                // Success! The timer will close the modal smoothly.
-                console.log("Contact email sent successfully.");
-                btnSpan.textContent = "Sent ✓";
-                btnSpan.style.color = "#4ade80"; // green text
-            } else {
-                // If it fails quickly, we cancel the timer and show error
-                const err = await response.text();
-                clearTimeout(closeTimer);
-                btnSpan.textContent = originalText;
-                 sendBtn.disabled = false;
-                throw new Error(err || "Failed to send message.");
-            }
-        } catch (error) {
-            console.error("Contact Error:", error);
-            clearTimeout(closeTimer);
-            btnSpan.textContent = originalText;
-            btnSpan.style.color = "";
-            sendBtn.disabled = false;
-            alert("Error: " + error.message);
-        }
-    });
 
     // Original app elements
     const dropZone = document.getElementById('drop-zone');
