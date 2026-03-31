@@ -298,12 +298,12 @@ async def contact_form(
         body = message
         msg.attach(MIMEText(body, 'plain'))
         
-        # Connect and send async via aiosmtplib
+        # Connect and send async via aiosmtplib (port 465 for implicit TLS to avoid timeouts)
         await aiosmtplib.send(
             msg,
             hostname="smtp.gmail.com",
-            port=587,
-            start_tls=True,
+            port=465,
+            use_tls=True,
             username=sender_email,
             password=sender_password,
         )
