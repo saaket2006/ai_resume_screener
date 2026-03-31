@@ -345,13 +345,15 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSpan.textContent = "Sending...";
         sendBtn.disabled = true;
 
-        const formData = new FormData();
-        formData.append('message', contactMessage.value);
-        formData.append('email', user.email);
-        
+        let finalMessage = contactMessage.value;
         if (contactFiles.length > 0) {
-            formData.set('message', contactMessage.value + "\n\n[Wants to attach: " + contactFiles.join(", ") + "]");
+            finalMessage += "\n\n[Wants to attach: " + contactFiles.join(", ") + "]";
         }
+
+        const payload = {
+            user_email: user.email,
+            message: finalMessage
+        };
 
         // --- FIXED 3.5s TIMER LOGIC ---
         // We start a timer to close the modal after 3.5s regardless of backend speed
@@ -361,18 +363,24 @@ document.addEventListener('DOMContentLoaded', () => {
             contactFiles = [];
             contactFileList.innerHTML = '';
             btnSpan.textContent = originalText;
+            btnSpan.style.color = "";
             sendBtn.disabled = false;
         }, 3500);
 
         try {
-            const response = await fetch(`${API_BASE}/api/contact`, {
+            const response = await fetch(`${API_BASE}/contact`, {
                 method: "POST",
-                body: formData
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
             });
 
             if (response.ok) {
                 // Success! The timer will close the modal smoothly.
                 console.log("Contact email sent successfully.");
+                btnSpan.textContent = "Sent ✓";
+                btnSpan.style.color = "#4ade80"; // green text
             } else {
                 // If it fails quickly, we cancel the timer and show error
                 const err = await response.text();
@@ -385,6 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Contact Error:", error);
             clearTimeout(closeTimer);
             btnSpan.textContent = originalText;
+            btnSpan.style.color = "";
             sendBtn.disabled = false;
             alert("Error: " + error.message);
         }
