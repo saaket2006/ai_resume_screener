@@ -243,27 +243,40 @@ async def process_resumes(
         "jd_skills": sorted(jd_skills)
     }
 
-import smtplib
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from pydantic import BaseModel, EmailStr
+import aiosmtplib
+from dotenv import load_dotenv
 
-@app.post("/api/contact")
-@limiter.limit("3/minute")
+load_dotenv()
+
+class ContactRequest(BaseModel):
+    user_email: EmailStr
+    message: str
+
+@app.post("/contact")
+@limiter.limit("5/minute")
 async def contact_form(
     request: Request,
-    message: str = Form(...),
-    email: str = Form(...)
+    payload: ContactRequest
 ):
     """
-    Handle contact form submissions by sending an email.
-    Note: Requires SMTP_EMAIL and SMTP_PASSWORD environment variables.
+    Handle contact form submissions by sending an async email via aiosmtplib.
+    Note: Requires EMAIL_USER, EMAIL_PASS, and EMAIL_TO environment variables.
     """
+    email = payload.user_email
+    message = payload.message.strip()
+    
+    if not message:
+        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+        
     logger.info("New contact request from: %s", email)
     
-    sender_email = os.getenv("SMTP_EMAIL")
-    sender_password = os.getenv("SMTP_PASSWORD")
-    recipient_email = "airesumescreener@gmail.com"
+    sender_email = os.getenv("EMAIL_USER")
+    sender_password = os.getenv("EMAIL_PASS")
+    recipient_email = os.getenv("EMAIL_TO", "airesumescreener@gmail.com")
     
     if not sender_email or not sender_password:
         logger.error("SMTP credentials not configured. Email not sent.")
@@ -279,16 +292,21 @@ async def contact_form(
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = recipient_email
-        msg['Subject'] = f"Support Request: AI Resume Screener (from {email})"
+        msg['Subject'] = email
         msg.add_header('Reply-To', email)
         
-        body = f"User Email: {email}\n\nMessage:\n{message}"
+        body = message
         msg.attach(MIMEText(body, 'plain'))
         
-        # Connect and send
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
+        # Connect and send async via aiosmtplib
+        await aiosmtplib.send(
+            msg,
+            hostname="smtp.gmail.com",
+            port=587,
+            start_tls=True,
+            username=sender_email,
+            password=sender_password,
+        )
             
         logger.info("Successfully sent contact email from %s", email)
         return {"status": "success", "message": "Your message was sent successfully."}
