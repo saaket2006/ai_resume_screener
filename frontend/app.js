@@ -10,7 +10,8 @@ import {
     setPersistence,
     updateProfile,
     browserSessionPersistence,
-    inMemoryPersistence
+    inMemoryPersistence,
+    sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 import { firebaseConfig } from "./firebase-config.js";
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginEmailInput = document.getElementById('login-email');
     const loginPasswordInput = document.getElementById('login-password');
     const emailLoginBtn = document.getElementById('email-login-btn');
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
 
     // Signup Form
     const signupForm = document.getElementById('signup-form');
@@ -84,6 +86,41 @@ document.addEventListener('DOMContentLoaded', () => {
         authErrorMsg.textContent = message;
         authErrorMsg.classList.remove('hidden');
     };
+
+    // Forgot Password Flow
+    forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = loginEmailInput.value.trim();
+
+        if (!email) {
+            showError("Please enter your email above to receive a reset link.");
+            loginEmailInput.focus();
+            return;
+        }
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            showError(`Success! A password reset link has been sent to ${email}. Check your inbox.`);
+            authErrorMsg.style.color = "#4ade80"; // Turn error message green for success
+
+            // Revert color after a few seconds
+            setTimeout(() => {
+                authErrorMsg.style.color = "#ef4444";
+            }, 6000);
+
+        } catch (error) {
+            console.error("Reset Password Error:", error);
+            authErrorMsg.style.color = "#ef4444";
+
+            if (error.code === 'auth/invalid-email') {
+                showError("Invalid email format.");
+            } else if (error.code === 'auth/user-not-found') {
+                showError("No account found with this email.");
+            } else {
+                showError("Cannot send reset email. " + error.message);
+            }
+        }
+    });
 
     // Tab Switching Logic
     tabLogin.addEventListener('click', () => {
