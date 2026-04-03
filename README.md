@@ -97,20 +97,6 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 
 Examine `notebooks/evaluation.ipynb` to explore the vector space model, demonstrating how the raw text data is transformed into TF-IDF numerical matrices and how Cosine Similarity calculates spatial relevance between document vectors.
 
-## Deployment Guide
-
-### Frontend (Firebase Hosting)
-
-1.  **Install Firebase CLI:** `npm install -g firebase-tools`
-2.  **Login to Firebase:** `firebase login`
-3.  **Deploy:** `firebase deploy --only hosting`
-    Your app will be live at `https://<your-project-id>.web.app`.
-
-### Backend (Railway / Render / Google Cloud Run)
-
-The FastAPI backend can be deployed to any cloud provider that supports Python/Uvicorn:
-
-1.  **Prepare for Deployment:** Ensure your `requirements.txt` contains all dependencies.
 2.  **Environment Variables:** Configure necessary environment variables in your cloud dashboard.
 3.  **CORS:** Update the `allow_origins` in `backend/main.py` with your production frontend URL.
 4.  **Deploy Command:** `gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app`
