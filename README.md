@@ -184,7 +184,3 @@ A powerful ranking system that goes beyond basic keyword matching:
 ## Evaluation
 
 Examine `notebooks/evaluation.ipynb` to explore the vector space model, demonstrating how the raw text data is transformed into TF-IDF numerical matrices and how Cosine Similarity calculates spatial relevance between document vectors.
-
-2.  **Environment Variables:** Configure necessary environment variables in your cloud dashboard.
-3.  **CORS:** Update the `allow_origins` in `backend/main.py` with your production frontend URL.
-4.  **Deploy Command:** `gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app`
