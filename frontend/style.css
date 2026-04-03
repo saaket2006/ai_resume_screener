@@ -610,6 +610,17 @@ th {
     transition: background-color 5000s ease-in-out 0s;
 }
 
+/* Hide default browser password reveal and clear icons */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
+
+input[type="password"]::-webkit-credentials-reveal,
+input[type="password"]::-webkit-password-toggle {
+    display: none !important;
+}
+
 .password-input-wrapper {
     position: relative;
     display: flex;
