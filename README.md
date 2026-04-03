@@ -8,32 +8,120 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
 
 ---
 
-## Features
+## ✨ Features
 
-- **Professional Footer**: Persistent footer on the main dashboard with copyright info and developer credit.
-- **Multi-Format Document Parsing:** Automatically extracts text from uploaded PDF and DOCX files.
-- **Candidate Information Extraction:** Uses Regex and NLP heuristics to dynamically mine Candidate Names, Emails, Phone Numbers, and Social Links directly from unstructured resume text.
-- **Advanced Weighted Scoring:** A sophisticated ranking engine that goes beyond simple keyword matching:
-    - **Skill Relevance (50%):** TF-IDF and Cosine Similarity for deep technical overlap.
-    - **Experience (25%):** Automated years-of-experience detection and scaling.
-    - **Education (15%):** Heuristic degree level analysis (PhD, Master, Bachelor).
-    - **Projects (10%):** Evaluation of practical portfolio and project prevalence.
-- **Explainability & Score Breakdown:** Click any candidate row to expand a detail panel showing animated progress bars for each score component and weighted weight labels.
-- **Backend Logging:** Structured request lifecycle logging with timestamps — tracks JD skill extraction, per-resume processing, score breakdowns, ranking results, and total processing time.
-- **Dynamic Visual Dashboard:** Premium UI featuring:
-    - **Animated Score Bars:** Horizontal charts with dynamic color grading (Green/Yellow/Red).
-    - **Attribute Badges:** Instant visibility into Experience, Education, and Project scale.
-    - **Glowing Highlights:** Visual differentiation of Matched vs. Missing technical skills.
-- **Firebase Authentication:** Secure user access with:
-    - **Email/Password Sign-In:** Standard credential-based login with real-time password complexity validation.
-    - **Google Sign-In:** One-click OAuth authentication.
-    - **Secure Session Management:** Uses `browserSessionPersistence` for session-based security (auto-logout on tab close).
-- **Profile Management:** Dynamic user profile menu with hover/click support and the ability to update display names instantly.
-- **Mobile & Tablet Friendly:** Fully responsive design:
-    - **Table-to-Card Layout:** On mobile, dense results tables are converted into beautiful, digestible candidate cards.
-    - **Optimized Touch Targets:** All buttons and inputs meet the 48px touch-friendly standard.
-    - **Fluid Scaling:** Viewport-aware layout ensures a premium experience across all device sizes.
-- **FastAPI Backend:** High-performance, async-ready REST API.
+### 🧾 Core Functionality
+
+* **Professional Footer**
+  Persistent dashboard footer with copyright information and developer credits.
+
+* **Multi-Format Document Parsing**
+  Seamlessly extracts text from **PDF** and **DOCX** files.
+
+* **Candidate Information Extraction**
+  Leverages **Regex** and **NLP heuristics** to extract:
+
+  * Candidate names
+  * Email addresses
+  * Phone numbers
+  * Social/profile links
+    from unstructured resume content.
+
+
+### 🧠 Intelligent Scoring Engine
+
+A powerful ranking system that goes beyond basic keyword matching:
+
+* **Skill Relevance (50%)**
+  Uses *TF-IDF* and *Cosine Similarity* for deep technical alignment.
+
+* **Experience (25%)**
+  Automatically detects and scales years of experience.
+
+* **Education (15%)**
+  Heuristic-based degree classification (*PhD, Master’s, Bachelor’s*).
+
+* **Projects (10%)**
+  Evaluates practical experience through project analysis.
+
+
+### 📊 Explainability & Transparency
+
+* **Detailed Score Breakdown**
+  Expand any candidate to view:
+
+  * Animated progress bars
+  * Weighted scoring contributions
+  * Clear evaluation insights
+
+
+### 📈 Dynamic Visual Dashboard
+
+* **Animated Score Bars**
+  Horizontal charts with intuitive color grading:
+
+  * 🟢 High match
+  * 🟡 Moderate match
+  * 🔴 Low match
+
+* **Attribute Badges**
+  Quick insights into:
+
+  * Experience
+  * Education
+  * Project strength
+
+* **Skill Highlights**
+  Clear distinction between:
+
+  * ✅ Matched skills
+  * ❌ Missing skills
+
+
+### 🔐 Authentication & Security
+
+* **Firebase Authentication**
+
+  * Email/Password login with real-time validation
+  * Google OAuth (one-click sign-in)
+
+* **Secure Session Management**
+  Uses `browserSessionPersistence` for automatic logout on tab close.
+
+
+### 👤 User Profile Management
+
+* Interactive profile menu with hover/click support
+* Instant display name updates
+
+
+### 📱 Responsive Design
+
+* **Mobile & Tablet Optimized**
+
+  * Table → Card layout transformation for better readability
+  * Clean and modern UI across all devices
+
+* **Touch-Friendly Design**
+  All elements follow the **48px touch target standard**.
+
+* **Fluid Scaling**
+  Viewport-aware layout ensures a consistent experience on any screen size.
+
+
+### ⚙️ Backend & Performance
+
+* **FastAPI Backend**
+  High-performance, async-ready REST API.
+
+* **Structured Logging**
+  Tracks:
+
+  * Job description skill extraction
+  * Resume processing lifecycle
+  * Score breakdowns
+  * Ranking results
+  * Total processing time
 
 ## Project Structure
 
