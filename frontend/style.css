@@ -128,6 +128,57 @@ textarea:focus {
     margin-bottom: 1rem;
 }
 
+.resumes-dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.resumes-dropdown-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+}
+
+.resumes-dropdown-header .dropdown-chevron {
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.file-upload-box.collapsed {
+    padding: 1.5rem 1rem;
+}
+
+.file-upload-box.collapsed .upload-icon,
+.file-upload-box.collapsed p {
+    display: none;
+}
+
+.file-upload-box.collapsed .file-list {
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+}
+
+.file-upload-box.collapsed.active .file-list {
+    max-height: 500px;
+    margin-top: 1rem;
+}
+
+.file-upload-box.collapsed.active .resumes-dropdown-header .dropdown-chevron {
+    transform: rotate(180deg);
+}
+
 .file-list {
     list-style: none;
     margin-top: 1rem;
@@ -143,6 +194,13 @@ textarea:focus {
     justify-content: space-between;
     align-items: center;
     font-size: 0.9rem;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.file-list li:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .glow-btn {

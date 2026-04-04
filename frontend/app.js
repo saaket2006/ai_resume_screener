@@ -348,6 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsContainer = document.getElementById('results-container');
     const resultsBody = document.getElementById('results-body');
     const jdInput = document.getElementById('job-description');
+    const resumesDropdownHeader = document.getElementById('resumes-dropdown-header');
+    const resumesCountSpan = document.getElementById('resumes-count');
 
     let uploadedFiles = [];
 
@@ -382,7 +384,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(`File ${file.name} is not a valid format. Only PDF and DOCX are supported.`);
             }
         }
+        updateResumeCountDisplay();
     }
+
+    function updateResumeCountDisplay() {
+        resumesCountSpan.textContent = `Resumes (${uploadedFiles.length})`;
+    }
+
+    // Toggle dropdown expansion
+    resumesDropdownHeader.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (dropZone.classList.contains('collapsed')) {
+            dropZone.classList.toggle('active');
+        }
+    });
 
     function renderFileList() {
         fileList.innerHTML = '';
@@ -399,6 +414,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.removeFile = (index) => {
         uploadedFiles.splice(index, 1);
         renderFileList();
+        updateResumeCountDisplay();
+        
+        // If all files removed, un-collapse if necessary
+        if (uploadedFiles.length === 0) {
+            dropZone.classList.remove('collapsed', 'active');
+            resumesDropdownHeader.classList.add('hidden');
+        }
     };
 
     processBtn.addEventListener('click', async () => {
@@ -416,6 +438,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.classList.remove('hidden');
         processBtn.disabled = true;
         resultsContainer.classList.add('hidden');
+
+        // Collapse resumes list
+        dropZone.classList.add('collapsed');
+        dropZone.classList.remove('active'); // Start collapsed (not expanded)
+        resumesDropdownHeader.classList.remove('hidden');
+        updateResumeCountDisplay();
 
         const formData = new FormData();
         formData.append('job_description', jd);
