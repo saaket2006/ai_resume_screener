@@ -554,6 +554,13 @@
                     <div id="cand-stats-container">
                         <!-- Summary card or empty state placeholder populated by JS -->
                     </div>
+
+                    <div class="analysis-history-section" style="margin-top: 2.5rem;">
+                        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: #fff;">Analysis History</h2>
+                        <div id="candidate-timeline-list" class="timeline-container">
+                            <!-- Populated dynamically via candidate.js -->
+                        </div>
+                    </div>
                 </section>
 
                 <!-- VIEW 2: RESUME ANALYSIS -->
@@ -578,6 +585,11 @@
                                     </div>
                                     <ul id="cand-file-list" class="file-list"></ul>
                                 </div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-top: 1rem;">
+                                <label for="cand-resume-label">Version Label (Optional)</label>
+                                <input type="text" id="cand-resume-label" placeholder="e.g. Software Engineer Application, V1" class="auth-input" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-sizing: border-box; color: white;">
                             </div>
                             
                             <button id="cand-process-btn" class="glow-btn">
@@ -622,6 +634,10 @@
                             <div class="info-field">
                                 <span class="info-label">Current Domain</span>
                                 <span class="info-value" id="profile-cand-domain">N/A</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Member Since</span>
+                                <span class="info-value" id="profile-cand-joined">N/A</span>
                             </div>
                         </div>
                     </div>
@@ -685,6 +701,93 @@
                     <div class="skills-block" style="margin-top: 1rem;">
                         <h5>❌ Missing Skills</h5>
                         <div id="qv-cand-missing-skills" class="skills-tags-container">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Analysis View Modal -->
+    <div id="cand-analysis-view-modal" class="auth-modal-overlay hidden">
+        <div class="glass-card quick-view-card">
+            <div class="quick-view-header">
+                <h2>Analysis Snapshot</h2>
+                <button id="close-cand-analysis-btn" class="close-modal-btn">✕</button>
+            </div>
+            
+            <div class="quick-view-body">
+                <div class="qv-profile-summary">
+                    <div class="qv-avatar">📄</div>
+                    <div class="qv-meta">
+                        <h3 id="cav-label">Version 1</h3>
+                        <p id="cav-filename" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.25rem;">resume.pdf</p>
+                        <p id="cav-date" style="font-size: 0.8rem; color: var(--text-secondary);">Uploaded on: 2026-07-12</p>
+                    </div>
+                    <div style="margin-left: auto;">
+                        <p id="cav-score-badge" class="score-badge" style="font-size: 1.1rem; padding: 0.5rem 1rem;">85.5% Match</p>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Target Job Description</h4>
+                    <p id="cav-jd-title" style="font-weight: 600; color: #fff; margin-bottom: 0.5rem;"></p>
+                    <div style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); white-space: pre-wrap;" id="cav-jd-description"></div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Contact Info in Resume</h4>
+                    <div class="qv-info-grid">
+                        <div>📧 <span id="cav-cand-email">...</span></div>
+                        <div>📞 <span id="cav-cand-phone">...</span></div>
+                        <div>🔗 <span id="cav-cand-linkedin">...</span></div>
+                        <div>💻 <span id="cav-cand-github">...</span></div>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Extracted Details</h4>
+                    <div class="qv-info-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div>🎓 Education: <span id="cav-cand-education">...</span></div>
+                        <div>💼 Experience: <span id="cav-cand-experience">...</span></div>
+                        <div>📁 Projects: <span id="cav-cand-projects">...</span></div>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Skills Overview</h4>
+                    <div class="skills-block">
+                        <h5>Extracted Skills</h5>
+                        <div id="cav-cand-extracted-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>✅ Matched Skills</h5>
+                        <div id="cav-cand-matched-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>❌ Missing Skills</h5>
+                        <div id="cav-cand-missing-skills" class="skills-tags-container">...</div>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Match Breakdown</h4>
+                    <div class="qv-info-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; text-align: center; gap: 0.5rem;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.75rem; border-radius: 8px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">Skills</span>
+                            <strong id="cav-score-skills" style="font-size: 1.1rem; color: #fff;">0.0%</strong>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.75rem; border-radius: 8px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">Experience</span>
+                            <strong id="cav-score-experience" style="font-size: 1.1rem; color: #fff;">0.0%</strong>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.75rem; border-radius: 8px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">Education</span>
+                            <strong id="cav-score-education" style="font-size: 1.1rem; color: #fff;">0.0%</strong>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.75rem; border-radius: 8px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">Projects</span>
+                            <strong id="cav-score-projects" style="font-size: 1.1rem; color: #fff;">0.0%</strong>
+                        </div>
                     </div>
                 </div>
             </div>

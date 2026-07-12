@@ -69,6 +69,9 @@ export function initCandidatePage() {
     if (candProcessBtn) {
         candProcessBtn.addEventListener('click', async () => {
             const jd = candJobDescription.value.trim();
+            const labelInput = document.getElementById('cand-resume-label');
+            const labelValue = labelInput ? labelInput.value.trim() : '';
+
             if (!jd) {
                 alert(MESSAGES.ENTER_JD);
                 return;
@@ -92,17 +95,30 @@ export function initCandidatePage() {
             const formData = new FormData();
             formData.append('job_description', jd);
             formData.append('resume', candUploadedFile);
+            if (labelValue) {
+                formData.append('label', labelValue);
+            }
 
             toggleButtonLoading(candProcessBtn, true, "Analyzing...", "Analyze Resume");
 
             try {
                 const results = await api.screenResumeCandidate(formData);
                 renderCandidateAnalysisResults(results.results[0]);
+                if (labelInput) {
+                    labelInput.value = '';
+                }
             } catch (err) {
                 alert(err.message);
             } finally {
                 toggleButtonLoading(candProcessBtn, false, "Analyzing...", "Analyze Resume");
             }
+        });
+    }
+
+    const closeBtn = document.getElementById('close-cand-analysis-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('cand-analysis-view-modal').classList.add('hidden');
         });
     }
 
@@ -132,11 +148,13 @@ function renderFileList() {
 
 export function clearCandidateWorkspaceState() {
     const candJobDescription = document.getElementById('cand-job-description');
+    const candResumeLabel = document.getElementById('cand-resume-label');
     const candDropZone = document.getElementById('cand-drop-zone');
     const candResumesHeader = document.getElementById('cand-resumes-header');
     const candResultsContainer = document.getElementById('cand-results-container');
     
     if (candJobDescription) candJobDescription.value = '';
+    if (candResumeLabel) candResumeLabel.value = '';
     candUploadedFile = null;
     renderFileList();
     if (candDropZone) candDropZone.classList.remove('collapsed', 'active');
@@ -177,6 +195,15 @@ export async function initializeCandidateDashboard() {
         const stats = await api.getCandidateStats();
         
         if (stats.latest_ats_score !== null && stats.latest_ats_score !== undefined) {
+            let formattedDate = "N/A";
+            if (stats.last_analysis_date) {
+                const dateObj = new Date(stats.last_analysis_date);
+                formattedDate = dateObj.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
             statsContainer.innerHTML = `
                 <div class="rec-grid">
                     <div class="stat-card">
@@ -187,15 +214,182 @@ export async function initializeCandidateDashboard() {
                         <div class="stat-value" id="cand-stat-latest-score">${stats.latest_ats_score}%</div>
                         <p class="stat-description">Most recent semantic relevance match</p>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Last Analysis Date</span>
+                            <span class="stat-icon">📅</span>
+                        </div>
+                        <div class="stat-value" style="font-size: 1.5rem; margin-top: 0.5rem;" id="cand-stat-last-date">${formattedDate}</div>
+                        <p class="stat-description">Timestamp of the last run</p>
+                    </div>
                 </div>
             `;
         } else {
             statsContainer.innerHTML = getEmptyStateHTML("You have not analyzed any resumes yet. Go to Resume Analysis to evaluate your resume!");
         }
+
+        // Fetch and render resume versions timeline list
+        const historyList = await api.getCandidateResumes();
+        renderTimelineList(historyList);
+
     } catch (err) {
         console.error("Error loading candidate dashboard stats:", err);
     }
 }
+
+function renderTimelineList(historyList) {
+    const container = document.getElementById('candidate-timeline-list');
+    if (!container) return;
+
+    if (!historyList || historyList.length === 0) {
+        container.innerHTML = `<p style="color: var(--text-secondary); text-align: center; padding: 2rem; background: rgba(255,255,255,0.02); border-radius: 8px;">No analysis history yet.</p>`;
+        return;
+    }
+
+    container.innerHTML = historyList.map((item, idx) => {
+        const isNewest = idx === 0;
+        const uploadDate = new Date(item.uploaded_at).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        let scoreClass = 'low-score';
+        if (item.ats_score >= 70) {
+            scoreClass = 'high-score';
+        } else if (item.ats_score >= 40) {
+            scoreClass = 'med-score';
+        }
+
+        return `
+            <div class="glass-card timeline-card" style="margin-bottom: 1rem; padding: 1.5rem; position: relative; border-left: 4px solid ${isNewest ? '#6366f1' : 'transparent'}; background: rgba(255, 255, 255, 0.02); border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s;">
+                ${isNewest ? `<span class="newest-badge" style="position: absolute; top: 1rem; right: 1rem; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; font-size: 0.75rem; font-weight: bold; padding: 0.25rem 0.6rem; border-radius: 12px;">Newest Version</span>` : ''}
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <h3 style="margin: 0; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>${item.label}</span>
+                                <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: normal;">(V${item.version})</span>
+                            </h3>
+                            <button onclick="renameCandidateAnalysis(${item.id}, '${item.label.replace(/'/g, "\\'")}')" class="footer-link-btn" style="background: none; border: none; font-size: 0.9rem; cursor: pointer; color: #94a3b8; padding: 0;" title="Rename Label">✒️</button>
+                        </div>
+                        <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📁 ${item.original_filename}</span>
+                            <span>•</span>
+                            <span>📅 ${uploadDate}</span>
+                        </p>
+                        <p style="margin: 0; font-size: 0.85rem; color: #94a3b8; background: rgba(0,0,0,0.15); padding: 0.5rem; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+                            <strong>JD:</strong> ${item.job_description_title} — ${item.job_description_summary}
+                        </p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; min-width: 150px;">
+                        <span class="score-badge ${scoreClass}" style="font-size: 1.1rem; font-weight: bold; padding: 0.4rem 0.8rem;">${item.ats_score}% Match</span>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button onclick="viewCandidateAnalysis(${item.id})" class="glow-btn" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">
+                                <span>View Analysis</span>
+                            </button>
+                            <button onclick="deleteCandidateAnalysis(${item.id})" class="glow-btn secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem; border-color: #ef4444; color: #ef4444;">
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+window.viewCandidateAnalysis = async (resumeId) => {
+    try {
+        const details = await api.getCandidateResumeDetails(resumeId);
+        
+        document.getElementById('cav-label').textContent = `${details.label} (V${details.version})`;
+        document.getElementById('cav-filename').textContent = details.original_filename;
+        
+        const uploadDate = new Date(details.uploaded_at).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        document.getElementById('cav-date').textContent = `Uploaded on: ${uploadDate}`;
+        
+        const badge = document.getElementById('cav-score-badge');
+        badge.textContent = `${details.ats_score}% Match`;
+        badge.className = 'score-badge';
+        if (details.ats_score >= 70) {
+            badge.classList.add('high-score');
+        } else if (details.ats_score >= 40) {
+            badge.classList.add('med-score');
+        } else {
+            badge.classList.add('low-score');
+        }
+        
+        document.getElementById('cav-jd-title').textContent = details.job_description?.title || "N/A";
+        document.getElementById('cav-jd-description').textContent = details.job_description?.description || "N/A";
+        
+        // Candidate Details
+        const cand = details.candidate_details || {};
+        document.getElementById('cav-cand-email').textContent = cand.email || "N/A";
+        document.getElementById('cav-cand-phone').textContent = cand.phone || "N/A";
+        document.getElementById('cav-cand-linkedin').textContent = cand.linkedin || "N/A";
+        document.getElementById('cav-cand-github').textContent = cand.github || "N/A";
+        
+        document.getElementById('cav-cand-education').textContent = cand.education || "None";
+        document.getElementById('cav-cand-experience').textContent = cand.experience ? `${cand.experience} Years` : "0 Years";
+        document.getElementById('cav-cand-projects').textContent = cand.projects ? `${cand.projects} out of 5 projects` : "0 projects";
+        
+        // Sub-scores
+        document.getElementById('cav-score-skills').textContent = `${cand.skill_score || 0.0}%`;
+        document.getElementById('cav-score-experience').textContent = `${cand.experience_score || 0.0}%`;
+        document.getElementById('cav-score-education').textContent = `${cand.education_score || 0.0}%`;
+        document.getElementById('cav-score-projects').textContent = `${cand.projects_score || 0.0}%`;
+        
+        // Skills lists
+        const ext = details.extracted_skills || [];
+        const mat = details.matched_skills || [];
+        const mis = details.missing_skills || [];
+        
+        document.getElementById('cav-cand-extracted-skills').innerHTML = ext.map(s => `<span class="skill-tag">${s}</span>`).join('') || '<span style="color:#666">None</span>';
+        document.getElementById('cav-cand-matched-skills').innerHTML = mat.map(s => `<span class="skill-tag matched">${s}</span>`).join('') || '<span style="color:#666">None</span>';
+        document.getElementById('cav-cand-missing-skills').innerHTML = mis.map(s => `<span class="skill-tag missing">${s}</span>`).join('') || '<span style="color:#666">None</span>';
+        
+        document.getElementById('cand-analysis-view-modal').classList.remove('hidden');
+    } catch (err) {
+        alert("Failed to load version details: " + err.message);
+    }
+};
+
+window.deleteCandidateAnalysis = async (resumeId) => {
+    if (!confirm("Are you sure you want to delete this resume version? This action is permanent and cannot be undone.")) {
+        return;
+    }
+    try {
+        await api.deleteCandidateResume(resumeId);
+        await initializeCandidateDashboard();
+    } catch (err) {
+        alert("Failed to delete resume version: " + err.message);
+    }
+};
+
+window.renameCandidateAnalysis = async (resumeId, currentLabel) => {
+    const newLabel = prompt("Enter new label for this version:", currentLabel);
+    if (newLabel === null) return;
+    const trimmed = newLabel.trim();
+    if (!trimmed) {
+        alert("Label cannot be empty.");
+        return;
+    }
+    try {
+        await api.updateCandidateResumeLabel(resumeId, trimmed);
+        await initializeCandidateDashboard();
+    } catch (err) {
+        alert("Failed to update label: " + err.message);
+    }
+};
 
 /**
  * Page view initializer for Candidate Resume Analysis view.
@@ -213,6 +407,7 @@ export async function initializeCandidateProfile() {
     const profileCandStatus = document.getElementById('profile-cand-status');
     const profileCandField = document.getElementById('profile-cand-field');
     const profileCandDomain = document.getElementById('profile-cand-domain');
+    const profileCandJoined = document.getElementById('profile-cand-joined');
 
     try {
         const profile = await api.getProfile();
@@ -224,6 +419,18 @@ export async function initializeCandidateProfile() {
         if (profileCandStatus) profileCandStatus.textContent = profile.candidate_profile?.current_status || "N/A";
         if (profileCandField) profileCandField.textContent = profile.candidate_profile?.field_of_study || "N/A";
         if (profileCandDomain) profileCandDomain.textContent = profile.candidate_profile?.current_domain || "N/A";
+
+        if (profile.created_at) {
+            const joinDate = new Date(profile.created_at);
+            const formattedJoin = joinDate.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            if (profileCandJoined) profileCandJoined.textContent = formattedJoin;
+        } else {
+            if (profileCandJoined) profileCandJoined.textContent = "N/A";
+        }
     } catch (err) {
         console.error("Error loading candidate profile details:", err);
     }

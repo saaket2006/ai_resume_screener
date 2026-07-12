@@ -55,7 +55,7 @@ async def process_resumes(
         
         # Save Job Description
         jd_model = JobDescription(
-            recruiter_id=current_user.id,
+            owner_id=current_user.id,
             title=job_description[:50] + ("..." if len(job_description) > 50 else ""),
             description=job_description
         )
@@ -68,9 +68,13 @@ async def process_resumes(
             if cand.get("email") == "N/A" and cand.get("name") in ("Unsupported/Invalid File", "File Too Large (>5MB)"):
                 continue
                 
+            fn = cand.get("filename", "unknown_file")
+            ext = fn.split(".")[-1].lower() if "." in fn else "unknown"
             resume_model = Resume(
                 candidate_id=None,  # Nullable since external candidate
-                extracted_text=f"Resume file: {cand['filename']}",
+                extracted_text=f"Resume file: {fn}",
+                original_filename=fn,
+                file_type=ext,
                 version=1
             )
             db.add(resume_model)
@@ -107,9 +111,9 @@ def get_recruiter_stats(
     """
     logger.info("Recruiter stats requested for user: %s", current_user.email)
     
-    total_candidates = db.query(ScanResult).join(JobDescription).filter(JobDescription.recruiter_id == current_user.id).count()
+    total_candidates = db.query(ScanResult).join(JobDescription).filter(JobDescription.owner_id == current_user.id).count()
     
-    avg_score_res = db.query(func.avg(ScanResult.ats_score)).join(JobDescription).filter(JobDescription.recruiter_id == current_user.id).scalar()
+    avg_score_res = db.query(func.avg(ScanResult.ats_score)).join(JobDescription).filter(JobDescription.owner_id == current_user.id).scalar()
     
     avg_score = round(float(avg_score_res), 1) if avg_score_res is not None else 0.0
     
