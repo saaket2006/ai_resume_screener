@@ -11,7 +11,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/ats.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/onboarding.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/recruiter.css">
 </head>
 
 <body>
@@ -126,10 +131,6 @@
                             </button>
                         </div>
                     </div>
-                    <div style="text-align: right; margin-top: -10px; margin-bottom: 15px;">
-                        <a href="#" id="forgot-password-link"
-                            style="color: #6366f1; font-size: 0.85rem; text-decoration: none;">Forgot Password?</a>
-                    </div>
                     <button type="submit" class="glow-btn" id="email-login-btn">
                         <span>Sign In</span>
                     </button>
@@ -139,7 +140,7 @@
             <!-- SIGN UP CONTENT -->
             <div id="signup-plane" class="auth-plane hidden">
                 <h2>Create Account</h2>
-                <p>Register to dynamically rank your candidates</p>
+                <p>Register to customize your profile</p>
                 <form id="signup-form">
                     <div class="form-group">
                         <input type="email" id="signup-email" name="email" autocomplete="username" required
@@ -167,17 +168,148 @@
                     </button>
                 </form>
             </div>
+            
+            <p id="auth-error" class="auth-error-message hidden" style="margin-top: 1rem;"></p>
+        </div>
+    </div>
 
-            <div class="auth-divider">
-                <span>OR</span>
+    <!-- Onboarding Modal -->
+    <div id="onboarding-modal" class="auth-modal-overlay hidden">
+        <div class="glass-card auth-card" style="max-width: 500px;">
+            <!-- Stepper Header -->
+            <div class="onboarding-header" style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left; width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <h3 style="margin: 0; font-size: 1.2rem; color: #fff;">Profile Setup</h3>
+                    <span id="onboarding-step-indicator" style="font-size: 0.85rem; color: var(--text-secondary);">Step 1 of 4</span>
+                </div>
+                <div style="height: 6px; width: 100%; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden;">
+                    <div id="onboarding-progress-bar" style="height: 100%; width: 25%; background: linear-gradient(135deg, #6366f1, #a855f7); transition: width 0.3s ease;"></div>
+                </div>
             </div>
 
-            <button id="google-login-btn" class="google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"
-                    class="google-icon">
-                Continue with Google
-            </button>
-            <p id="auth-error" class="auth-error-message hidden"></p>
+            <!-- STEP 1: WELCOME & ROLE SELECT -->
+            <div id="ob-step-1" class="ob-step active-plane" style="width: 100%;">
+                <h2 style="margin-bottom: 0.5rem; color: #fff;">Welcome!</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Let's personalize your experience. Choose your role:</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; width: 100%;">
+                    <!-- Recruiter Choice Card -->
+                    <div id="ob-role-recruiter" class="ob-role-card" style="flex: 1; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 2px solid rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.75rem;">💼</span>
+                        <strong style="font-size: 1.1rem; display: block; margin-bottom: 0.25rem; color: #fff;">Recruiter</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; line-height: 1.2;">Screen & rank candidates</span>
+                    </div>
+                    <!-- Candidate Choice Card -->
+                    <div id="ob-role-candidate" class="ob-role-card" style="flex: 1; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 2px solid rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.75rem;">🎓</span>
+                        <strong style="font-size: 1.1rem; display: block; margin-bottom: 0.25rem; color: #fff;">Candidate</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; line-height: 1.2;">Review your profile matching</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECRUITER STEP 2: COMPANY NAME -->
+            <div id="ob-rec-step-2" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Company Details</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is the name of your organization?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <input type="text" id="ob-company-name" placeholder="Acme Corp" class="auth-input">
+                </div>
+            </div>
+
+            <!-- RECRUITER STEP 3: COMPANY TYPE -->
+            <div id="ob-rec-step-3" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Company Type</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is the size/category of your company?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <select id="ob-company-type" class="auth-input" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+                        <option value="" style="background: #111;">Select Company Type...</option>
+                        <option value="Startup" style="background: #111;">Startup</option>
+                        <option value="SME" style="background: #111;">SME</option>
+                        <option value="Enterprise" style="background: #111;">Enterprise</option>
+                        <option value="MNC" style="background: #111;">MNC</option>
+                        <option value="Government" style="background: #111;">Government</option>
+                        <option value="Educational Institution" style="background: #111;">Educational Institution</option>
+                        <option value="Consultancy" style="background: #111;">Consultancy</option>
+                        <option value="Non-Profit" style="background: #111;">Non-Profit</option>
+                        <option value="Other" style="background: #111;">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- RECRUITER STEP 4: HIRING DOMAIN -->
+            <div id="ob-rec-step-4" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Hiring Focus</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Select your primary hiring domain:</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <select id="ob-hiring-domain" class="auth-input" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+                        <option value="" style="background: #111;">Select hiring domain...</option>
+                        <option value="Software & IT" style="background: #111;">Software & IT</option>
+                        <option value="Mechanical" style="background: #111;">Mechanical</option>
+                        <option value="Civil" style="background: #111;">Civil</option>
+                        <option value="Electrical" style="background: #111;">Electrical</option>
+                        <option value="Electronics" style="background: #111;">Electronics</option>
+                        <option value="Data Science & AI" style="background: #111;">Data Science & AI</option>
+                        <option value="Finance" style="background: #111;">Finance</option>
+                        <option value="Marketing" style="background: #111;">Marketing</option>
+                        <option value="Healthcare" style="background: #111;">Healthcare</option>
+                        <option value="Education" style="background: #111;">Education</option>
+                        <option value="Legal" style="background: #111;">Legal</option>
+                        <option value="Human Resources" style="background: #111;">Human Resources</option>
+                        <option value="Sales" style="background: #111;">Sales</option>
+                        <option value="Other" style="background: #111;">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CANDIDATE STEP 2: CURRENT STATUS -->
+            <div id="ob-cand-step-2" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Current Status</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your professional status?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <select id="ob-current-status" class="auth-input" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+                        <option value="" style="background: #111;">Select current status...</option>
+                        <option value="Student" style="background: #111;">Student</option>
+                        <option value="Working Professional" style="background: #111;">Working Professional</option>
+                        <option value="Career Switcher" style="background: #111;">Career Switcher</option>
+                        <option value="Freelancer" style="background: #111;">Freelancer</option>
+                        <option value="Job Seeker" style="background: #111;">Job Seeker</option>
+                        <option value="Other" style="background: #111;">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CANDIDATE STEP 3: FIELD OF STUDY -->
+            <div id="ob-cand-step-3" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Field of Study</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your major or specialization?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <input type="text" id="ob-field-study" placeholder="e.g. Computer Science / MBA" class="auth-input">
+                </div>
+            </div>
+
+            <!-- CANDIDATE STEP 4: CURRENT DOMAIN -->
+            <div id="ob-cand-step-4" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Current Domain</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your current domain or expertise?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <input type="text" id="ob-current-domain" placeholder="e.g. Software Development / None" class="auth-input">
+                </div>
+            </div>
+
+
+
+            <!-- ERROR MESSAGE -->
+            <p id="ob-error" class="auth-error-message hidden" style="margin-bottom: 1rem; text-align: center; width: 100%;"></p>
+
+            <!-- Navigation Buttons -->
+            <div class="modal-actions" style="display: flex; gap: 1rem; width: 100%; margin-top: 1rem;">
+                <button type="button" id="ob-back-btn" class="glow-btn secondary hidden" style="flex: 1;">
+                    <span>Back</span>
+                </button>
+                <button type="button" id="ob-next-btn" class="glow-btn" style="flex: 1; display: none;">
+                    <span>Next</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -216,7 +348,216 @@
         </div>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <!-- Recruiter Workspace Container -->
+    <div class="rec-layout hidden" id="recruiter-container">
+        <!-- Sidebar -->
+        <aside class="rec-sidebar">
+            <div class="sidebar-logo">
+                <span class="logo-emoji">🚀</span>
+                <span class="logo-text">Screener AI</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#/recruiter/dashboard" class="sidebar-link active" id="link-rec-dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#/recruiter/screen" class="sidebar-link" id="link-rec-screen">
+                    <span class="nav-icon">🔎</span>
+                    <span>Resume Screening</span>
+                </a>
+                <a href="#/recruiter/profile" class="sidebar-link" id="link-rec-profile">
+                    <span class="nav-icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="rec-sign-out-btn" class="sign-out-btn">
+                    <span class="nav-icon">⏻</span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="rec-main-wrapper">
+            <!-- Topbar -->
+            <header class="rec-topbar">
+                <div class="topbar-title-section">
+                    <h2 id="rec-page-title">Dashboard</h2>
+                </div>
+                <div class="topbar-profile">
+                    <span id="rec-top-user-name" class="topbar-username">Recruiter</span>
+                </div>
+            </header>
+
+            <!-- Dynamic Views -->
+            <main class="rec-content">
+                <!-- VIEW 1: DASHBOARD -->
+                <section id="rec-view-dashboard" class="rec-view active">
+                    <div class="welcome-banner">
+                        <h1 class="welcome-title">Welcome back, <span id="dash-rec-name">...</span>!</h1>
+                        <p class="welcome-subtitle">Here is the latest overview of your workspace at <strong id="dash-comp-name">...</strong> (<span id="dash-comp-type">...</span>).</p>
+                        <div class="welcome-meta-badges">
+                            <span class="meta-badge"><span class="badge-dot"></span> Hiring Focus: <strong id="dash-hiring-domain" style="margin-left: 4px; color: #fff;">...</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="rec-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-title">Total Candidates Screened</span>
+                                <span class="stat-icon">👥</span>
+                            </div>
+                            <div class="stat-value" id="stat-total-screened">0</div>
+                            <p class="stat-description">Cumulative resumes parsed & ranked</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-title">Average ATS Score</span>
+                                <span class="stat-icon">📈</span>
+                            </div>
+                            <div class="stat-value" id="stat-avg-score">0.0%</div>
+                            <p class="stat-description">Average spatial semantic relevance match</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 2: RESUME SCREENING -->
+                <section id="rec-view-screen" class="rec-view hidden">
+                    <div class="screening-workspace">
+                        <div class="screening-inputs glass-card">
+                            <div class="form-group">
+                                <label for="rec-job-description">Job Description</label>
+                                <textarea id="rec-job-description" placeholder="Paste target Job Description here..."></textarea>
+                            </div>
+                            
+                            <div class="form-group file-upload-wrapper">
+                                <label>Upload Resumes (PDF/DOCX)</label>
+                                <div class="file-upload-box" id="rec-drop-zone">
+                                    <span class="upload-icon">📂</span>
+                                    <p>Drag and drop resumes here, or click to browse</p>
+                                    <input type="file" id="rec-resumes" accept=".pdf,.doc,.docx" multiple hidden>
+                                    
+                                    <div id="rec-resumes-header" class="resumes-dropdown-header hidden">
+                                        <span id="rec-resumes-count">Resumes (0)</span>
+                                        <span class="dropdown-chevron">▼</span>
+                                    </div>
+                                    <ul id="rec-file-list" class="file-list"></ul>
+                                </div>
+                            </div>
+                            
+                            <button id="rec-process-btn" class="glow-btn">
+                                <span>Run ATS Screening</span>
+                                <div class="loader hidden"></div>
+                            </button>
+                        </div>
+
+                        <!-- Screening Results -->
+                        <div class="results-section hidden" id="rec-results-container" style="margin-top: 2rem;">
+                            <h3>Ranked Candidates</h3>
+                            <div class="rec-results-list" id="rec-results-list">
+                                <!-- Candidate Cards go here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 3: PROFILE -->
+                <section id="rec-view-profile" class="rec-view hidden">
+                    <div class="glass-card profile-details-card">
+                        <div class="profile-card-header">
+                            <div class="profile-avatar">👤</div>
+                            <div class="profile-meta">
+                                <h3 id="profile-rec-name">Recruiter Name</h3>
+                                <p id="profile-rec-email">recruiter@company.com</p>
+                            </div>
+                        </div>
+                        <div class="profile-info-grid">
+                            <div class="info-field">
+                                <span class="info-label">Current Role</span>
+                                <span class="info-value">Recruiter</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Company Name</span>
+                                <span class="info-value" id="profile-comp-name">Acme Corp</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Company Type</span>
+                                <span class="info-value" id="profile-comp-type">Enterprise</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Hiring Domain Focus</span>
+                                <span class="info-value" id="profile-hiring-domain">Software & IT</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Candidate Quick View Modal -->
+    <div id="rec-quick-view-modal" class="auth-modal-overlay hidden">
+        <div class="glass-card quick-view-card">
+            <div class="quick-view-header">
+                <h2>Candidate Details</h2>
+                <button id="close-quick-view-btn" class="close-modal-btn">✕</button>
+            </div>
+            
+            <div class="quick-view-body">
+                <div class="qv-profile-summary">
+                    <div class="qv-avatar">📄</div>
+                    <div class="qv-meta">
+                        <h3 id="qv-cand-name">Marcus Johnson</h3>
+                        <p id="qv-cand-score-badge" class="score-badge">85.5% Match</p>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Contact Info</h4>
+                    <div class="qv-info-grid">
+                        <div>📧 <span id="qv-cand-email">...</span></div>
+                        <div>📞 <span id="qv-cand-phone">...</span></div>
+                        <div>🔗 <span id="qv-cand-linkedin">...</span></div>
+                        <div>💻 <span id="qv-cand-github">...</span></div>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Education</h4>
+                    <p id="qv-cand-education">...</p>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Experience</h4>
+                    <p id="qv-cand-experience">...</p>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Projects</h4>
+                    <p id="qv-cand-projects">...</p>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Skills Overview</h4>
+                    <div class="skills-block">
+                        <h5>Extracted Skills</h5>
+                        <div id="qv-cand-extracted-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>✅ Matched Skills</h5>
+                        <div id="qv-cand-matched-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>❌ Missing Skills</h5>
+                        <div id="qv-cand-missing-skills" class="skills-tags-container">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/app.js"></script>
 </body>
 
 </html>

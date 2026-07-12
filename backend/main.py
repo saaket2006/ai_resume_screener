@@ -1,47 +1,73 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+import logging
+from fastapi import FastAPI, UploadFile, File, Form, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-import spacy
-import logging
-import time
 
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.middleware import SlowAPIMiddleware
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-7s | %(message)s",
-    datefmt="%H:%M:%S"
-)
+# Initialize central config and logging
+from backend.config import settings
+from backend.logging_config import setup_logging
+setup_logging(settings.LOG_LEVEL)
+
 logger = logging.getLogger("resume_screener")
 
-nlp = spacy.load("en_core_web_sm")
+# Startup configuration and environment variable validation
+required_configs = [
+    ("DATABASE_URL", settings.DATABASE_URL),
+    ("JWT_SECRET", settings.JWT_SECRET),
+    ("JWT_ALGORITHM", settings.JWT_ALGORITHM),
+    ("JWT_EXPIRY_MINUTES", settings.JWT_EXPIRY_MINUTES)
+]
 
-from backend.services.document_service import extract_text
-from backend.services.nlp_service import preprocess_text
-from backend.services.skill_extractor import extract_skills
-from backend.services.scoring_service import rank_candidates
-from backend.services.info_extractor import extract_name, extract_email, extract_phone, extract_linkedin, extract_github, extract_experience, extract_relevant_internships, extract_education, extract_projects
+for name, val in required_configs:
+    if not val:
+        logger.critical("Startup Configuration Failed: Required configuration/environment variable %s is not set.", name)
+        raise RuntimeError(f"Required configuration {name} is missing.")
 
-app = FastAPI(title="AI Resume Screener API")
+try:
+    int(settings.JWT_EXPIRY_MINUTES)
+except ValueError:
+    logger.critical("Startup Configuration Failed: JWT_EXPIRY_MINUTES must be a valid integer.")
+    raise RuntimeError("JWT_EXPIRY_MINUTES must be a valid integer.")
 
-limiter = Limiter(key_func=get_remote_address)
+# Test database connection on startup by importing database engine
+try:
+    from backend.database.database import engine
+    logger.info("Startup Validation: Database connection verified successfully.")
+except Exception as e:
+    logger.critical("Startup Validation Failed: Database connection could not be established. Error: %s", e)
+    raise RuntimeError(f"Database connection test failed: {e}") from e
+
+# Initialize Rate Limiter
+from backend.limiter import limiter
+
+# Import Routers
+from backend.routers import auth, candidate, recruiter, onboarding
+from backend.dependencies.auth_deps import require_recruiter
+from backend.models.models import User
+from backend.schemas.schemas import UserProfileResponse
+from backend.dependencies.auth_deps import get_current_user
+
+app = FastAPI(title=settings.API_TITLE)
+
+# Set up Rate Limiting Middleware
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
-# Setup CORS to allow frontend connections
+# Set up CORS Middleware using centralized settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Root and Health check endpoints
 @app.get("/")
 def read_root():
     return {"message": "AI Resume Screener API running."}
@@ -50,196 +76,33 @@ def read_root():
 def health():
     return {"status": "ok"}
 
+# Register Modular Routers
+app.include_router(auth.router, prefix="/api")
+app.include_router(candidate.router, prefix="/api")
+app.include_router(recruiter.router, prefix="/api")
+app.include_router(onboarding.router, prefix="/api")
+
+# Profile Endpoint (retrieves full nested profile details for dashboards)
+@app.get("/api/profile", response_model=UserProfileResponse)
+def get_profile(current_user: User = Depends(get_current_user)):
+    """Retrieves the full profile details of the authenticated user."""
+    logger.info("Profile retrieval requested for user: %s", current_user.email)
+    return current_user
+
+from sqlalchemy.orm import Session
+from backend.database.database import get_db
+
+# Legacy Route for 100% backward compatibility
+# Delegate directly to the process_resumes function from recruiter router
 @app.post("/api/process")
-@limiter.limit("5/minute")
-async def process_resumes(
+@limiter.limit(settings.RATE_LIMIT)
+async def legacy_process_resumes(
     request: Request,
     job_description: str = Form(...),
-    resumes: List[UploadFile] = File(...)
+    resumes: List[UploadFile] = File(...),
+    current_user: User = Depends(require_recruiter),
+    db: Session = Depends(get_db)
 ):
-    start_time = time.time()
-    logger.info("=" * 60)
-    logger.info("New screening request: %d resume(s) uploaded", len(resumes))
-
-    if not job_description:
-        raise HTTPException(status_code=400, detail="Job description is required")
-        
-    if not resumes:
-        raise HTTPException(status_code=400, detail="At least one resume must be uploaded")
-        
-    # Process Job Description
-    clean_jd = preprocess_text(job_description)
-    jd_skills = extract_skills(job_description) # raw is often better for exact matching
-    logger.info("JD skills extracted (%d): %s", len(jd_skills), ", ".join(jd_skills))
-    
-    processed_resumes = []
-    
-    MAX_FILE_SIZE = 5 * 1024 * 1024 # 5 MB
-    ALLOWED_EXTENSIONS = {".pdf", ".docx", ".doc"}
-    
-    for resume in resumes:
-        filename = resume.filename
-        
-        if not filename:
-            continue
-            
-        # File type validation
-        if not any(filename.lower().endswith(ext) for ext in ALLOWED_EXTENSIONS):
-            logger.error("  Skipping '%s': Unsupported file extension", filename)
-            processed_resumes.append({
-                "filename": filename,
-                "name": "Unsupported/Invalid File",
-                "email": "N/A",
-                "phone": "N/A",
-                "matched_skills": [],
-                "missing_skills": sorted(jd_skills)
-            })
-            continue
-
-        contents = await resume.read()
-        
-        # File size validation
-        if len(contents) > MAX_FILE_SIZE:
-            logger.error("  Skipping '%s': File size exceeds 5MB limit", filename)
-            processed_resumes.append({
-                "filename": filename,
-                "name": "File Too Large (>5MB)",
-                "email": "N/A",
-                "phone": "N/A",
-                "matched_skills": [],
-                "missing_skills": sorted(jd_skills)
-            })
-            continue
-        
-        # Extract text based on file type
-        try:
-            raw_text = extract_text(contents, filename)
-        except ValueError as e:
-            logger.error("  Skipping '%s': %s", filename, e)
-            processed_resumes.append({
-                "filename": filename,
-                "name": "Unreadable File",
-                "email": "N/A",
-                "phone": "N/A",
-                "matched_skills": [],
-                "missing_skills": sorted(jd_skills)
-            })
-            continue
-        
-        # Extract candidate details directly from raw text before preprocessing
-        candidate_name = extract_name(raw_text)
-        candidate_email = extract_email(raw_text)
-        candidate_phone = extract_phone(raw_text)
-        candidate_linkedin = extract_linkedin(raw_text)
-        candidate_github = extract_github(raw_text)
-        candidate_experience = extract_experience(raw_text)
-        candidate_internships = extract_relevant_internships(raw_text, jd_skills)
-        candidate_education = extract_education(raw_text)
-        candidate_projects = extract_projects(raw_text)
-        
-        # Preprocess text
-        clean_text = preprocess_text(raw_text)
-        
-        # Resolve broad conceptual requirements using Semantic Expansions
-        from backend.services.skill_expander import get_related_skills, is_skill_in_text
-        import re
-        
-        raw_text_lower = raw_text.lower()
-        matched = []
-        missing = []
-        
-        for skill in jd_skills:
-            related_skills, is_broad = get_related_skills(skill)
-            
-            # Check if the JD skill itself is explicitly in the resume
-            has_exact = is_skill_in_text(skill, raw_text_lower)
-            
-            if is_broad and related_skills:
-                # It's a broad category (e.g., 'Frontend')
-                found_related = []
-                
-                for rs in related_skills:
-                    if is_skill_in_text(rs, raw_text_lower):
-                        found_related.append(rs)
-                        
-                # Real-world inference: If they have the exact broad term OR at least 1 related technology
-                # e.g., if they know React, they natively know Frontend.
-                if has_exact or len(found_related) >= 1:
-                    matched.append(skill) # Give credit for the broad domain itself
-                    matched.extend(found_related) # Include the specific tools found
-                else:
-                    # They missed the domain entirely and didn't mention any related tech
-                    missing.append(skill)
-                    
-            else:
-                # Regular strict precision match
-                if has_exact:
-                    matched.append(skill)
-                else:
-                    missing.append(skill)
-                    
-        # Remove duplicates
-        matched_unique = sorted(list(set(matched)))
-        missing_unique = sorted(list(set(missing)))
-        logger.info("  '%s' | %s | %d yrs exp | %d internships | Skills: %d matched, %d missing",
-                    candidate_name, candidate_education, candidate_experience, candidate_internships,
-                    len(matched_unique), len(missing_unique))
-
-        processed_resumes.append({
-            "filename": filename,
-            "name": candidate_name,
-            "email": candidate_email,
-            "phone": candidate_phone,
-            "linkedin": candidate_linkedin,
-            "github": candidate_github,
-            "experience": candidate_experience,
-            "internships": candidate_internships,
-            "education": candidate_education,
-            "projects": candidate_projects,
-            "text": clean_text,
-            "matched_skills": matched_unique,
-            "missing_skills": missing_unique
-        })
-        
-    # Rank candidates using Percentage Fulfillment Math
-    ranked_candidates = rank_candidates(jd_skills, processed_resumes)
-    logger.info("Ranking complete — %d candidates scored", len(ranked_candidates))
-    
-    # Clean up output (remove large text payload)
-    final_response = []
-    for cand in ranked_candidates:
-        cand_dict = {
-            "filename": cand["filename"],
-            "name": cand["name"],
-            "email": cand["email"],
-            "phone": cand["phone"],
-            "linkedin": cand.get("linkedin", "Not Provided"),
-            "github": cand.get("github", "Not Provided"),
-            "experience": cand.get("experience", 0),
-            "education": cand.get("education", "None"),
-            "projects": cand.get("projects", 0),
-            "similarity_score": cand["similarity_score"],
-            "skill_score": cand.get("skill_score", 0),
-            "experience_score": cand.get("experience_score", 0),
-            "education_score": cand.get("education_score", 0),
-            "projects_score": cand.get("projects_score", 0),
-            "rank": cand["rank"],
-            "matched_skills": cand["matched_skills"],
-            "missing_skills": cand["missing_skills"]
-        }
-        final_response.append(cand_dict)
-        
-    elapsed = round(time.time() - start_time, 2)
-    for cand in final_response:
-        logger.info("  #%d %-20s → Final: %.1f%% (Skill: %.1f | Exp: %.1f | Edu: %.1f | Proj: %.1f)",
-                    cand["rank"], cand["name"], cand["similarity_score"],
-                    cand["skill_score"], cand["experience_score"],
-                    cand["education_score"], cand["projects_score"])
-    logger.info("Request completed in %.2fs", elapsed)
-    logger.info("=" * 60)
-
-    return {
-        "results": final_response, 
-        "jd_skills": sorted(jd_skills)
-    }
-
+    """Legacy endpoint delegating to recruiter process_resumes. Requires Recruiter authentication."""
+    logger.info("Legacy endpoint /api/process called by recruiter: %s. Routing to recruiter service...", current_user.email)
+    return await recruiter.process_resumes(request, job_description, resumes, current_user=current_user, db=db)
