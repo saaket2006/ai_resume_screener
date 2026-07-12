@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Float, Boolean, Enum as SQLEnum
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Float, Boolean, Enum as SQLEnum, JSON
 from sqlalchemy.orm import relationship
 from backend.database.database import Base
 from backend.models.enums import UserRole, CompanyType
@@ -16,7 +16,7 @@ class User(Base):
 
     # Relationships
     resumes = relationship("Resume", back_populates="candidate", cascade="all, delete-orphan")
-    job_descriptions = relationship("JobDescription", back_populates="recruiter", cascade="all, delete-orphan")
+    job_descriptions = relationship("JobDescription", back_populates="owner", cascade="all, delete-orphan")
     recruiter_profile = relationship("RecruiterProfile", uselist=False, back_populates="user", cascade="all, delete-orphan")
     candidate_profile = relationship("CandidateProfile", uselist=False, back_populates="user", cascade="all, delete-orphan")
 
@@ -41,6 +41,7 @@ class CandidateProfile(Base):
     current_status = Column(String(100), nullable=False)
     field_of_study = Column(String(255), nullable=False)
     current_domain = Column(String(255), nullable=False)
+    resume_version_counter = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
@@ -52,7 +53,11 @@ class Resume(Base):
     id = Column(Integer, primary_key=True, index=True)
     candidate_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
     version = Column(Integer, nullable=False, default=1)
+    label = Column(String(255), nullable=True)
     extracted_text = Column(Text, nullable=False)
+    original_filename = Column(String(255), nullable=True)
+    file_type = Column(String(50), nullable=True)
+    uploaded_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
@@ -63,14 +68,14 @@ class JobDescription(Base):
     __tablename__ = "job_descriptions"
 
     id = Column(Integer, primary_key=True, index=True)
-    recruiter_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     title = Column(String(255), nullable=False)
     subtitle = Column(String(255), nullable=True)
     description = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-    recruiter = relationship("User", back_populates="job_descriptions")
+    owner = relationship("User", back_populates="job_descriptions")
     scan_results = relationship("ScanResult", back_populates="job_description", cascade="all, delete-orphan")
 
 class ScanResult(Base):
@@ -80,6 +85,7 @@ class ScanResult(Base):
     resume_id = Column(Integer, ForeignKey("resumes.id", ondelete="CASCADE"), nullable=False)
     job_description_id = Column(Integer, ForeignKey("job_descriptions.id", ondelete="CASCADE"), nullable=False)
     ats_score = Column(Float, nullable=False)
+    analysis_metadata = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships

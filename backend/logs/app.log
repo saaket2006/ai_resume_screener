@@ -666,3 +666,410 @@ connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection re
 2026-07-12 15:26:09,241 | INFO    | resume_screener:recruiter.py:87 | Screening persisted successfully for job description ID 6
 2026-07-12 15:26:09,247 | INFO    | resume_screener:recruiter.py:108 | Recruiter stats requested for user: recruiter_workspace_test_1783850168@screener.com
 2026-07-12 15:26:09,256 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: recruiter_workspace_test_1783850168@screener.com
+2026-07-12 16:05:17,641 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-12 16:05:18,201 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-12 16:05:18,203 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-12 16:05:18,253 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-12 16:05:18,254 | INFO    | resume_screener:main.py:39 | Startup Validation: Database connection verified successfully.
+2026-07-12 16:05:39,734 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: candidate_ws_test_1783852539@screener.com
+2026-07-12 16:05:40,291 | INFO    | resume_screener:auth.py:40 | Successfully registered user: candidate_ws_test_1783852539@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:05:40,307 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: recruiter_ws_test_1783852539@screener.com
+2026-07-12 16:05:40,806 | INFO    | resume_screener:auth.py:40 | Successfully registered user: recruiter_ws_test_1783852539@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:05:40,820 | INFO    | resume_screener:auth.py:46 | Login attempt for email: candidate_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,310 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user candidate_ws_test_1783852539@screener.com. Issuing token...
+2026-07-12 16:05:41,322 | INFO    | resume_screener:auth.py:46 | Login attempt for email: recruiter_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,805 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user recruiter_ws_test_1783852539@screener.com. Issuing token...
+2026-07-12 16:05:41,823 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: candidate_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,842 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: candidate_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,860 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,876 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: recruiter_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,890 | INFO    | resume_screener:candidate.py:114 | Candidate stats requested for user: candidate_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,916 | INFO    | resume_screener:candidate.py:31 | Candidate endpoint called by user: candidate_ws_test_1783852539@screener.com
+2026-07-12 16:05:41,947 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:05:41,951 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:05:42,009 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:05:42,188 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:05:42,198 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:05:42,199 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:05:42,200 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.25s
+2026-07-12 16:05:42,201 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:05:42,217 | INFO    | resume_screener:candidate.py:92 | Candidate resume analysis persisted successfully for ScanResult ID 7
+2026-07-12 16:05:42,231 | INFO    | resume_screener:candidate.py:114 | Candidate stats requested for user: candidate_ws_test_1783852539@screener.com
+2026-07-12 16:05:42,246 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User candidate_ws_test_1783852539@screener.com does not have RECRUITER role (role: UserRole.CANDIDATE)
+2026-07-12 16:05:42,253 | WARNING | resume_screener:auth_deps.py:55 | Access denied: User recruiter_ws_test_1783852539@screener.com does not have CANDIDATE role (role: UserRole.RECRUITER)
+2026-07-12 16:05:48,386 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:48,881 | INFO    | resume_screener:auth.py:40 | Successfully registered user: recruiter_workspace_test_1783852548@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:05:48,892 | INFO    | resume_screener:auth.py:46 | Login attempt for email: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:49,384 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user recruiter_workspace_test_1783852548@screener.com. Issuing token...
+2026-07-12 16:05:49,398 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:49,410 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:49,423 | INFO    | resume_screener:recruiter.py:108 | Recruiter stats requested for user: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:49,455 | INFO    | resume_screener:recruiter.py:31 | Recruiter endpoint called by user: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:49,456 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:05:49,457 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:05:49,508 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:05:49,660 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:05:49,667 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:05:49,668 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:05:49,670 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.21s
+2026-07-12 16:05:49,671 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:05:49,684 | INFO    | resume_screener:recruiter.py:87 | Screening persisted successfully for job description ID 8
+2026-07-12 16:05:49,697 | INFO    | resume_screener:recruiter.py:108 | Recruiter stats requested for user: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:49,712 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: recruiter_workspace_test_1783852548@screener.com
+2026-07-12 16:05:56,288 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: recruiter_ob_1783852556@screener.com
+2026-07-12 16:05:56,790 | INFO    | resume_screener:auth.py:40 | Successfully registered user: recruiter_ob_1783852556@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:05:56,802 | INFO    | resume_screener:auth.py:46 | Login attempt for email: recruiter_ob_1783852556@screener.com
+2026-07-12 16:05:57,326 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user recruiter_ob_1783852556@screener.com. Issuing token...
+2026-07-12 16:05:57,349 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_ob_1783852556@screener.com
+2026-07-12 16:05:57,360 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: recruiter_ob_1783852556@screener.com
+2026-07-12 16:05:57,380 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_ob_1783852556@screener.com
+2026-07-12 16:05:57,380 | WARNING | resume_screener:onboarding.py:33 | Onboarding rejected: User recruiter_ob_1783852556@screener.com has already completed onboarding.
+2026-07-12 16:05:57,392 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: recruiter_ob_1783852556@screener.com
+2026-07-12 16:05:57,394 | WARNING | resume_screener:onboarding.py:77 | Onboarding rejected: User recruiter_ob_1783852556@screener.com has already completed onboarding.
+2026-07-12 16:05:57,414 | INFO    | resume_screener:main.py:107 | Legacy endpoint /api/process called by recruiter: recruiter_ob_1783852556@screener.com. Routing to recruiter service...
+2026-07-12 16:05:57,415 | INFO    | resume_screener:recruiter.py:31 | Recruiter endpoint called by user: recruiter_ob_1783852556@screener.com
+2026-07-12 16:05:57,416 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:05:57,417 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:05:57,455 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (5): css, frontend, html, javascript, react
+2026-07-12 16:05:57,602 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 10 matched, 1 missing
+2026-07-12 16:05:57,609 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:05:57,610 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 59.7% (Skill: 89.4 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:05:57,611 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.19s
+2026-07-12 16:05:57,612 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:05:57,629 | INFO    | resume_screener:recruiter.py:87 | Screening persisted successfully for job description ID 9
+2026-07-12 16:05:57,638 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: candidate_ob_1783852556@screener.com
+2026-07-12 16:05:58,131 | INFO    | resume_screener:auth.py:40 | Successfully registered user: candidate_ob_1783852556@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:05:58,143 | INFO    | resume_screener:auth.py:46 | Login attempt for email: candidate_ob_1783852556@screener.com
+2026-07-12 16:05:58,631 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user candidate_ob_1783852556@screener.com. Issuing token...
+2026-07-12 16:05:58,655 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: candidate_ob_1783852556@screener.com
+2026-07-12 16:05:58,667 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: candidate_ob_1783852556@screener.com
+2026-07-12 16:05:58,687 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: candidate_ob_1783852556@screener.com
+2026-07-12 16:05:58,689 | WARNING | resume_screener:onboarding.py:77 | Onboarding rejected: User candidate_ob_1783852556@screener.com has already completed onboarding.
+2026-07-12 16:05:58,708 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User candidate_ob_1783852556@screener.com does not have RECRUITER role (role: UserRole.CANDIDATE)
+2026-07-12 16:23:12,201 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-12 16:23:12,760 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-12 16:23:12,763 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-12 16:23:12,818 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-12 16:23:12,819 | INFO    | resume_screener:main.py:39 | Startup Validation: Database connection verified successfully.
+2026-07-12 16:23:31,097 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_refine_1783853611@screener.com
+2026-07-12 16:23:31,618 | INFO    | resume_screener:auth.py:40 | Successfully registered user: cand_refine_1783853611@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:23:31,631 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_refine_1783853611@screener.com
+2026-07-12 16:23:32,115 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_refine_1783853611@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:23:32,132 | INFO    | resume_screener:auth.py:46 | Login attempt for email: cand_refine_1783853611@screener.com
+2026-07-12 16:23:32,601 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user cand_refine_1783853611@screener.com. Issuing token...
+2026-07-12 16:23:32,615 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_refine_1783853611@screener.com
+2026-07-12 16:23:33,092 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_refine_1783853611@screener.com. Issuing token...
+2026-07-12 16:23:33,111 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: cand_refine_1783853611@screener.com
+2026-07-12 16:23:33,132 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: cand_refine_1783853611@screener.com
+2026-07-12 16:23:33,147 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: rec_refine_1783853611@screener.com
+2026-07-12 16:23:33,164 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: rec_refine_1783853611@screener.com
+2026-07-12 16:23:33,186 | INFO    | resume_screener:candidate.py:31 | Candidate endpoint called by user: cand_refine_1783853611@screener.com
+2026-07-12 16:23:33,214 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:23:33,216 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:23:33,267 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): fastapi, git, python, sql
+2026-07-12 16:23:33,427 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 1 matched, 3 missing
+2026-07-12 16:23:33,443 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:23:33,449 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 40.0% (Skill: 50.0 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:23:33,451 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.23s
+2026-07-12 16:23:33,452 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:23:33,478 | INFO    | resume_screener:candidate.py:95 | Candidate resume analysis persisted successfully for ScanResult ID 10
+2026-07-12 16:23:33,495 | INFO    | resume_screener:candidate.py:117 | Candidate stats requested for user: cand_refine_1783853611@screener.com
+2026-07-12 16:23:43,221 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_refine_1783853623@screener.com
+2026-07-12 16:23:43,714 | INFO    | resume_screener:auth.py:40 | Successfully registered user: cand_refine_1783853623@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:23:43,726 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_refine_1783853623@screener.com
+2026-07-12 16:23:44,214 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_refine_1783853623@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:23:44,224 | INFO    | resume_screener:auth.py:46 | Login attempt for email: cand_refine_1783853623@screener.com
+2026-07-12 16:23:44,695 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user cand_refine_1783853623@screener.com. Issuing token...
+2026-07-12 16:23:44,713 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_refine_1783853623@screener.com
+2026-07-12 16:23:45,193 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_refine_1783853623@screener.com. Issuing token...
+2026-07-12 16:23:45,213 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: cand_refine_1783853623@screener.com
+2026-07-12 16:23:45,225 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: cand_refine_1783853623@screener.com
+2026-07-12 16:23:45,234 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: rec_refine_1783853623@screener.com
+2026-07-12 16:23:45,247 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: rec_refine_1783853623@screener.com
+2026-07-12 16:23:45,261 | INFO    | resume_screener:candidate.py:31 | Candidate endpoint called by user: cand_refine_1783853623@screener.com
+2026-07-12 16:23:45,287 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:23:45,289 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:23:45,335 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): fastapi, git, python, sql
+2026-07-12 16:23:45,460 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 1 matched, 3 missing
+2026-07-12 16:23:45,468 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:23:45,470 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 40.0% (Skill: 50.0 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:23:45,471 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.18s
+2026-07-12 16:23:45,472 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:23:45,485 | INFO    | resume_screener:candidate.py:95 | Candidate resume analysis persisted successfully for ScanResult ID 11
+2026-07-12 16:23:45,496 | INFO    | resume_screener:candidate.py:117 | Candidate stats requested for user: cand_refine_1783853623@screener.com
+2026-07-12 16:23:45,561 | INFO    | resume_screener:recruiter.py:31 | Recruiter endpoint called by user: rec_refine_1783853623@screener.com
+2026-07-12 16:23:45,566 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:23:45,566 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:23:45,600 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (0): 
+2026-07-12 16:23:45,732 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 0 missing
+2026-07-12 16:23:45,734 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 0 candidates scored
+2026-07-12 16:23:45,735 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.17s
+2026-07-12 16:23:45,736 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:23:45,746 | INFO    | resume_screener:recruiter.py:91 | Screening persisted successfully for job description ID 12
+2026-07-12 16:23:53,740 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_refine_1783853633@screener.com
+2026-07-12 16:23:54,226 | INFO    | resume_screener:auth.py:40 | Successfully registered user: cand_refine_1783853633@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:23:54,237 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_refine_1783853633@screener.com
+2026-07-12 16:23:54,730 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_refine_1783853633@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:23:54,743 | INFO    | resume_screener:auth.py:46 | Login attempt for email: cand_refine_1783853633@screener.com
+2026-07-12 16:23:55,265 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user cand_refine_1783853633@screener.com. Issuing token...
+2026-07-12 16:23:55,277 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_refine_1783853633@screener.com
+2026-07-12 16:23:55,747 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_refine_1783853633@screener.com. Issuing token...
+2026-07-12 16:23:55,761 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: cand_refine_1783853633@screener.com
+2026-07-12 16:23:55,772 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: cand_refine_1783853633@screener.com
+2026-07-12 16:23:55,785 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: rec_refine_1783853633@screener.com
+2026-07-12 16:23:55,795 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: rec_refine_1783853633@screener.com
+2026-07-12 16:23:55,811 | INFO    | resume_screener:candidate.py:31 | Candidate endpoint called by user: cand_refine_1783853633@screener.com
+2026-07-12 16:23:55,868 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:23:55,871 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:23:55,915 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): fastapi, git, python, sql
+2026-07-12 16:23:56,055 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 1 matched, 3 missing
+2026-07-12 16:23:56,064 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:23:56,065 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 40.0% (Skill: 50.0 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:23:56,065 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.20s
+2026-07-12 16:23:56,065 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:23:56,078 | INFO    | resume_screener:candidate.py:95 | Candidate resume analysis persisted successfully for ScanResult ID 12
+2026-07-12 16:23:56,089 | INFO    | resume_screener:candidate.py:117 | Candidate stats requested for user: cand_refine_1783853633@screener.com
+2026-07-12 16:23:56,149 | INFO    | resume_screener:recruiter.py:31 | Recruiter endpoint called by user: rec_refine_1783853633@screener.com
+2026-07-12 16:23:56,150 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:23:56,151 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:23:56,176 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (0): 
+2026-07-12 16:23:56,335 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 0 missing
+2026-07-12 16:23:56,339 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 0 candidates scored
+2026-07-12 16:23:56,340 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.19s
+2026-07-12 16:23:56,340 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:23:56,349 | INFO    | resume_screener:recruiter.py:91 | Screening persisted successfully for job description ID 14
+2026-07-12 16:24:09,755 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_refine_1783853649@screener.com
+2026-07-12 16:24:10,256 | INFO    | resume_screener:auth.py:40 | Successfully registered user: cand_refine_1783853649@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:24:10,267 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_refine_1783853649@screener.com
+2026-07-12 16:24:10,766 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_refine_1783853649@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:24:10,778 | INFO    | resume_screener:auth.py:46 | Login attempt for email: cand_refine_1783853649@screener.com
+2026-07-12 16:24:11,261 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user cand_refine_1783853649@screener.com. Issuing token...
+2026-07-12 16:24:11,271 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_refine_1783853649@screener.com
+2026-07-12 16:24:11,757 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_refine_1783853649@screener.com. Issuing token...
+2026-07-12 16:24:11,770 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: cand_refine_1783853649@screener.com
+2026-07-12 16:24:11,784 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: cand_refine_1783853649@screener.com
+2026-07-12 16:24:11,796 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: rec_refine_1783853649@screener.com
+2026-07-12 16:24:11,810 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: rec_refine_1783853649@screener.com
+2026-07-12 16:24:11,825 | INFO    | resume_screener:candidate.py:31 | Candidate endpoint called by user: cand_refine_1783853649@screener.com
+2026-07-12 16:24:11,853 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:24:11,855 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:24:11,893 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): fastapi, git, python, sql
+2026-07-12 16:24:12,034 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 1 matched, 3 missing
+2026-07-12 16:24:12,042 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:24:12,043 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 40.0% (Skill: 50.0 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:24:12,044 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.19s
+2026-07-12 16:24:12,045 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:24:12,057 | INFO    | resume_screener:candidate.py:95 | Candidate resume analysis persisted successfully for ScanResult ID 13
+2026-07-12 16:24:12,068 | INFO    | resume_screener:candidate.py:117 | Candidate stats requested for user: cand_refine_1783853649@screener.com
+2026-07-12 16:24:12,135 | INFO    | resume_screener:recruiter.py:31 | Recruiter endpoint called by user: rec_refine_1783853649@screener.com
+2026-07-12 16:24:12,137 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:24:12,138 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:24:12,186 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:24:12,304 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:24:12,311 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:24:12,312 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:24:12,313 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.18s
+2026-07-12 16:24:12,314 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:24:12,326 | INFO    | resume_screener:recruiter.py:91 | Screening persisted successfully for job description ID 16
+2026-07-12 16:24:32,073 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: candidate_ws_test_1783853672@screener.com
+2026-07-12 16:24:32,567 | INFO    | resume_screener:auth.py:40 | Successfully registered user: candidate_ws_test_1783853672@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:24:32,578 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: recruiter_ws_test_1783853672@screener.com
+2026-07-12 16:24:33,100 | INFO    | resume_screener:auth.py:40 | Successfully registered user: recruiter_ws_test_1783853672@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:24:33,113 | INFO    | resume_screener:auth.py:46 | Login attempt for email: candidate_ws_test_1783853672@screener.com
+2026-07-12 16:24:33,593 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user candidate_ws_test_1783853672@screener.com. Issuing token...
+2026-07-12 16:24:33,604 | INFO    | resume_screener:auth.py:46 | Login attempt for email: recruiter_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,099 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user recruiter_ws_test_1783853672@screener.com. Issuing token...
+2026-07-12 16:24:34,114 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: candidate_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,125 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: candidate_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,139 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,150 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: recruiter_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,157 | INFO    | resume_screener:candidate.py:117 | Candidate stats requested for user: candidate_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,173 | INFO    | resume_screener:candidate.py:31 | Candidate endpoint called by user: candidate_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,211 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:24:34,212 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:24:34,267 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:24:34,395 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:24:34,401 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:24:34,402 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:24:34,403 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.19s
+2026-07-12 16:24:34,404 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:24:34,416 | INFO    | resume_screener:candidate.py:95 | Candidate resume analysis persisted successfully for ScanResult ID 15
+2026-07-12 16:24:34,427 | INFO    | resume_screener:candidate.py:117 | Candidate stats requested for user: candidate_ws_test_1783853672@screener.com
+2026-07-12 16:24:34,442 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User candidate_ws_test_1783853672@screener.com does not have RECRUITER role (role: UserRole.CANDIDATE)
+2026-07-12 16:24:34,456 | WARNING | resume_screener:auth_deps.py:55 | Access denied: User recruiter_ws_test_1783853672@screener.com does not have CANDIDATE role (role: UserRole.RECRUITER)
+2026-07-12 16:53:43,393 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-12 16:53:43,900 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-12 16:53:43,907 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-12 16:53:43,951 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-12 16:53:43,952 | INFO    | resume_screener:main.py:39 | Startup Validation: Database connection verified successfully.
+2026-07-12 16:53:58,105 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: versioning_test_1783855438@screener.com
+2026-07-12 16:53:58,626 | INFO    | resume_screener:auth.py:40 | Successfully registered user: versioning_test_1783855438@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:53:58,640 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_versioning_test_1783855438@screener.com
+2026-07-12 16:53:59,126 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_versioning_test_1783855438@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 16:53:59,143 | INFO    | resume_screener:auth.py:46 | Login attempt for email: versioning_test_1783855438@screener.com
+2026-07-12 16:53:59,619 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user versioning_test_1783855438@screener.com. Issuing token...
+2026-07-12 16:53:59,632 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,111 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_versioning_test_1783855438@screener.com. Issuing token...
+2026-07-12 16:54:00,130 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,153 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,167 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: rec_versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,184 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: rec_versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,207 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,248 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:54:00,249 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:54:00,297 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:54:00,446 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:54:00,460 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:54:00,461 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:54:00,462 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.21s
+2026-07-12 16:54:00,463 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:54:00,487 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 16
+2026-07-12 16:54:00,508 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,533 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:54:00,541 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:54:00,579 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:54:00,716 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:54:00,724 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:54:00,725 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:54:00,726 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.19s
+2026-07-12 16:54:00,728 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:54:00,740 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 17
+2026-07-12 16:54:00,757 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:00,789 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:54:00,792 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:54:00,829 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:54:00,996 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:54:01,005 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:54:01,006 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:54:01,007 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.22s
+2026-07-12 16:54:01,008 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:54:01,023 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 18
+2026-07-12 16:54:01,036 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,072 | INFO    | resume_screener:candidate.py:204 | Candidate resume details requested for resume ID 17, user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,092 | INFO    | resume_screener:candidate.py:280 | Candidate resume label update requested for resume ID 18, user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,119 | INFO    | resume_screener:candidate.py:204 | Candidate resume details requested for resume ID 18, user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,136 | INFO    | resume_screener:candidate.py:257 | Candidate resume deletion requested for resume ID 17, user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,164 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,180 | INFO    | resume_screener:candidate.py:204 | Candidate resume details requested for resume ID 17, user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,198 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,227 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:54:01,232 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:54:01,272 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:54:01,421 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:54:01,431 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:54:01,433 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:54:01,434 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.21s
+2026-07-12 16:54:01,435 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:54:01,447 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 19
+2026-07-12 16:54:01,473 | INFO    | resume_screener:recruiter.py:31 | Recruiter endpoint called by user: rec_versioning_test_1783855438@screener.com
+2026-07-12 16:54:01,476 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 16:54:01,477 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 16:54:01,508 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (4): css, html, javascript, react
+2026-07-12 16:54:01,641 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Marcus Johnson' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 3 matched, 1 missing
+2026-07-12 16:54:01,651 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 16:54:01,651 | INFO    | resume_screener:screening_service.py:185 |   #1 Marcus Johnson       → Final: 58.3% (Skill: 86.6 | Exp: 0.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-12 16:54:01,652 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.18s
+2026-07-12 16:54:01,653 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 16:54:01,666 | INFO    | resume_screener:recruiter.py:91 | Screening persisted successfully for job description ID 22
+2026-07-12 17:03:49,352 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_verify_123@screener.com
+2026-07-12 17:03:49,592 | INFO    | resume_screener:auth.py:40 | Successfully registered user: cand_verify_123@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 17:03:49,602 | INFO    | resume_screener:auth.py:46 | Login attempt for email: cand_verify_123@screener.com
+2026-07-12 17:03:49,829 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user cand_verify_123@screener.com. Issuing token...
+2026-07-12 17:04:45,181 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: cand_verify_123@screener.com
+2026-07-12 17:04:45,199 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: cand_verify_123@screener.com
+2026-07-12 17:04:45,258 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:04:45,539 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:04:45,583 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:09:42,152 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: cand_verify_123@screener.com
+2026-07-12 17:09:42,153 | ERROR   | resume_screener:document_service.py:31 | Failed to read DOCX: File is not a zip file
+2026-07-12 17:09:42,154 | ERROR   | resume_screener:candidate.py:53 | Resume extraction failed: Failed to read DOCX file format: File is not a zip file
+2026-07-12 17:12:07,061 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: cand_verify_123@screener.com
+2026-07-12 17:12:07,062 | ERROR   | resume_screener:document_service.py:31 | Failed to read DOCX: File is not a zip file
+2026-07-12 17:12:07,062 | ERROR   | resume_screener:candidate.py:53 | Resume extraction failed: Failed to read DOCX file format: File is not a zip file
+2026-07-12 17:12:13,141 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: cand_verify_123@screener.com
+2026-07-12 17:12:13,141 | ERROR   | resume_screener:document_service.py:18 | Failed to read PDF: EOF marker not found
+2026-07-12 17:12:13,142 | ERROR   | resume_screener:candidate.py:53 | Resume extraction failed: Failed to read PDF file format: EOF marker not found
+2026-07-12 17:12:17,665 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: cand_verify_123@screener.com
+2026-07-12 17:12:17,668 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 17:12:17,668 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 17:12:17,697 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (3): fastapi, python, sql
+2026-07-12 17:12:17,711 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 3 missing
+2026-07-12 17:12:17,716 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 17:12:17,717 | INFO    | resume_screener:screening_service.py:185 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-12 17:12:17,718 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.05s
+2026-07-12 17:12:17,718 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 17:12:17,729 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 21
+2026-07-12 17:12:32,942 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: cand_verify_123@screener.com
+2026-07-12 17:12:32,943 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 17:12:32,943 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 17:12:32,966 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (3): fastapi, python, sql
+2026-07-12 17:12:32,981 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 3 missing
+2026-07-12 17:12:32,985 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 17:12:32,986 | INFO    | resume_screener:screening_service.py:185 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-12 17:12:32,987 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.04s
+2026-07-12 17:12:32,987 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 17:12:32,998 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 22
+2026-07-12 17:12:43,329 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:12:43,346 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:12:43,391 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:13:15,171 | INFO    | resume_screener:candidate.py:257 | Candidate resume deletion requested for resume ID 22, user: cand_verify_123@screener.com
+2026-07-12 17:13:15,200 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:13:15,216 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:13:15,232 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:13:23,422 | INFO    | resume_screener:candidate.py:257 | Candidate resume deletion requested for resume ID 21, user: cand_verify_123@screener.com
+2026-07-12 17:13:23,446 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:13:23,463 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:13:23,483 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:13:50,399 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: cand_verify_123@screener.com
+2026-07-12 17:13:50,401 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 17:13:50,402 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 17:13:50,684 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (3): fastapi, python, sql
+2026-07-12 17:13:50,701 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 3 missing
+2026-07-12 17:13:50,707 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 17:13:50,709 | INFO    | resume_screener:screening_service.py:185 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-12 17:13:50,709 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.31s
+2026-07-12 17:13:50,710 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 17:13:50,720 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 21
+2026-07-12 17:14:03,663 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:14:03,681 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:14:03,698 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:14:35,678 | INFO    | resume_screener:candidate.py:34 | Candidate endpoint called by user: cand_verify_123@screener.com
+2026-07-12 17:14:35,680 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 17:14:35,681 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 17:14:35,720 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (3): fastapi, python, sql
+2026-07-12 17:14:35,752 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 3 missing
+2026-07-12 17:14:35,759 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 17:14:35,760 | INFO    | resume_screener:screening_service.py:185 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-12 17:14:35,760 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.08s
+2026-07-12 17:14:35,761 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 17:14:35,773 | INFO    | resume_screener:candidate.py:134 | Candidate resume analysis persisted successfully for ScanResult ID 22
+2026-07-12 17:14:46,742 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:14:46,765 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:14:46,785 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:15:08,915 | INFO    | resume_screener:candidate.py:280 | Candidate resume label update requested for resume ID 21, user: cand_verify_123@screener.com
+2026-07-12 17:15:08,938 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:15:08,958 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:15:08,973 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:15:21,274 | INFO    | resume_screener:candidate.py:204 | Candidate resume details requested for resume ID 21, user: cand_verify_123@screener.com
+2026-07-12 17:15:49,207 | INFO    | resume_screener:candidate.py:257 | Candidate resume deletion requested for resume ID 21, user: cand_verify_123@screener.com
+2026-07-12 17:15:49,233 | INFO    | resume_screener:main.py:89 | Profile retrieval requested for user: cand_verify_123@screener.com
+2026-07-12 17:15:49,250 | INFO    | resume_screener:candidate.py:305 | Candidate stats requested for user: cand_verify_123@screener.com
+2026-07-12 17:15:49,275 | INFO    | resume_screener:candidate.py:163 | Candidate resumes list requested for user: cand_verify_123@screener.com
+2026-07-12 17:17:11,007 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_verify_123@screener.com
+2026-07-12 17:17:11,009 | WARNING | resume_screener:auth.py:49 | Login failed: invalid credentials for email rec_verify_123@screener.com
+2026-07-12 17:18:08,920 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_verify_123@screener.com
+2026-07-12 17:18:09,175 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_verify_123@screener.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-12 17:19:46,442 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_verify_123@screener.com
+2026-07-12 17:19:46,688 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_verify_123@screener.com. Issuing token...
+2026-07-12 17:21:36,857 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: rec_verify_123@screener.com
+2026-07-12 17:21:36,870 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: rec_verify_123@screener.com
+2026-07-12 17:22:42,005 | INFO    | resume_screener:recruiter.py:31 | Recruiter endpoint called by user: rec_verify_123@screener.com
+2026-07-12 17:22:42,006 | INFO    | resume_screener:screening_service.py:28 | ============================================================
+2026-07-12 17:22:42,007 | INFO    | resume_screener:screening_service.py:29 | New screening request started: 1 resume(s) uploaded
+2026-07-12 17:22:42,048 | INFO    | resume_screener:screening_service.py:42 | JD skills extracted (3): fastapi, python, sql
+2026-07-12 17:22:42,073 | INFO    | resume_screener:screening_service.py:135 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 3 missing
+2026-07-12 17:22:42,077 | INFO    | resume_screener:screening_service.py:157 | Ranking complete — 1 candidates scored
+2026-07-12 17:22:42,078 | INFO    | resume_screener:screening_service.py:185 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-12 17:22:42,081 | INFO    | resume_screener:screening_service.py:189 | Request completed in 0.07s
+2026-07-12 17:22:42,082 | INFO    | resume_screener:screening_service.py:190 | ============================================================
+2026-07-12 17:22:42,099 | INFO    | resume_screener:recruiter.py:91 | Screening persisted successfully for job description ID 27

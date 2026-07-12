@@ -169,3 +169,40 @@ export async function screenResumeCandidate(formData) {
         body: formData
     });
 }
+
+/**
+ * GET /api/candidate/resumes
+ */
+export async function getCandidateResumes() {
+    return request(API_ENDPOINTS.CANDIDATE_RESUMES, {
+        method: "GET"
+    });
+}
+
+/**
+ * GET /api/candidate/resumes/{resume_id}
+ */
+export async function getCandidateResumeDetails(resumeId) {
+    return request(`${API_ENDPOINTS.CANDIDATE_RESUMES}/${resumeId}`, {
+        method: "GET"
+    });
+}
+
+/**
+ * DELETE /api/candidate/resumes/{resume_id}
+ */
+export async function deleteCandidateResume(resumeId) {
+    return request(`${API_ENDPOINTS.CANDIDATE_RESUMES}/${resumeId}`, {
+        method: "DELETE"
+    });
+}
+
+/**
+ * PUT /api/candidate/resumes/{resume_id}/label
+ */
+export async function updateCandidateResumeLabel(resumeId, label) {
+    return request(`${API_ENDPOINTS.CANDIDATE_RESUMES}/${resumeId}/label`, {
+        method: "PUT",
+        body: JSON.stringify({ label })
+    });
+}
