@@ -12,6 +12,9 @@ export const ROUTES = {
     DASHBOARD: "#/recruiter/dashboard",
     SCREEN: "#/recruiter/screen",
     PROFILE: "#/recruiter/profile",
+    CANDIDATE_DASHBOARD: "#/candidate/dashboard",
+    CANDIDATE_SCREEN: "#/candidate/screen",
+    CANDIDATE_PROFILE: "#/candidate/profile",
     LOGIN: "#/login",
     SIGNUP: "#/signup"
 };
@@ -25,7 +28,9 @@ export const API_ENDPOINTS = {
     ONBOARDING_RECRUITER: "/api/onboarding/recruiter",
     ONBOARDING_CANDIDATE: "/api/onboarding/candidate",
     PROCESS: "/api/process",
-    PROCESS_RECRUITER: "/api/recruiter/process"
+    PROCESS_RECRUITER: "/api/recruiter/process",
+    CANDIDATE_STATS: "/api/candidate/stats",
+    CANDIDATE_PROCESS: "/api/candidate/process"
 };
 
 export const COMPANY_TYPES = [

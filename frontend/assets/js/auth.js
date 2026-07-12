@@ -2,7 +2,7 @@ import * as api from './api.js';
 import * as state from './state.js';
 import { ROLES } from './constants.js';
 import { showOnboardingWizard } from './pages/onboarding.js';
-import { handleRecruiterRouting } from './router.js';
+import { handleRouting } from './router.js';
 
 /**
  * Checks authentication status and routes appropriately based on user profile completion and role.
@@ -12,6 +12,7 @@ export async function checkAuthStatus() {
     const appContainer = document.getElementById('app-container');
     const onboardingModal = document.getElementById('onboarding-modal');
     const recruiterContainer = document.getElementById('recruiter-container');
+    const candidateContainer = document.getElementById('candidate-container');
     const userDisplayNameElem = document.getElementById('user-display-name');
 
     const token = state.getToken();
@@ -20,6 +21,7 @@ export async function checkAuthStatus() {
         appContainer.classList.add('hidden');
         onboardingModal.classList.add('hidden');
         recruiterContainer.classList.add('hidden');
+        candidateContainer.classList.add('hidden');
         return;
     }
 
@@ -38,10 +40,18 @@ export async function checkAuthStatus() {
         
         if (user.role === ROLES.RECRUITER) {
             appContainer.classList.add('hidden');
+            candidateContainer.classList.add('hidden');
             recruiterContainer.classList.remove('hidden');
-            handleRecruiterRouting();
-        } else {
+            handleRouting();
+        } else if (user.role === ROLES.CANDIDATE) {
+            appContainer.classList.add('hidden');
             recruiterContainer.classList.add('hidden');
+            candidateContainer.classList.remove('hidden');
+            handleRouting();
+        } else {
+            // UNASSIGNED or other (redirect to legacy or fallback)
+            recruiterContainer.classList.add('hidden');
+            candidateContainer.classList.add('hidden');
             appContainer.classList.remove('hidden');
             userDisplayNameElem.textContent = user.email.split('@')[0];
         }
@@ -52,5 +62,6 @@ export async function checkAuthStatus() {
         appContainer.classList.add('hidden');
         onboardingModal.classList.add('hidden');
         recruiterContainer.classList.add('hidden');
+        candidateContainer.classList.add('hidden');
     }
 }

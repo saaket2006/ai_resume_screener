@@ -3,6 +3,7 @@ import { initLoginPage, initializeLoginPage } from './pages/login.js';
 import { initSignupPage, initializeSignupPage } from './pages/signup.js';
 import { initOnboarding } from './pages/onboarding.js';
 import { initRecruiterPage } from './pages/recruiter.js';
+import { initCandidatePage } from './pages/candidate.js';
 import { initRouter } from './router.js';
 import { initModals } from './components/modal.js';
 import { initNavbar } from './components/navbar.js';
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSignupPage();
     initOnboarding();
     initRecruiterPage();
+    initCandidatePage();
     initRouter();
     initModals();
     initNavbar(clearCandidateState);

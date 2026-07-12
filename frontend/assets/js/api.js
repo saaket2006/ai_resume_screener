@@ -150,3 +150,22 @@ export async function screenResumesRecruiter(formData) {
         body: formData
     });
 }
+
+/**
+ * GET /api/candidate/stats
+ */
+export async function getCandidateStats() {
+    return request(API_ENDPOINTS.CANDIDATE_STATS, {
+        method: "GET"
+    });
+}
+
+/**
+ * POST /api/candidate/process
+ */
+export async function screenResumeCandidate(formData) {
+    return request(API_ENDPOINTS.CANDIDATE_PROCESS, {
+        method: "POST",
+        body: formData
+    });
+}
