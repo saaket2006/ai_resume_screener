@@ -1,5 +1,6 @@
 import * as state from '../state.js';
 import { clearRecruiterWorkspaceState } from '../pages/recruiter.js';
+import { clearCandidateWorkspaceState } from '../pages/candidate.js';
 import { ROUTES } from '../constants.js';
 
 /**
@@ -11,11 +12,13 @@ export function initNavbar(clearCandidateStateCallback) {
     const userTrigger = document.getElementById('user-trigger');
     const signOutBtn = document.getElementById('sign-out-btn');
     const recSignOutBtn = document.getElementById('rec-sign-out-btn');
+    const candSignOutBtn = document.getElementById('cand-sign-out-btn');
 
     const authModal = document.getElementById('auth-modal');
     const appContainer = document.getElementById('app-container');
     const onboardingModal = document.getElementById('onboarding-modal');
     const recruiterContainer = document.getElementById('recruiter-container');
+    const candidateContainer = document.getElementById('candidate-container');
 
     // Profile Dropdown Trigger Handlers
     if (userTrigger && userProfileDropdown) {
@@ -31,7 +34,7 @@ export function initNavbar(clearCandidateStateCallback) {
         });
     }
 
-    // Candidate Sign Out Handler
+    // Candidate Legacy View Sign Out Handler
     if (signOutBtn) {
         signOutBtn.addEventListener('click', () => {
             state.clearState();
@@ -43,7 +46,6 @@ export function initNavbar(clearCandidateStateCallback) {
                 clearCandidateStateCallback();
             }
             
-            // Default to login tab
             const tabLogin = document.getElementById('tab-login');
             if (tabLogin) tabLogin.click();
         });
@@ -60,7 +62,21 @@ export function initNavbar(clearCandidateStateCallback) {
             
             clearRecruiterWorkspaceState();
             
-            // Navigate to login hash
+            window.location.hash = ROUTES.LOGIN;
+        });
+    }
+
+    // Candidate workspace sign out link
+    if (candSignOutBtn) {
+        candSignOutBtn.addEventListener('click', () => {
+            state.clearState();
+            candidateContainer.classList.add('hidden');
+            authModal.classList.remove('hidden');
+            onboardingModal.classList.add('hidden');
+            appContainer.classList.add('hidden');
+            
+            clearCandidateWorkspaceState();
+            
             window.location.hash = ROUTES.LOGIN;
         });
     }

@@ -1,18 +1,21 @@
-import { ROUTES } from './constants.js';
+import { ROUTES, ROLES } from './constants.js';
+import * as state from './state.js';
 import { updateSidebarActiveLink } from './components/sidebar.js';
 import { 
     initializeRecruiterDashboard, 
     initializeRecruiterScreen, 
     initializeRecruiterProfile 
 } from './pages/recruiter.js';
+import {
+    initializeCandidateDashboard,
+    initializeCandidateScreen,
+    initializeCandidateProfile
+} from './pages/candidate.js';
 
 /**
- * Handles hash-based routing for recruiter workspace views.
- * Shows/hides sections and invokes page-specific initializers.
+ * Handles recruiter workspace routing sub-views.
  */
-export function handleRecruiterRouting() {
-    const hash = window.location.hash || ROUTES.DASHBOARD;
-    
+export function handleRecruiterRouting(hash) {
     const recViewDashboard = document.getElementById('rec-view-dashboard');
     const recViewScreen = document.getElementById('rec-view-screen');
     const recViewProfile = document.getElementById('rec-view-profile');
@@ -22,12 +25,10 @@ export function handleRecruiterRouting() {
         return;
     }
 
-    // Hide all recruiter sub-views
     recViewDashboard.classList.add('hidden');
     recViewScreen.classList.add('hidden');
     recViewProfile.classList.add('hidden');
     
-    // Highlight the active link in the sidebar
     updateSidebarActiveLink(hash);
     
     if (hash === ROUTES.DASHBOARD) {
@@ -46,13 +47,68 @@ export function handleRecruiterRouting() {
 }
 
 /**
- * Initializes the routing events.
+ * Handles candidate workspace routing sub-views.
+ */
+export function handleCandidateRouting(hash) {
+    const candViewDashboard = document.getElementById('cand-view-dashboard');
+    const candViewScreen = document.getElementById('cand-view-screen');
+    const candViewProfile = document.getElementById('cand-view-profile');
+    const candPageTitle = document.getElementById('cand-page-title');
+
+    if (!candViewDashboard || !candViewScreen || !candViewProfile || !candPageTitle) {
+        return;
+    }
+
+    candViewDashboard.classList.add('hidden');
+    candViewScreen.classList.add('hidden');
+    candViewProfile.classList.add('hidden');
+
+    updateSidebarActiveLink(hash);
+
+    if (hash === ROUTES.CANDIDATE_DASHBOARD) {
+        candViewDashboard.classList.remove('hidden');
+        candPageTitle.textContent = "Dashboard";
+        initializeCandidateDashboard();
+    } else if (hash === ROUTES.CANDIDATE_SCREEN) {
+        candViewScreen.classList.remove('hidden');
+        candPageTitle.textContent = "Resume Analysis";
+        initializeCandidateScreen();
+    } else if (hash === ROUTES.CANDIDATE_PROFILE) {
+        candViewProfile.classList.remove('hidden');
+        candPageTitle.textContent = "My Profile";
+        initializeCandidateProfile();
+    }
+}
+
+/**
+ * Central routing router entry point. Enforces role-based route access limits.
+ */
+export function handleRouting() {
+    const user = state.getUser();
+    if (!user) return; // Not authenticated yet
+
+    const hash = window.location.hash || (user.role === ROLES.RECRUITER ? ROUTES.DASHBOARD : ROUTES.CANDIDATE_DASHBOARD);
+
+    if (user.role === ROLES.RECRUITER) {
+        if (hash.startsWith("#/candidate")) {
+            window.location.hash = ROUTES.DASHBOARD;
+            return;
+        }
+        handleRecruiterRouting(hash);
+    } else if (user.role === ROLES.CANDIDATE) {
+        if (hash.startsWith("#/recruiter")) {
+            window.location.hash = ROUTES.CANDIDATE_DASHBOARD;
+            return;
+        }
+        handleCandidateRouting(hash);
+    }
+}
+
+/**
+ * Registers hashchange routing event triggers.
  */
 export function initRouter() {
     window.addEventListener('hashchange', () => {
-        const recruiterContainer = document.getElementById('recruiter-container');
-        if (recruiterContainer && !recruiterContainer.classList.contains('hidden')) {
-            handleRecruiterRouting();
-        }
+        handleRouting();
     });
 }
