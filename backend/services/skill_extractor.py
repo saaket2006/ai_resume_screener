@@ -5,10 +5,7 @@ import logging
 
 logger = logging.getLogger("resume_screener")
 
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    pass
+from backend.services.nlp_service import nlp
 
 # A comprehensive list of real-world technical skills to ensure accuracy
 TECH_SKILLS = {
