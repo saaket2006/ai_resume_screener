@@ -37,8 +37,12 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
     
     ranked_results = []
     for idx, resume in enumerate(resumes):
-        # 1. Base TF-IDF Skill Score (0 to 100)
-        skill_score = float(cosine_similarities[idx]) * 100
+        # 1. Base Skill Score (0 to 100)
+        # Use semantic_score if available (new analyses), fallback to TF-IDF score (historical compatibility)
+        if "semantic_score" in resume:
+            skill_score = float(resume["semantic_score"])
+        else:
+            skill_score = float(cosine_similarities[idx]) * 100
         
         # 2. Experience Score (Max 10 years for 100%)
         # Add 0.5 years equivalent for each relevant internship (matching JD skills)

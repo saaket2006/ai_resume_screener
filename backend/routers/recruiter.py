@@ -70,26 +70,27 @@ async def process_resumes(
                 
             fn = cand.get("filename", "unknown_file")
             ext = fn.split(".")[-1].lower() if "." in fn else "unknown"
-            resume_model = Resume(
-                candidate_id=None,  # Nullable since external candidate
-                extracted_text=f"Resume file: {fn}",
-                original_filename=fn,
-                file_type=ext,
-                version=1
-            )
-            db.add(resume_model)
-            db.flush()  # Obtain resume_model.id
-            
-            scan_result = ScanResult(
-                resume_id=resume_model.id,
+            from backend.services.pipeline import PersistenceStage
+            persist_stage = PersistenceStage(db)
+            persistence_result = persist_stage.execute(
+                cand["pipeline_event"],
+                candidate_id=None,
+                version=1,
+                label=None,
+                label_source="SYSTEM",
                 job_description_id=jd_model.id,
-                ats_score=cand["similarity_score"]
+                ats_score=cand["similarity_score"],
+                elapsed_ms=0
             )
-            db.add(scan_result)
+            if persistence_result.status != "success":
+                raise HTTPException(status_code=500, detail=persistence_result.error_message)
             
         db.commit()
         logger.info("Screening persisted successfully for job description ID %d", jd_model.id)
         
+        for cand in results.get("results", []):
+            cand.pop("pipeline_event", None)
+            
         return results
     except ValueError as e:
         db.rollback()
