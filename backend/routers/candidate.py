@@ -6,8 +6,11 @@ from sqlalchemy.orm import Session
 from backend.dependencies.auth_deps import require_candidate
 from backend.database.database import get_db
 from backend.models.models import User, Resume, JobDescription, ScanResult, CandidateProfile
+from backend.models.enums import ResumeStatus
 from backend.services.document_service import extract_text as parse_document_text
 from backend.services.screening_service import screen_resumes
+from backend.services.metadata_builder import build_analysis_metadata
+import time
 
 logger = logging.getLogger("resume_screener")
 
@@ -46,6 +49,7 @@ async def process_candidate_resume(
         logger.error("Failed to read candidate resume file: %s", e)
         raise HTTPException(status_code=400, detail="Unreadable resume file")
 
+    start_time = time.time()
     try:
         # 1. Parse/Extract text from resume
         raw_text = parse_document_text(content, filename)
@@ -58,6 +62,8 @@ async def process_candidate_resume(
         resumes_data = [{"filename": filename, "content": content}]
         results = await screen_resumes(job_description, resumes_data)
         
+        elapsed_ms = int((time.time() - start_time) * 1000)
+
         # Verify result exists
         if not results.get("results"):
             raise HTTPException(status_code=400, detail="Parsing failed to generate valid results")
@@ -76,8 +82,10 @@ async def process_candidate_resume(
         # Default label if not provided
         if not label or not label.strip():
             label_val = f"Version {version}"
+            label_source_val = "SYSTEM"
         else:
             label_val = label.strip()
+            label_source_val = "USER"
 
         # 3. Create database records
         # Save Job Description
@@ -89,55 +97,42 @@ async def process_candidate_resume(
         db.add(jd_model)
         db.flush()
 
-        # Save Resume
-        file_ext = filename.split(".")[-1].lower() if "." in filename else "unknown"
-        resume_model = Resume(
+        from backend.services.pipeline import PersistenceStage
+        
+        persist_stage = PersistenceStage(db)
+        persistence_result = persist_stage.execute(
+            candidate_result["pipeline_event"],
             candidate_id=current_user.id,
-            extracted_text=raw_text,
-            original_filename=filename,
-            file_type=file_ext,
             version=version,
-            label=label_val
-        )
-        db.add(resume_model)
-        db.flush()
-
-        # Build analysis metadata snapshot
-        analysis_metadata = {
-            "matched_skills": candidate_result["matched_skills"],
-            "missing_skills": candidate_result["missing_skills"],
-            "extracted_skills": candidate_result["matched_skills"],  # Candidate's own skills
-            "candidate_name": candidate_result["name"],
-            "email": candidate_result["email"],
-            "phone": candidate_result["phone"],
-            "linkedin": candidate_result.get("linkedin", "Not Provided"),
-            "github": candidate_result.get("github", "Not Provided"),
-            "experience": candidate_result.get("experience", 0),
-            "education": candidate_result.get("education", "None"),
-            "projects": candidate_result.get("projects", 0),
-            "skill_score": candidate_result.get("skill_score", 0.0),
-            "experience_score": candidate_result.get("experience_score", 0.0),
-            "education_score": candidate_result.get("education_score", 0.0),
-            "projects_score": candidate_result.get("projects_score", 0.0)
-        }
-
-        # Save Scan Result
-        scan_result = ScanResult(
-            resume_id=resume_model.id,
+            label=label_val,
+            label_source=label_source_val,
             job_description_id=jd_model.id,
             ats_score=candidate_result["similarity_score"],
-            analysis_metadata=analysis_metadata
+            elapsed_ms=elapsed_ms
         )
-        db.add(scan_result)
+        
+        if persistence_result.status != "success":
+            raise HTTPException(status_code=500, detail=persistence_result.error_message)
+            
         db.commit()
+        
+        # Retrieve stored resume for uploaded_at datetime
+        stored_resume = db.query(Resume).filter(Resume.id == persistence_result.resume_id).first()
+        resume_id_val = persistence_result.resume_id
+        uploaded_at_val = stored_resume.uploaded_at.isoformat() if stored_resume else ""
 
-        logger.info("Candidate resume analysis persisted successfully for ScanResult ID %d", scan_result.id)
+        logger.info("Candidate resume analysis persisted successfully for ScanResult ID %d", persistence_result.scan_result_id)
         
         # Include resume versioning details in the return result
         candidate_result["version"] = version
         candidate_result["label"] = label_val
-        candidate_result["resume_id"] = resume_model.id
-        candidate_result["uploaded_at"] = resume_model.uploaded_at.isoformat()
+        candidate_result["resume_id"] = resume_id_val
+        candidate_result["uploaded_at"] = uploaded_at_val
+
+        # Clean up pipeline events to prevent response serialization issues
+        candidate_result.pop("pipeline_event", None)
+        for r in results.get("results", []):
+            r.pop("pipeline_event", None)
 
         return results
 
@@ -163,7 +158,7 @@ def get_candidate_resumes(
     logger.info("Candidate resumes list requested for user: %s", current_user.email)
     resumes = (
         db.query(Resume)
-        .filter(Resume.candidate_id == current_user.id)
+        .filter(Resume.candidate_id == current_user.id, Resume.status == ResumeStatus.ACTIVE)
         .order_by(Resume.version.desc())
         .all()
     )
@@ -204,7 +199,7 @@ def get_candidate_resume_details(
     logger.info("Candidate resume details requested for resume ID %d, user: %s", resume_id, current_user.email)
     resume = (
         db.query(Resume)
-        .filter(Resume.id == resume_id, Resume.candidate_id == current_user.id)
+        .filter(Resume.id == resume_id, Resume.candidate_id == current_user.id, Resume.status == ResumeStatus.ACTIVE)
         .first()
     )
     if not resume:
@@ -213,6 +208,11 @@ def get_candidate_resume_details(
     scan = resume.scan_results[0] if resume.scan_results else None
     score = scan.ats_score if scan else 0.0
     meta = scan.analysis_metadata if scan else {}
+
+    # Backward compatibility: extract values from standardized nested structure or legacy flat keys
+    cand_info = meta.get("candidate", {})
+    score_categories = meta.get("score", {}).get("categories", {})
+    skills_info = meta.get("skills", {})
 
     return {
         "id": resume.id,
@@ -226,23 +226,24 @@ def get_candidate_resume_details(
             "title": scan.job_description.title if scan and scan.job_description else "",
             "description": scan.job_description.description if scan and scan.job_description else ""
         } if scan else None,
-        "extracted_skills": meta.get("extracted_skills", []),
-        "matched_skills": meta.get("matched_skills", []),
-        "missing_skills": meta.get("missing_skills", []),
+        "extracted_skills": skills_info.get("extracted") or meta.get("extracted_skills") or [],
+        "matched_skills": skills_info.get("matched") or meta.get("matched_skills") or [],
+        "missing_skills": skills_info.get("missing") or meta.get("missing_skills") or [],
         "candidate_details": {
-            "name": meta.get("candidate_name", "N/A"),
-            "email": meta.get("email", "N/A"),
-            "phone": meta.get("phone", "N/A"),
-            "linkedin": meta.get("linkedin", "N/A"),
-            "github": meta.get("github", "N/A"),
-            "experience": meta.get("experience", 0),
-            "education": meta.get("education", "N/A"),
-            "projects": meta.get("projects", 0),
-            "skill_score": meta.get("skill_score", 0.0),
-            "experience_score": meta.get("experience_score", 0.0),
-            "education_score": meta.get("education_score", 0.0),
-            "projects_score": meta.get("projects_score", 0.0)
-        }
+            "name": cand_info.get("name") or meta.get("candidate_name", "N/A"),
+            "email": cand_info.get("email") or meta.get("email", "N/A"),
+            "phone": cand_info.get("phone") or meta.get("phone", "N/A"),
+            "linkedin": cand_info.get("linkedin") or meta.get("linkedin", "N/A"),
+            "github": cand_info.get("github") or meta.get("github", "N/A"),
+            "experience": cand_info.get("experience") if "experience" in cand_info else meta.get("experience", 0),
+            "education": cand_info.get("education") or meta.get("education", "N/A"),
+            "projects": cand_info.get("projects") if "projects" in cand_info else meta.get("projects", 0),
+            "skill_score": score_categories.get("skill_score") if "skill_score" in score_categories else meta.get("skill_score", 0.0),
+            "experience_score": score_categories.get("experience_score") if "experience_score" in score_categories else meta.get("experience_score", 0.0),
+            "education_score": score_categories.get("education_score") if "education_score" in score_categories else meta.get("education_score", 0.0),
+            "projects_score": score_categories.get("projects_score") if "projects_score" in score_categories else meta.get("projects_score", 0.0)
+        },
+        "xai": meta.get("xai")
     }
 
 @router.delete("/resumes/{resume_id}")
@@ -257,13 +258,13 @@ def delete_candidate_resume(
     logger.info("Candidate resume deletion requested for resume ID %d, user: %s", resume_id, current_user.email)
     resume = (
         db.query(Resume)
-        .filter(Resume.id == resume_id, Resume.candidate_id == current_user.id)
+        .filter(Resume.id == resume_id, Resume.candidate_id == current_user.id, Resume.status == ResumeStatus.ACTIVE)
         .first()
     )
     if not resume:
         raise HTTPException(status_code=404, detail="Resume version not found")
 
-    db.delete(resume)
+    resume.status = ResumeStatus.DELETED
     db.commit()
     return {"message": "Resume version deleted successfully"}
 
@@ -280,7 +281,7 @@ def update_candidate_resume_label(
     logger.info("Candidate resume label update requested for resume ID %d, user: %s", resume_id, current_user.email)
     resume = (
         db.query(Resume)
-        .filter(Resume.id == resume_id, Resume.candidate_id == current_user.id)
+        .filter(Resume.id == resume_id, Resume.candidate_id == current_user.id, Resume.status == ResumeStatus.ACTIVE)
         .first()
     )
     if not resume:
@@ -291,6 +292,7 @@ def update_candidate_resume_label(
         raise HTTPException(status_code=400, detail="Label cannot be empty")
 
     resume.label = new_label.strip()
+    resume.label_source = "USER"
     db.commit()
     return {"message": "Label updated successfully", "label": resume.label}
 
@@ -307,7 +309,7 @@ def get_candidate_stats(
     latest_scan = (
         db.query(ScanResult)
         .join(Resume)
-        .filter(Resume.candidate_id == current_user.id)
+        .filter(Resume.candidate_id == current_user.id, Resume.status == ResumeStatus.ACTIVE)
         .order_by(ScanResult.created_at.desc())
         .first()
     )

@@ -2,7 +2,7 @@ import datetime
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Float, Boolean, Enum as SQLEnum, JSON
 from sqlalchemy.orm import relationship
 from backend.database.database import Base
-from backend.models.enums import UserRole, CompanyType
+from backend.models.enums import UserRole, CompanyType, ResumeStatus
 
 class User(Base):
     __tablename__ = "users"
@@ -54,6 +54,8 @@ class Resume(Base):
     candidate_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
     version = Column(Integer, nullable=False, default=1)
     label = Column(String(255), nullable=True)
+    label_source = Column(String(50), nullable=True)
+    status = Column(SQLEnum(ResumeStatus, native_enum=False), default=ResumeStatus.ACTIVE, nullable=False)
     extracted_text = Column(Text, nullable=False)
     original_filename = Column(String(255), nullable=True)
     file_type = Column(String(50), nullable=True)

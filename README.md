@@ -28,54 +28,60 @@ An end-to-end AI-powered system designed to analyze candidate resumes against a 
     from unstructured resume content.
 
 
-### 🧠 Intelligent Scoring Engine
+### 🧠 Semantic Scoring & Normalized Skill Layer
 
-A powerful ranking system that goes beyond basic keyword matching:
+A powerful, multi-tier ranking system that goes beyond simple keyword match lookups:
 
-* **Skill Relevance (50%)**
-  Uses *TF-IDF* and *Cosine Similarity* for deep technical alignment.
+* **Normalized Skill Intelligence**
+  Handles skill aliases, abbreviations, technology hierarchies, and domain families (e.g. mapping "ReactJS" to "React", or "FastAPI" under backend framework families).
+  
+* **Semantic Matching Engine**
+  Performs deep semantic checks to resolve relationship paths and assign weighted relevance scores for candidate profile matching.
 
-* **Experience (25%)**
-  Automatically detects and scales years of experience.
-
-* **Education (15%)**
-  Heuristic-based degree classification (*PhD, Master’s, Bachelor’s*).
-
-* **Projects (10%)**
-  Evaluates practical experience through project analysis.
-
-
-### 📊 Explainability & Transparency
-
-* **Detailed Score Breakdown**
-  Expand any candidate to view:
-
-  * Animated progress bars
-  * Weighted scoring contributions
-  * Clear evaluation insights
+* **Weighted Attribute Breakdown**
+  - **Technical Skill Matching (50%)**: Direct and resolved semantic alignments.
+  - **Work Experience (25%)**: Professional tenure and relevant internship adjustments.
+  - **Education Level (15%)**: PhD, Master's, Bachelor's degree tiers.
+  - **Projects Focus (10%)**: Matching project count target checks.
 
 
-### 📈 Dynamic Visual Dashboard
+### 🔄 Staged Analysis Pipeline (Event-Driven)
 
-* **Animated Score Bars**
-  Horizontal charts with intuitive color grading:
+Processes resumes through a clean, linear, decoupled analysis pipeline where each stage builds on structured outputs of the previous:
+1. **Resume Text Extraction**: Raw file parser.
+2. **Skill Extraction**: spaCy/Regex NER.
+3. **Semantic Matching**: Mapped aliases, hierarchies, and technological families.
+4. **Scoring**: Computes sub-scores and TF-IDF document similarity.
+5. **Explanation Building**: Assembles structured presentations.
+6. **Persistence**: Saves records transactionally to the database.
 
-  * 🟢 High match
-  * 🟡 Moderate match
-  * 🔴 Low match
 
-* **Attribute Badges**
-  Quick insights into:
+### 📊 Explainable Scoring Engine (XAI)
 
-  * Experience
-  * Education
-  * Project strength
+* **Multi-Level Explanations**
+  Provides presentation-independent explanations available in **Summary** and **Detailed** formats in the user interface (and **Technical** formats internally).
+  
+* **Structured Evidence Logging**
+  Collects specific reasons points were awarded or deducted along with structured `Evidence` nodes (e.g., exact matches, alias matches, project gaps) for future extensibility.
+  
+* **Collapsible breakdowns**
+  Features sleek, non-cluttering expandable UI sections showing overall matching summaries and detailed evidence blocks.
 
-* **Skill Highlights**
-  Clear distinction between:
 
-  * ✅ Matched skills
-  * ❌ Missing skills
+## 🚀 Future-Proofing Roadmap
+
+We have planned the following lightweight abstractions to enhance the system's observability and extensibility:
+
+1. **Pipeline Context Object**
+   Transition to a lightweight `AnalysisContext` passed into each stage's `execute(context)` call, containing `request_id`, `resume_id`, `candidate_id`, timestamps, and performance metrics.
+2. **Pipeline Metrics**
+   Introduce structured instrumentation to record start/end times and execution durations per stage for visual performance dashboards.
+3. **Pipeline Hooks**
+   Define lifecycle triggers (`Before Stage`, `After Stage`, `On Error`) to plug in logging, auditing, and real-time monitoring without changing individual stage logic.
+4. **Unified Configuration**
+   Inject an immutable pipeline-level configuration object for cleaner dependency management.
+5. **Error Recovery Tiers**
+   Support configure-per-stage error actions (`Retry`, `Skip`, `Abort`) to handle transient external OCR or LLM API network disruptions.
 
 
 ### 🔐 Authentication & Security
