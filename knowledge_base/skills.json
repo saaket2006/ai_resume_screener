@@ -1,0 +1,137 @@
+[
+  {
+    "id": "python",
+    "canonical_name": "Python",
+    "aliases": ["Py"],
+    "abbreviations": [],
+    "category": "Programming Languages",
+    "subcategory": "General Purpose",
+    "technology_family": "Backend Development"
+  },
+  {
+    "id": "javascript",
+    "canonical_name": "JavaScript",
+    "aliases": ["JS", "JavaScript Engine"],
+    "abbreviations": ["JS"],
+    "category": "Programming Languages",
+    "subcategory": "Web Scripting",
+    "technology_family": "Frontend Development"
+  },
+  {
+    "id": "typescript",
+    "canonical_name": "TypeScript",
+    "aliases": ["TS"],
+    "abbreviations": ["TS"],
+    "category": "Programming Languages",
+    "subcategory": "Typed Scripting",
+    "technology_family": "Frontend Development"
+  },
+  {
+    "id": "react",
+    "canonical_name": "React",
+    "aliases": ["ReactJS", "React.js"],
+    "abbreviations": [],
+    "category": "Frontend Frameworks",
+    "subcategory": "UI Libraries",
+    "technology_family": "Frontend Development"
+  },
+  {
+    "id": "fastapi",
+    "canonical_name": "FastAPI",
+    "aliases": ["Fast API"],
+    "abbreviations": [],
+    "category": "Backend Frameworks",
+    "subcategory": "REST APIs",
+    "technology_family": "Backend Development"
+  },
+  {
+    "id": "large_language_models",
+    "canonical_name": "Large Language Models",
+    "aliases": ["Generative Language Models", "Generative AI", "GenAI"],
+    "abbreviations": ["LLM"],
+    "category": "Machine Learning",
+    "subcategory": "Deep Learning",
+    "technology_family": "Artificial Intelligence"
+  },
+  {
+    "id": "sql",
+    "canonical_name": "SQL",
+    "aliases": ["Structured Query Language"],
+    "abbreviations": ["SQL"],
+    "category": "Databases",
+    "subcategory": "Relational Databases",
+    "technology_family": "Data Engineering"
+  },
+  {
+    "id": "postgresql",
+    "canonical_name": "PostgreSQL",
+    "aliases": ["Postgres"],
+    "abbreviations": [],
+    "category": "Databases",
+    "subcategory": "Relational Databases",
+    "technology_family": "Data Engineering"
+  },
+  {
+    "id": "docker",
+    "canonical_name": "Docker",
+    "aliases": ["Docker Container"],
+    "abbreviations": [],
+    "category": "DevOps Tools",
+    "subcategory": "Containerization",
+    "technology_family": "DevOps"
+  },
+  {
+    "id": "kubernetes",
+    "canonical_name": "Kubernetes",
+    "aliases": ["K8s Container Orchestration"],
+    "abbreviations": ["K8s"],
+    "category": "DevOps Tools",
+    "subcategory": "Container Orchestration",
+    "technology_family": "DevOps"
+  },
+  {
+    "id": "html",
+    "canonical_name": "HTML",
+    "aliases": ["HyperText Markup Language"],
+    "abbreviations": ["HTML"],
+    "category": "Programming Languages",
+    "subcategory": "Web Markup",
+    "technology_family": "Frontend Development"
+  },
+  {
+    "id": "css",
+    "canonical_name": "CSS",
+    "aliases": ["Cascading Style Sheets"],
+    "abbreviations": ["CSS"],
+    "category": "Programming Languages",
+    "subcategory": "Web Styling",
+    "technology_family": "Frontend Development"
+  },
+  {
+    "id": "flask",
+    "canonical_name": "Flask",
+    "aliases": ["Flask Framework"],
+    "abbreviations": [],
+    "category": "Backend Frameworks",
+    "subcategory": "REST APIs",
+    "technology_family": "Backend Development"
+  },
+  {
+    "id": "backend_development",
+    "canonical_name": "Backend Development",
+    "aliases": [],
+    "abbreviations": [],
+    "category": "Broad Category",
+    "subcategory": "Engineering",
+    "technology_family": "Backend Development"
+  },
+  {
+    "id": "frontend_development",
+    "canonical_name": "Frontend Development",
+    "aliases": [],
+    "abbreviations": [],
+    "category": "Broad Category",
+    "subcategory": "Engineering",
+    "technology_family": "Frontend Development"
+  }
+]

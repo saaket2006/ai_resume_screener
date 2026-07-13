@@ -227,9 +227,6 @@ window.showCandidateQuickView = (cand) => {
     const qvCandPhone = document.getElementById('qv-cand-phone');
     const qvCandLinkedin = document.getElementById('qv-cand-linkedin');
     const qvCandGithub = document.getElementById('qv-cand-github');
-    const qvCandEducation = document.getElementById('qv-cand-education');
-    const qvCandExperience = document.getElementById('qv-cand-experience');
-    const qvCandProjects = document.getElementById('qv-cand-projects');
     const qvCandExtractedSkills = document.getElementById('qv-cand-extracted-skills');
     const qvCandMatchedSkills = document.getElementById('qv-cand-matched-skills');
     const qvCandMissingSkills = document.getElementById('qv-cand-missing-skills');
@@ -265,9 +262,11 @@ window.showCandidateQuickView = (cand) => {
         qvCandGithub.textContent = 'N/A';
     }
     
-    qvCandEducation.textContent = cand.education || 'N/A';
-    qvCandExperience.textContent = cand.experience ? `${cand.experience} Years` : '0 Years';
-    qvCandProjects.textContent = cand.projects ? `${cand.projects} out of 5 projects match focus` : '0 projects matching';
+    // Render XAI details
+    const xaiContainer = document.getElementById('qv-xai-container');
+    if (xaiContainer) {
+        xaiContainer.innerHTML = renderXaiContent(cand.analysis_metadata?.xai);
+    }
     
     const allExtracted = cand.matched_skills.concat(cand.missing_skills);
     qvCandExtractedSkills.innerHTML = allExtracted.map(s => `<span class="skill-tag">${s}</span>`).join('') || '<span style="color:#666">None</span>';
@@ -276,3 +275,104 @@ window.showCandidateQuickView = (cand) => {
     
     recQuickViewModal.classList.remove('hidden');
 };
+
+export function renderXaiContent(xaiData) {
+    if (!xaiData || !xaiData.enabled) {
+        return `
+            <div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 8px;">
+                <p style="margin: 0; font-size: 0.95rem; color: #fca5a5;">This analysis was created before Explainable Scoring was available.</p>
+            </div>
+        `;
+    }
+
+    const components = xaiData.components || [];
+    const explanations = xaiData.explanations || {};
+    
+    let html = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: rgba(255,255,255,0.02); padding: 0.5rem 1rem; border-radius: 8px;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;">Explanation Level:</span>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="xai-level-btn active" onclick="toggleXaiLevel('summary')" style="font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 4px; background: #6366f1; border: none; color: #fff; cursor: pointer;">Summary</button>
+                <button class="xai-level-btn" onclick="toggleXaiLevel('detailed')" style="font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ccc; cursor: pointer;">Detailed</button>
+            </div>
+        </div>
+
+        <div style="background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.05rem; color: #fff;">💡 Overall Summary</h4>
+            <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #cbd5e1;">${xaiData.overall_summary}</p>
+        </div>
+
+        <div class="xai-accordion-group" style="display: flex; flex-direction: column; gap: 0.75rem;">
+    `;
+
+    components.forEach((comp) => {
+        let key = comp.name.toLowerCase().replace(" ", "_");
+        if (key === "technical_skills") key = "skills";
+        if (key === "work_experience") key = "experience";
+        
+        const compExpl = explanations[key] || {};
+        const summaryExpl = compExpl.summary || { why_awarded: "No summary explanation.", why_deducted: "" };
+        const detailedExpl = compExpl.detailed || { why_awarded: "No detailed explanation.", why_deducted: "" };
+        
+        let statusColor = "#ef4444";
+        if (comp.status === "met") statusColor = "#10b981";
+        else if (comp.status === "partially_met") statusColor = "#f59e0b";
+        else if (comp.status === "exceeded") statusColor = "#3b82f6";
+
+        const statusBadge = `<span style="background: ${statusColor}15; color: ${statusColor}; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase;">${comp.status.replace("_", " ")}</span>`;
+
+        html += `
+            <div class="xai-accordion-item" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.01);">
+                <div class="xai-accordion-header" onclick="toggleXaiAccordion(this)" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; cursor: pointer; transition: background 0.2s;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span class="xai-chevron" style="font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.2s; display: inline-block;">▶</span>
+                        <strong style="color: #fff; font-size: 0.95rem;">${comp.name}</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">(${comp.weight * 100}% weight)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        ${statusBadge}
+                        <strong style="color: #fff; font-size: 1rem;">${Math.round(comp.raw_score)}%</strong>
+                    </div>
+                </div>
+                
+                <div class="xai-accordion-content hidden" style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.15); display: none;">
+                    <div style="margin-bottom: 0.75rem;">
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">✅ Points Awarded</h5>
+                        <p class="xai-text-awarded-summary" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #e2e8f0;">${summaryExpl.why_awarded}</p>
+                        <p class="xai-text-awarded-detailed" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #e2e8f0; display: none;">${detailedExpl.why_awarded}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #ef4444; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">❌ Deductions & Gaps</h5>
+                        <p class="xai-text-deducted-summary" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #cbd5e1;">${summaryExpl.why_deducted || 'No deductions applied.'}</p>
+                        <p class="xai-text-deducted-detailed" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; display: none;">${detailedExpl.why_deducted || 'No deductions applied.'}</p>
+                    </div>
+
+                    <div>
+                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">📂 Supporting Evidence</h5>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            ${comp.evidence.map(ev => {
+                                let impColor = "#10b981";
+                                if (ev.importance === "medium") impColor = "#f59e0b";
+                                else if (ev.importance === "high") impColor = "#ef4444";
+                                
+                                return `
+                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 6px; display: flex; flex-direction: column; gap: 0.25rem;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                            <strong style="font-size: 0.85rem; color: #fff;">${ev.title}</strong>
+                                            <span style="font-size: 0.7rem; color: ${impColor}; font-weight: bold; background: ${impColor}10; padding: 0.1rem 0.3rem; border-radius: 3px; text-transform: uppercase;">${ev.importance}</span>
+                                        </div>
+                                        <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">${ev.description}</p>
+                                    </div>
+                                `;
+                            }).join('') || '<p style="margin:0; font-size:0.8rem; color:#666;">No evidence items identified.</p>'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    return html;
+}

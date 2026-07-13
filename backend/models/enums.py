@@ -15,3 +15,9 @@ class CompanyType(str, Enum):
     CONSULTANCY = "Consultancy"
     NON_PROFIT = "Non-Profit"
     OTHER = "Other"
+
+class ResumeStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    ARCHIVED = "ARCHIVED"
+    DELETED = "DELETED"
+
