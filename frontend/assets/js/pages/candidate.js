@@ -191,8 +191,9 @@ export async function initializeCandidateDashboard() {
         if (dashCandDomain) dashCandDomain.textContent = domainVal;
         if (candTopUserName) candTopUserName.textContent = candName;
 
-        // Fetch candidate stats
+        // Fetch candidate stats & history
         const stats = await api.getCandidateStats();
+        const historyList = await api.getCandidateResumes();
         
         if (stats.latest_ats_score !== null && stats.latest_ats_score !== undefined) {
             let formattedDate = "N/A";
@@ -204,11 +205,112 @@ export async function initializeCandidateDashboard() {
                     day: 'numeric'
                 });
             }
+            
+            // Generate Career Progress Timeline
+            const chronologicalList = [...historyList].reverse();
+            let progressTimelineHTML = "";
+            if (chronologicalList.length > 0) {
+                const timelineSteps = chronologicalList.map(item => `
+                    <div style="display: flex; flex-direction: column; align-items: center; min-width: 80px; position: relative;">
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem;">V${item.version}</span>
+                        <div style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 2; border: 3px solid #1e1e2e; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                            ${item.ats_score}%
+                        </div>
+                        <span style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.4rem; text-align: center; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${item.label}">${item.label}</span>
+                    </div>
+                `).join(`
+                    <div style="height: 4px; flex-grow: 1; min-width: 40px; background: rgba(255,255,255,0.08); margin-top: 24px; position: relative; z-index: 1;">
+                        <div style="position: absolute; top: -8px; left: calc(50% - 6px); color: var(--text-secondary); font-size: 0.9rem;">→</div>
+                    </div>
+                `);
+
+                const oldest = chronologicalList[0];
+                const newest = chronologicalList[chronologicalList.length - 1];
+                const scoreDiff = newest.ats_score - oldest.ats_score;
+                
+                const timeDiffMs = new Date(newest.uploaded_at) - new Date(oldest.uploaded_at);
+                const weeks = Math.round(timeDiffMs / (1000 * 60 * 60 * 24 * 7));
+                const days = Math.round(timeDiffMs / (1000 * 60 * 60 * 24));
+                let timeText = "";
+                if (weeks > 0) {
+                    timeText = `${weeks} week${weeks > 1 ? 's' : ''}`;
+                } else {
+                    timeText = `${days} day${days !== 1 ? 's' : ''}`;
+                }
+
+                let progressStatsHTML = "";
+                if (chronologicalList.length > 1) {
+                    const oldestJD = oldest.job_description_title || "Unknown JD";
+                    const newestJD = newest.job_description_title || "Unknown JD";
+                    const oldestProfile = oldest.analysis_metadata?.profile_name || "General Software Engineer";
+                    const newestProfile = newest.analysis_metadata?.profile_name || "General Software Engineer";
+                    const oldestEngine = oldest.analysis_metadata?.engine_version || "v1.0.0";
+                    const newestEngine = newest.analysis_metadata?.engine_version || "v1.0.0";
+                    
+                    const sameJD = (oldestJD === newestJD);
+                    const sameProfile = (oldestProfile === newestProfile);
+                    const sameEngine = (oldestEngine === newestEngine);
+                    const isReliable = sameJD && sameProfile && sameEngine;
+
+                    let reliabilityDetailsHTML = `
+                        <div style="font-size: 0.75rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.2rem; opacity: 0.85;">
+                            <div style="color: ${sameJD ? '#10b981' : '#ef4444'}; font-weight: 500;">
+                                ${sameJD ? '✓ Same Job Description' : '✗ Different Job Description'}
+                            </div>
+                            <div style="color: ${sameProfile ? '#10b981' : '#ef4444'}; font-weight: 500;">
+                                ${sameProfile ? '✓ Same Profile' : '✗ Different Profile'}
+                            </div>
+                            <div style="color: ${sameEngine ? '#10b981' : '#ef4444'}; font-weight: 500;">
+                                ${sameEngine ? '✓ Same Engine Version' : '✗ Different Engine Version'}
+                            </div>
+                        </div>
+                    `;
+
+                    if (scoreDiff > 0) {
+                        progressStatsHTML = `
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.25rem;">
+                                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15); padding: 0.6rem 0.9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.5rem; color: #34d399; font-weight: bold; font-size: 0.9rem; width: fit-content;">
+                                    <span>🚀 Resume Improved:</span>
+                                    <span style="font-size: 1.05rem; color: #10b981;">+${scoreDiff.toFixed(1)} points</span>
+                                    <span style="font-weight: normal; color: #a7f3d0; font-size: 0.8rem;">in ${timeText}</span>
+                                </div>
+                                <div style="font-size: 0.8rem; color: ${isReliable ? '#10b981' : '#f59e0b'}; font-weight: 600; margin-top: 0.25rem;">
+                                    Comparison Reliability: ${isReliable ? 'HIGH ⭐' : 'LOW ⚠'}
+                                </div>
+                                ${reliabilityDetailsHTML}
+                            </div>
+                        `;
+                    } else {
+                        progressStatsHTML = `
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+                                <div style="font-size: 0.8rem; color: ${isReliable ? '#10b981' : '#f59e0b'}; font-weight: 600;">
+                                    Comparison Reliability: ${isReliable ? 'HIGH ⭐' : 'LOW ⚠'}
+                                </div>
+                                ${reliabilityDetailsHTML}
+                            </div>
+                        `;
+                    }
+                }
+
+                progressTimelineHTML = `
+                    <div class="stat-card span-two" style="grid-column: span 2; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                        <div class="stat-header" style="margin-bottom: 1rem;">
+                            <span class="stat-title" style="font-weight: 600; color: #fff;">📈 Career Progress Timeline</span>
+                            <span class="stat-icon">🔥</span>
+                        </div>
+                        <div style="display: flex; align-items: center; overflow-x: auto; padding: 0.5rem 0; width: 100%; gap: 0.25rem;">
+                            ${timelineSteps}
+                        </div>
+                        ${progressStatsHTML}
+                    </div>
+                `;
+            }
+            
             statsContainer.innerHTML = `
                 <div class="rec-grid">
                     <div class="stat-card">
                         <div class="stat-header">
-                            <span class="stat-title">Latest ATS Score</span>
+                            <span class="stat-title">Latest Resume Match Score</span>
                             <span class="stat-icon">📈</span>
                         </div>
                         <div class="stat-value" id="cand-stat-latest-score">${stats.latest_ats_score}%</div>
@@ -222,14 +324,13 @@ export async function initializeCandidateDashboard() {
                         <div class="stat-value" style="font-size: 1.5rem; margin-top: 0.5rem;" id="cand-stat-last-date">${formattedDate}</div>
                         <p class="stat-description">Timestamp of the last run</p>
                     </div>
+                    ${progressTimelineHTML}
                 </div>
             `;
         } else {
             statsContainer.innerHTML = getEmptyStateHTML("You have not analyzed any resumes yet. Go to Resume Analysis to evaluate your resume!");
         }
 
-        // Fetch and render resume versions timeline list
-        const historyList = await api.getCandidateResumes();
         renderTimelineList(historyList);
 
     } catch (err) {
@@ -327,7 +428,19 @@ window.viewCandidateAnalysis = async (resumeId) => {
         } else {
             badge.classList.add('low-score');
         }
-        
+        const cavCtxProfile = document.getElementById('cav-ctx-profile');
+        const cavCtxJd = document.getElementById('cav-ctx-jd');
+        const cavCtxEngine = document.getElementById('cav-ctx-engine');
+        if (cavCtxProfile && cavCtxJd && cavCtxEngine) {
+            const profileName = details.analysis_metadata?.profile_name || "General Software Engineer";
+            const profileVer = details.analysis_metadata?.profile_version || "1.0.0";
+            const engineVer = details.analysis_metadata?.engine_version || "v1.0.0";
+            cavCtxProfile.textContent = `${profileName} (v${profileVer})`;
+            cavCtxJd.textContent = details.job_description?.title || "N/A";
+            const cleanEngine = engineVer.replace(/^v/, '');
+            cavCtxEngine.textContent = `ResumeAI Engine v${cleanEngine}`;
+        }
+
         document.getElementById('cav-jd-title').textContent = details.job_description?.title || "N/A";
         document.getElementById('cav-jd-description').textContent = details.job_description?.description || "N/A";
         
@@ -344,7 +457,7 @@ window.viewCandidateAnalysis = async (resumeId) => {
         // Render Resume Improvement Recommendations
         const recsContainer = document.getElementById('cav-recommendations-container');
         if (recsContainer) {
-            recsContainer.innerHTML = renderRecommendations(details.recommendations);
+            recsContainer.innerHTML = renderRecommendations(details.recommendations, details.id);
         }
         
         // Skills lists
@@ -380,7 +493,17 @@ window.toggleRecCard = (headerEl) => {
     }
 };
 
-export function renderRecommendations(recsData) {
+window.updateRecommendationStatus = async (resumeId, recId, status) => {
+    try {
+        await api.updateRecommendationStatus(resumeId, recId, status);
+        await initializeCandidateDashboard();
+        await window.viewCandidateAnalysis(resumeId);
+    } catch (err) {
+        alert("Failed to update recommendation status: " + err.message);
+    }
+};
+
+export function renderRecommendations(recsData, resumeId = null) {
     if (!recsData || !recsData.list || recsData.list.length === 0) {
         return `
             <div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 8px;">
@@ -397,7 +520,14 @@ export function renderRecommendations(recsData) {
         else if (rec.priority === "MEDIUM") priColor = "#eab308"; // yellow
         else if (rec.priority === "LOW") priColor = "#3b82f6"; // blue
         
+        let statusColor = "#3b82f6"; // blue for active
+        const statusUpper = (rec.status || "ACTIVE").toUpperCase();
+        if (statusUpper === "COMPLETED") statusColor = "#10b981"; // green
+        else if (statusUpper === "DISMISSED") statusColor = "#6b7280"; // gray
+        else if (statusUpper === "EXPIRED") statusColor = "#ef4444"; // red
+
         const priBadge = `<span style="background: ${priColor}15; color: ${priColor}; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase;">${rec.priority}</span>`;
+        const statusBadge = `<span style="background: ${statusColor}15; color: ${statusColor}; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase; margin-right: 0.5rem;">${statusUpper}</span>`;
         const gainBadge = `<span style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px;">+${rec.estimated_score_gain.toFixed(1)} ATS pts</span>`;
 
         html += `
@@ -408,6 +538,7 @@ export function renderRecommendations(recsData) {
                         <strong style="color: #fff; font-size: 0.95rem;">${rec.title}</strong>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        ${statusBadge}
                         ${priBadge}
                         ${gainBadge}
                     </div>
@@ -432,6 +563,27 @@ export function renderRecommendations(recsData) {
                         <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">🏷️ Related Skill(s)</h5>
                         <div style="display: flex; flex-wrap: wrap;">${skillTags}</div>
                     </div>
+            `;
+        }
+
+        if (resumeId && statusUpper === "ACTIVE") {
+            html += `
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                    <button onclick="event.stopPropagation(); updateRecommendationStatus(${resumeId}, '${rec.id}', 'COMPLETED')" class="glow-btn" style="font-size: 0.8rem; padding: 0.35rem 0.75rem; background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; cursor: pointer;">
+                        <span>✓ Mark Completed</span>
+                    </button>
+                    <button onclick="event.stopPropagation(); updateRecommendationStatus(${resumeId}, '${rec.id}', 'DISMISSED')" class="glow-btn secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem; border-color: rgba(255,255,255,0.2); color: #ccc; cursor: pointer;">
+                        <span>✕ Dismiss</span>
+                    </button>
+                </div>
+            `;
+        } else if (statusUpper !== "ACTIVE") {
+            const dateStr = rec.resolved_at ? new Date(rec.resolved_at).toLocaleDateString() : '';
+            html += `
+                <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary);">
+                    <span>Status: <strong>${statusUpper}</strong></span>
+                    ${dateStr ? `<span>Resolved on: ${dateStr}</span>` : ''}
+                </div>
             `;
         }
 

@@ -413,7 +413,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-header">
-                                <span class="stat-title">Average ATS Score</span>
+                                <span class="stat-title">Average Resume Match Score</span>
                                 <span class="stat-icon">📈</span>
                             </div>
                             <div class="stat-value" id="stat-avg-score">0.0%</div>
@@ -460,7 +460,7 @@
 
                 <!-- VIEW 2: RESUME SCREENING -->
                 <section id="rec-view-screen" class="rec-view hidden">
-                    <div class="screening-workspace">
+                     <div class="screening-workspace">
                         <div class="screening-inputs glass-card">
                             <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                                 <div>
@@ -503,7 +503,7 @@
                             </div>
                             
                             <button id="rec-process-btn" class="glow-btn">
-                                <span>Run ATS Screening</span>
+                                <span>Run Match Screening</span>
                                 <div class="loader hidden"></div>
                             </button>
                         </div>
@@ -716,6 +716,12 @@
                     <div class="qv-meta">
                         <h3 id="qv-cand-name">Marcus Johnson</h3>
                         <p id="qv-cand-score-badge" class="score-badge">85.5% Match</p>
+                        <div id="qv-context-card" style="margin-top: 0.5rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; font-size: 0.8rem; line-height: 1.4; text-align: left;">
+                            <span style="color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 0.25rem;">Scored Relative To:</span>
+                            <div style="color: #cbd5e1;">🎯 Profile: <strong id="qv-ctx-profile" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">📋 Job Description: <strong id="qv-ctx-jd" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="qv-ctx-engine" style="color: #fff;">ResumeAI Engine v1.0</strong></div>
+                        </div>
                     </div>
                 </div>
 
@@ -773,6 +779,12 @@
                         <h3 id="cav-label">Version 1</h3>
                         <p id="cav-filename" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.25rem;">resume.pdf</p>
                         <p id="cav-date" style="font-size: 0.8rem; color: var(--text-secondary);">Uploaded on: 2026-07-12</p>
+                        <div id="cav-context-card" style="margin-top: 0.5rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; font-size: 0.8rem; line-height: 1.4;">
+                            <span style="color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 0.25rem;">Scored Relative To:</span>
+                            <div style="color: #cbd5e1;">🎯 Profile: <strong id="cav-ctx-profile" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">📋 Job Description: <strong id="cav-ctx-jd" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="cav-ctx-engine" style="color: #fff;">ResumeAI Engine v1.0</strong></div>
+                        </div>
                     </div>
                     <div style="margin-left: auto;">
                         <p id="cav-score-badge" class="score-badge" style="font-size: 1.1rem; padding: 0.5rem 1rem;">85.5% Match</p>

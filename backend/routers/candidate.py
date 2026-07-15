@@ -101,7 +101,7 @@ async def process_candidate_resume(
         
         persist_stage = PersistenceStage(db)
         persistence_result = persist_stage.execute(
-            candidate_result["pipeline_event"],
+            candidate_result["pipeline_context"],
             candidate_id=current_user.id,
             version=version,
             label=label_val,
@@ -325,3 +325,81 @@ def get_candidate_stats(
         "last_analysis_date": latest_scan.created_at.isoformat(),
         "timestamp": latest_scan.created_at.isoformat()
     }
+
+from pydantic import BaseModel
+
+class UpdateRecommendationPayload(BaseModel):
+    status: str  # ACTIVE, COMPLETED, DISMISSED, EXPIRED
+    accepted_by_user: Optional[bool] = None
+
+@router.put("/resumes/{resume_id}/recommendations/{rec_id}")
+def update_recommendation_status(
+    resume_id: int,
+    rec_id: str,
+    payload: UpdateRecommendationPayload,
+    current_user: User = Depends(require_candidate),
+    db: Session = Depends(get_db)
+):
+    """
+    Updates the lifecycle status and history flags of a specific recommendation
+    inside the analysis_metadata of the resume's scan result.
+    """
+    logger.info("Recommendation status update requested for resume: %d, rec: %s", resume_id, rec_id)
+    
+    # 1. Fetch the resume and verify candidate ownership
+    resume = (
+        db.query(Resume)
+        .filter(Resume.id == resume_id, Resume.candidate_id == current_user.id, Resume.status == ResumeStatus.ACTIVE)
+        .first()
+    )
+    if not resume:
+        raise HTTPException(status_code=404, detail="Resume version not found")
+        
+    # 2. Get the scan result
+    scan = resume.scan_results[0] if resume.scan_results else None
+    if not scan:
+        raise HTTPException(status_code=404, detail="Scan result not found for this resume version")
+        
+    # 3. Get analysis metadata
+    meta = scan.analysis_metadata or {}
+    recs_block = meta.get("recommendations", {})
+    recs_list = recs_block.get("list", [])
+    
+    # 4. Find the recommendation
+    found_rec = None
+    import datetime
+    for r in recs_list:
+        if r.get("id") == rec_id:
+            found_rec = r
+            break
+            
+    if not found_rec:
+        raise HTTPException(status_code=404, detail=f"Recommendation with ID '{rec_id}' not found in this analysis snapshot")
+        
+    # Valid statuses
+    valid_statuses = ["ACTIVE", "COMPLETED", "DISMISSED", "EXPIRED"]
+    status_upper = payload.status.upper()
+    if status_upper not in valid_statuses:
+        raise HTTPException(status_code=400, detail=f"Invalid status '{payload.status}'. Must be one of {valid_statuses}")
+        
+    # Update status and timestamps
+    found_rec["status"] = status_upper
+    if status_upper != "ACTIVE":
+        found_rec["resolved_at"] = datetime.datetime.utcnow().isoformat() + "Z"
+    else:
+        found_rec["resolved_at"] = None
+        
+    if payload.accepted_by_user is not None:
+        found_rec["accepted_by_user"] = payload.accepted_by_user
+    elif status_upper == "COMPLETED":
+        found_rec["accepted_by_user"] = True
+        
+    # 5. Save changes
+    from sqlalchemy.orm.attributes import flag_modified
+    meta["recommendations"]["list"] = recs_list
+    scan.analysis_metadata = meta
+    flag_modified(scan, "analysis_metadata")
+    db.commit()
+    
+    logger.info("Successfully updated recommendation '%s' status to %s", rec_id, status_upper)
+    return {"message": "Recommendation status updated successfully", "recommendation": found_rec}

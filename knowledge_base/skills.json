@@ -133,5 +133,23 @@
     "category": "Broad Category",
     "subcategory": "Engineering",
     "technology_family": "Frontend Development"
+  },
+  {
+    "id": "future.medical.radiology",
+    "canonical_name": "Radiology",
+    "aliases": ["Radiological Imaging", "Medical Imaging"],
+    "abbreviations": [],
+    "category": "Medical",
+    "subcategory": "Radiology",
+    "technology_family": "Healthcare"
+  },
+  {
+    "id": "future.finance.derivatives",
+    "canonical_name": "Derivatives",
+    "aliases": ["Financial Derivatives", "Options and Futures"],
+    "abbreviations": [],
+    "category": "Finance",
+    "subcategory": "Derivatives",
+    "technology_family": "Finance"
   }
 ]

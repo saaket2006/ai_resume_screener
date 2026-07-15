@@ -34,7 +34,18 @@ async def process_resumes(
     """
     logger.info("Recruiter endpoint called by user: %s", current_user.email)
     
-    # Resolve Job Description Text
+    # Resolve Form default objects if called directly
+    if not isinstance(jd_id, int):
+        try:
+            jd_id = int(jd_id)
+        except (TypeError, ValueError):
+            jd_id = None
+
+    if not isinstance(profile_id, int):
+        try:
+            profile_id = int(profile_id)
+        except (TypeError, ValueError):
+            profile_id = None
     if jd_id:
         jd_model = db.query(JobDescription).filter(
             JobDescription.id == jd_id,

@@ -19,9 +19,13 @@ def build_score_components(
     """
     components = []
     
+    # Extract weights from resolved profile or use default fallback
+    profile = getattr(scoring_event, "profile_resolved", None)
+    weights = profile.weights if profile else {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+    
     # 1. Technical Skills Component
     skills_raw = scoring_event.skill_score
-    skills_weight = 0.50
+    skills_weight = weights.get("skills", 0.50)
     skills_evidence = generate_skills_evidence(match_results)
     components.append(ScoreComponent(
         name="Technical Skills",
@@ -36,7 +40,7 @@ def build_score_components(
     
     # 2. Work Experience Component
     exp_raw = scoring_event.experience_score
-    exp_weight = 0.25
+    exp_weight = weights.get("experience", 0.25)
     exp_evidence = generate_experience_evidence(
         years=scoring_event.candidate_experience,
         internships=scoring_event.candidate_internships
@@ -54,7 +58,7 @@ def build_score_components(
     
     # 3. Education Component
     edu_raw = scoring_event.education_score
-    edu_weight = 0.15
+    edu_weight = weights.get("education", 0.15)
     edu_evidence = generate_education_evidence(scoring_event.candidate_education)
     components.append(ScoreComponent(
         name="Education",
@@ -69,7 +73,7 @@ def build_score_components(
     
     # 4. Projects Component
     proj_raw = scoring_event.projects_score
-    proj_weight = 0.10
+    proj_weight = weights.get("projects", 0.10)
     proj_evidence = generate_projects_evidence(scoring_event.candidate_projects)
     components.append(ScoreComponent(
         name="Projects",
