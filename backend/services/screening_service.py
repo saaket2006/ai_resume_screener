@@ -8,7 +8,15 @@ from backend.services.pipeline import AnalysisPipeline
 
 logger = logging.getLogger("resume_screener")
 
-async def screen_resumes(job_description: str, resumes: List[Dict]) -> Dict:
+from sqlalchemy.orm import Session
+from typing import List, Dict, Optional
+
+async def screen_resumes(
+    job_description: str,
+    resumes: List[Dict],
+    db: Optional[Session] = None,
+    profile_id: Optional[int] = None
+) -> Dict:
     """
     Core business logic to screen and rank candidate resumes against a job description.
     Utilizes the event-driven AnalysisPipeline for each individual resume.
@@ -38,19 +46,27 @@ async def screen_resumes(job_description: str, resumes: List[Dict]) -> Dict:
         filename = resume.get("filename", "unknown_file")
         contents = resume.get("content", b"")
         
-        # Execute Stages 1-5 of the analysis pipeline
-        explanation_result = pipeline.run_analysis(
+        # Execute Stages 1-7 of the analysis pipeline
+        import uuid
+        from backend.services.pipeline import AnalysisContext
+        context = AnalysisContext(
+            request_id=str(uuid.uuid4()),
+            profile_id=profile_id
+        )
+        recommendation_result = pipeline.run_analysis(
             filename=filename,
             content_bytes=contents,
             job_description=job_description,
-            clean_jd=clean_jd
+            clean_jd=clean_jd,
+            db=db,
+            context=context
         )
         
-        if explanation_result.status != "success":
-            logger.warning("Resume pipeline failed for '%s': %s", filename, explanation_result.error_message)
+        if recommendation_result.status != "success":
+            logger.warning("Resume pipeline failed for '%s': %s", filename, recommendation_result.error_message)
             processed_resumes.append({
                 "filename": filename,
-                "name": explanation_result.error_message,
+                "name": recommendation_result.error_message,
                 "email": "N/A",
                 "phone": "N/A",
                 "matched_skills": [],
@@ -58,7 +74,8 @@ async def screen_resumes(job_description: str, resumes: List[Dict]) -> Dict:
             })
             continue
             
-        scoring = explanation_result.scoring
+        # recommendation_result is the output of run_analysis (RecommendationBuiltEvent)
+        scoring = recommendation_result.explanation.scoring
         matching = scoring.matching
         
         processed_resumes.append({
@@ -77,9 +94,10 @@ async def screen_resumes(job_description: str, resumes: List[Dict]) -> Dict:
             "missing_skills": matching.missing_serialized,
             "semantic_score": scoring.semantic_score,
             "semantic_data": matching.semantic_metadata_payload,
-            "xai_explanations": explanation_result.xai_explanations,
-            "analysis_metadata": explanation_result.analysis_metadata,
-            "pipeline_event": explanation_result
+            "xai_explanations": recommendation_result.explanation.xai_explanations,
+            "analysis_metadata": recommendation_result.explanation.analysis_metadata,
+            "pipeline_event": recommendation_result,
+            "pipeline_context": context
         })
         
         logger.info("Processed candidate: '%s' | Edu: %s | Exp: %d yrs | Internships: %d | Skills: %d matched, %d missing | Semantic Score: %.1f%%",
@@ -116,7 +134,8 @@ async def screen_resumes(job_description: str, resumes: List[Dict]) -> Dict:
             "semantic_data": cand.get("semantic_data"),
             "xai_explanations": cand.get("xai_explanations"),
             "analysis_metadata": cand.get("analysis_metadata"),
-            "pipeline_event": cand.get("pipeline_event")
+            "pipeline_event": cand.get("pipeline_event"),
+            "pipeline_context": cand.get("pipeline_context")
         }
         final_response.append(cand_dict)
         

@@ -66,6 +66,20 @@ class Resume(Base):
     candidate = relationship("User", back_populates="resumes")
     scan_results = relationship("ScanResult", back_populates="resume", cascade="all, delete-orphan")
 
+class ScoringProfile(Base):
+    __tablename__ = "scoring_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    target_role = Column(String(255), nullable=True)
+    experience_level = Column(String(100), nullable=True)
+    domain = Column(String(100), nullable=True)
+    weights = Column(JSON, nullable=False)
+    created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    is_default = Column(Boolean, default=False, nullable=False)
+
 class JobDescription(Base):
     __tablename__ = "job_descriptions"
 
@@ -74,6 +88,10 @@ class JobDescription(Base):
     title = Column(String(255), nullable=False)
     subtitle = Column(String(255), nullable=True)
     description = Column(Text, nullable=False)
+    company = Column(String(255), nullable=True)
+    optional_notes = Column(Text, nullable=True)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow, nullable=True)
+    is_archived = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships

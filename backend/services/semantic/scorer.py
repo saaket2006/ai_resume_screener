@@ -24,7 +24,7 @@ class SemanticScorer:
                 "match_type": res.match_type,
                 "confidence": res.confidence,
                 "weight": res.weight,
-                "reason": res.reason
+                "reason": res.reason.dict() if hasattr(res.reason, "dict") else res.reason
             })
             
         overall_score = round((total_weight / len(match_results)) * 100, 2)

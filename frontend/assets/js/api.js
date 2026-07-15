@@ -206,3 +206,59 @@ export async function updateCandidateResumeLabel(resumeId, label) {
         body: JSON.stringify({ label })
     });
 }
+
+/**
+ * GET /api/recruiter/profiles
+ */
+export async function getScoringProfiles() {
+    return request(API_ENDPOINTS.PROFILES, {
+        method: "GET"
+    });
+}
+
+/**
+ * GET /api/recruiter/jobs
+ */
+export async function getJobs(includeArchived = false) {
+    return request(`${API_ENDPOINTS.JOBS}?include_archived=${includeArchived}`, {
+        method: "GET"
+    });
+}
+
+/**
+ * POST /api/recruiter/jobs
+ */
+export async function createJob(formData) {
+    return request(API_ENDPOINTS.JOBS, {
+        method: "POST",
+        body: formData
+    });
+}
+
+/**
+ * PUT /api/recruiter/jobs/{jd_id}
+ */
+export async function updateJob(jdId, formData) {
+    return request(`${API_ENDPOINTS.JOBS}/${jdId}`, {
+        method: "PUT",
+        body: formData
+    });
+}
+
+/**
+ * DELETE /api/recruiter/jobs/{jd_id}
+ */
+export async function archiveJob(jdId) {
+    return request(`${API_ENDPOINTS.JOBS}/${jdId}`, {
+        method: "DELETE"
+    });
+}
+
+/**
+ * DELETE /api/recruiter/jobs/{jd_id}/delete
+ */
+export async function deleteJob(jdId) {
+    return request(`${API_ENDPOINTS.JOBS}/${jdId}/delete`, {
+        method: "DELETE"
+    });
+}

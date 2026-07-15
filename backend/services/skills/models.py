@@ -9,6 +9,7 @@ class Skill(BaseModel):
     category: str
     subcategory: str
     technology_family: str
+    namespace: str = "core"
 
 class NormalizedSkill(BaseModel):
     skill: Skill

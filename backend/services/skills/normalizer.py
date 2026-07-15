@@ -18,9 +18,11 @@ class SkillNormalizer:
         cleaned = skill_name.strip()
         cleaned_lower = cleaned.lower()
 
-        # 1. Exact Match Check (canonical_name or stable id)
+        # 1. Exact Match Check (canonical_name, stable id, or namespace-stripped id)
         for s in self.skills:
-            if s.canonical_name.lower() == cleaned_lower or s.id == cleaned_lower:
+            id_parts = s.id.split(".")
+            simple_id = id_parts[-1] if len(id_parts) > 1 else s.id
+            if s.canonical_name.lower() == cleaned_lower or s.id == cleaned_lower or simple_id == cleaned_lower:
                 return NormalizedSkill(skill=s, match_type="exact", confidence=1.0)
 
         # 2. Alias Match Check (synonyms e.g. ReactJS -> React)

@@ -131,8 +131,10 @@ async def process_candidate_resume(
 
         # Clean up pipeline events to prevent response serialization issues
         candidate_result.pop("pipeline_event", None)
+        candidate_result.pop("pipeline_context", None)
         for r in results.get("results", []):
             r.pop("pipeline_event", None)
+            r.pop("pipeline_context", None)
 
         return results
 
@@ -243,7 +245,8 @@ def get_candidate_resume_details(
             "education_score": score_categories.get("education_score") if "education_score" in score_categories else meta.get("education_score", 0.0),
             "projects_score": score_categories.get("projects_score") if "projects_score" in score_categories else meta.get("projects_score", 0.0)
         },
-        "xai": meta.get("xai")
+        "xai": meta.get("xai"),
+        "recommendations": meta.get("recommendations")
     }
 
 @router.delete("/resumes/{resume_id}")
