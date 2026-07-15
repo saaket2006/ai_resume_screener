@@ -134,13 +134,22 @@ We have planned the following lightweight abstractions to enhance the system's o
 ```text
 ├── backend/
 │   ├── main.py                 # FastAPI Application Handlers
-│   └── services/               # Core NLP, Extraction, and Scoring Logic
+│   ├── models/                 # Database Schema Models & Enums
+│   ├── routers/                # FastAPI Routers (candidate, recruiter, auth)
+│   └── services/               # Core Application Logic
+│       ├── policy/             # Policy Layer (scoring, recommendations, recruiter)
+│       ├── recommendations/    # Resume Improvement Engine (heuristics, prioritizer, builder)
+│       ├── semantic/           # Normalized Skill Layer & Matcher
+│       ├── xai/                # Explainable Scoring Engine
+│       └── pipeline.py         # Event-Based Analysis Pipeline Stages
 ├── frontend/
-│   ├── index.html              # UI Structure & Auth Modal
-│   ├── style.css               # Premium Styling, Animations & Responsive UI
-│   └── app.js                  # Firebase Integration, UI Logic & Animations
-├── firebase.json               # Firebase Hosting Configuration
-├── .firebaserc                 # Firebase Project Link
+│   ├── index.html              # UI Structure & Modals
+│   ├── style.css               # Premium CSS Styles & Layouts
+│   └── assets/js/
+│       ├── app.js              # Auth & Initialization Orchestrator
+│       └── pages/
+│           ├── candidate.js    # Candidate Dashboard & Snapshot Modals
+│           └── recruiter.js    # Recruiter Dashboard & Quick View Modals
 ├── requirements.txt            # Python Dependencies
 ├── README.md                   # Project Documentation
 └── notebooks/

@@ -35,8 +35,16 @@ except ValueError:
 
 # Test database connection on startup by importing database engine
 try:
-    from backend.database.database import engine
+    from backend.database.database import engine, SessionLocal
+    from backend.services.policy.default_profiles import seed_default_profiles
     logger.info("Startup Validation: Database connection verified successfully.")
+    
+    # Seed default profiles on startup
+    db = SessionLocal()
+    try:
+        seed_default_profiles(db)
+    finally:
+        db.close()
 except Exception as e:
     logger.critical("Startup Validation Failed: Database connection could not be established. Error: %s", e)
     raise RuntimeError(f"Database connection test failed: {e}") from e
@@ -105,4 +113,10 @@ async def legacy_process_resumes(
 ):
     """Legacy endpoint delegating to recruiter process_resumes. Requires Recruiter authentication."""
     logger.info("Legacy endpoint /api/process called by recruiter: %s. Routing to recruiter service...", current_user.email)
-    return await recruiter.process_resumes(request, job_description, resumes, current_user=current_user, db=db)
+    return await recruiter.process_resumes(
+        request=request,
+        job_description=job_description,
+        resumes=resumes,
+        current_user=current_user,
+        db=db
+    )

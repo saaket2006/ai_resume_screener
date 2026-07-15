@@ -67,9 +67,16 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
         # 4. Projects Score (extract_projects returns 0-5)
         proj_score = (resume.get("projects", 0) / 5.0) * 100
         
-        # Apply Weights
-        # Skills: 50%, Experience: 25%, Education: 15%, Projects: 10%
-        final_score = (skill_score * 0.50) + (exp_score * 0.25) + (edu_score * 0.15) + (proj_score * 0.10)
+        # Apply Weights dynamically from resolved scoring profile weights (Part 5)
+        meta = resume.get("analysis_metadata", {})
+        weights = meta.get("component_weights", {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10})
+        
+        skills_w = weights.get("skills", 0.50)
+        experience_w = weights.get("experience", 0.25)
+        education_w = weights.get("education", 0.15)
+        projects_w = weights.get("projects", 0.10)
+        
+        final_score = (skill_score * skills_w) + (exp_score * experience_w) + (edu_score * education_w) + (proj_score * projects_w)
         logger.debug("  Scoring '%s': Skill=%.1f Exp=%.1f Edu=%.1f Proj=%.1f → Final=%.1f",
                      resume.get("name", "Unknown"), skill_score, exp_score, edu_score, proj_score, final_score)
         

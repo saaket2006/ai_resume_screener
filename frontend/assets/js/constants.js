@@ -31,7 +31,9 @@ export const API_ENDPOINTS = {
     PROCESS_RECRUITER: "/api/recruiter/process",
     CANDIDATE_STATS: "/api/candidate/stats",
     CANDIDATE_PROCESS: "/api/candidate/process",
-    CANDIDATE_RESUMES: "/api/candidate/resumes"
+    CANDIDATE_RESUMES: "/api/candidate/resumes",
+    PROFILES: "/api/recruiter/profiles",
+    JOBS: "/api/recruiter/jobs"
 };
 
 export const COMPANY_TYPES = [

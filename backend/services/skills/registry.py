@@ -30,13 +30,23 @@ class JsonSkillRepository(SkillRepository):
             
         skills = []
         for item in data:
+            item_id = item["id"]
+            if "." in item_id:
+                parts = item_id.split(".", 1)
+                ns = parts[0]
+                full_id = item_id
+            else:
+                ns = "core"
+                full_id = f"core.{item_id}"
+                
             skills.append(Skill(
-                id=item["id"],
+                id=full_id,
                 canonical_name=item["canonical_name"],
                 aliases=item.get("aliases", []),
                 abbreviations=item.get("abbreviations", []),
                 category=item["category"],
                 subcategory=item.get("subcategory", ""),
-                technology_family=item.get("technology_family", "")
+                technology_family=item.get("technology_family", ""),
+                namespace=ns
             ))
         return skills

@@ -21,13 +21,19 @@ class SemanticMatcher:
                 # We want to match the highest scoring relationship for this required skill
                 if weight > best_weight:
                     best_weight = weight
+                    from backend.services.semantic.models import MatchReason
+                    reason_obj = MatchReason(
+                        code=f"{m_type}_MATCH",
+                        message=reason,
+                        source="semantic" if m_type != "EXACT" else "exact"
+                    )
                     best_result = MatchResult(
                         required_skill=req,
                         candidate_skill=cand,
                         match_type=m_type,
                         confidence=conf,
                         weight=weight,
-                        reason=reason
+                        reason=reason_obj
                     )
             
             # If candidate had no matching skills, create a default UNKNOWN match result
@@ -42,13 +48,19 @@ class SemanticMatcher:
                     subcategory="Unknown",
                     technology_family="Unknown"
                 )
+                from backend.services.semantic.models import MatchReason
+                reason_obj = MatchReason(
+                    code="SKILL_MISSING",
+                    message=f"No match found for required skill {req.canonical_name}",
+                    source="exact"
+                )
                 best_result = MatchResult(
                     required_skill=req,
                     candidate_skill=empty_cand,
                     match_type="UNKNOWN",
                     confidence=0.0,
                     weight=0.0,
-                    reason=f"No match found for required skill {req.canonical_name}"
+                    reason=reason_obj
                 )
                 
             match_results.append(best_result)

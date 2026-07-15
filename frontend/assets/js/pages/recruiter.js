@@ -89,6 +89,17 @@ export function initRecruiterPage() {
 
             const formData = new FormData();
             formData.append('job_description', jd);
+            
+            const profileSelect = document.getElementById('rec-profile-select');
+            if (profileSelect && profileSelect.value) {
+                formData.append('profile_id', profileSelect.value);
+            }
+            
+            const jdSelect = document.getElementById('rec-jd-select');
+            if (jdSelect && jdSelect.value) {
+                formData.append('jd_id', jdSelect.value);
+            }
+            
             recUploadedFiles.forEach(file => {
                 formData.append('resumes', file);
             });
@@ -102,6 +113,75 @@ export function initRecruiterPage() {
                 alert(err.message);
             } finally {
                 toggleButtonLoading(recProcessBtn, false, "Processing...", "Run ATS Screening");
+            }
+        });
+    }
+
+    const jdSelect = document.getElementById('rec-jd-select');
+    const btnSaveJd = document.getElementById('btn-save-jd');
+    const btnArchiveJd = document.getElementById('btn-archive-jd');
+
+    if (jdSelect) {
+        jdSelect.addEventListener('change', () => {
+            const selectedId = jdSelect.value;
+            if (selectedId && window.recruiterJobsList) {
+                const job = window.recruiterJobsList.find(j => j.id == selectedId);
+                if (job) {
+                    recJobDescription.value = job.description;
+                    if (btnSaveJd) btnSaveJd.textContent = "💾 Update Library Item";
+                }
+            } else {
+                recJobDescription.value = '';
+                if (btnSaveJd) btnSaveJd.textContent = "💾 Save to Library";
+            }
+        });
+    }
+
+    if (btnSaveJd) {
+        btnSaveJd.addEventListener('click', async () => {
+            const jdText = recJobDescription.value.trim();
+            if (!jdText) {
+                alert("Please enter a job description to save.");
+                return;
+            }
+            const selectedId = jdSelect ? jdSelect.value : "";
+            try {
+                const title = jdText.substring(0, 50) + (jdText.length > 50 ? "..." : "");
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('description', jdText);
+                
+                if (selectedId) {
+                    await api.updateJob(selectedId, formData);
+                    alert("Job description updated successfully!");
+                } else {
+                    const res = await api.createJob(formData);
+                    alert("Job description saved to library!");
+                }
+                await loadJobDescriptionsDropdown();
+            } catch (err) {
+                alert("Failed to save job description: " + err.message);
+            }
+        });
+    }
+
+    if (btnArchiveJd) {
+        btnArchiveJd.addEventListener('click', async () => {
+            const selectedId = jdSelect ? jdSelect.value : "";
+            if (!selectedId) {
+                alert("Please select a job description from the library to archive.");
+                return;
+            }
+            if (confirm("Are you sure you want to archive this job description?")) {
+                try {
+                    await api.archiveJob(selectedId);
+                    alert("Job description archived successfully.");
+                    recJobDescription.value = "";
+                    await loadJobDescriptionsDropdown();
+                    if (btnSaveJd) btnSaveJd.textContent = "💾 Save to Library";
+                } catch (err) {
+                    alert("Failed to archive job description: " + err.message);
+                }
             }
         });
     }
@@ -122,6 +202,43 @@ export function initRecruiterPage() {
     }
 
     initialized = true;
+}
+
+/**
+ * Initializer for Recruiter Resume Screening view.
+ */
+export async function initializeRecruiterScreen() {
+    await loadScoringProfilesDropdown();
+    await loadJobDescriptionsDropdown();
+}
+
+async function loadScoringProfilesDropdown() {
+    const profileSelect = document.getElementById('rec-profile-select');
+    if (!profileSelect) return;
+    try {
+        const profiles = await api.getScoringProfiles();
+        profileSelect.innerHTML = profiles.map(p => 
+            `<option value="${p.id}" ${p.is_default ? "selected" : ""}>${p.name} (Skills: ${parseInt(p.weights.skills*100)}%, Exp: ${parseInt(p.weights.experience*100)}%)</option>`
+        ).join("");
+    } catch (err) {
+        console.error("Failed to load scoring profiles:", err);
+    }
+}
+
+async function loadJobDescriptionsDropdown() {
+    const jdSelect = document.getElementById('rec-jd-select');
+    if (!jdSelect) return;
+    try {
+        const jobs = await api.getJobs();
+        let options = '<option value="">-- Create New (No Library Item Selected) --</option>';
+        options += jobs.map(j => 
+            `<option value="${j.id}">${j.title} ${j.company ? " | " + j.company : ""}</option>`
+        ).join("");
+        jdSelect.innerHTML = options;
+        window.recruiterJobsList = jobs;
+    } catch (err) {
+        console.error("Failed to load job descriptions:", err);
+    }
 }
 
 /**
@@ -176,6 +293,32 @@ export async function initializeRecruiterDashboard() {
         const stats = await api.getRecruiterStats();
         updateStatisticCard("stat-total-screened", stats.total_candidates_screened);
         updateStatisticCard("stat-avg-score", `${stats.average_ats_score.toFixed(1)}%`);
+        updateStatisticCard("stat-avg-experience", `${stats.average_experience_tenure.toFixed(1)} yrs`);
+        updateStatisticCard("stat-common-education", stats.most_common_education_level);
+        
+        // Render common missing skills list
+        const missingList = document.getElementById("stat-missing-skills-list");
+        if (missingList) {
+            missingList.innerHTML = stats.most_common_missing_skills.length > 0
+                ? stats.most_common_missing_skills.map(s => `<li>${s.skill} (found ${s.count} times)</li>`).join("")
+                : "<li style='list-style:none; color:gray;'>No missing skills recorded yet</li>";
+        }
+        
+        // Render common matched skills list
+        const matchedList = document.getElementById("stat-matched-skills-list");
+        if (matchedList) {
+            matchedList.innerHTML = stats.most_common_matched_skills.length > 0
+                ? stats.most_common_matched_skills.map(s => `<li>${s.skill} (found ${s.count} times)</li>`).join("")
+                : "<li style='list-style:none; color:gray;'>No matched skills recorded yet</li>";
+        }
+        
+        // Render top improvements list
+        const improvementsList = document.getElementById("stat-improvements-list");
+        if (improvementsList) {
+            improvementsList.innerHTML = stats.top_recommended_improvements.length > 0
+                ? stats.top_recommended_improvements.map(r => `<li>${r.recommendation} (found ${r.count} times)</li>`).join("")
+                : "<li style='list-style:none; color:gray;'>No improvements generated yet</li>";
+        }
     } catch (err) {
         console.error("Error loading recruiter dashboard:", err);
     }
@@ -266,6 +409,12 @@ window.showCandidateQuickView = (cand) => {
     const xaiContainer = document.getElementById('qv-xai-container');
     if (xaiContainer) {
         xaiContainer.innerHTML = renderXaiContent(cand.analysis_metadata?.xai);
+    }
+    
+    // Render Resume Improvement Recommendations
+    const recsContainer = document.getElementById('qv-recommendations-container');
+    if (recsContainer) {
+        recsContainer.innerHTML = renderRecommendations(cand.analysis_metadata?.recommendations);
     }
     
     const allExtracted = cand.matched_skills.concat(cand.missing_skills);
@@ -368,6 +517,89 @@ export function renderXaiContent(xaiData) {
                             }).join('') || '<p style="margin:0; font-size:0.8rem; color:#666;">No evidence items identified.</p>'}
                         </div>
                     </div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    return html;
+}
+
+window.toggleRecCard = (headerEl) => {
+    const item = headerEl.closest('.rec-card');
+    const content = item.querySelector('.rec-content');
+    const chevron = item.querySelector('.rec-chevron');
+    
+    if (content.style.display === 'none' || content.classList.contains('hidden')) {
+        content.style.display = 'block';
+        content.classList.remove('hidden');
+        chevron.style.transform = 'rotate(90deg)';
+        headerEl.style.background = 'rgba(255, 255, 255, 0.03)';
+    } else {
+        content.style.display = 'none';
+        content.classList.add('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+        headerEl.style.background = 'transparent';
+    }
+};
+
+export function renderRecommendations(recsData) {
+    if (!recsData || !recsData.list || recsData.list.length === 0) {
+        return `
+            <div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 8px;">
+                <p style="margin: 0; font-size: 0.95rem; color: #fca5a5;">This analysis was created before Resume Improvement Recommendations were available.</p>
+            </div>
+        `;
+    }
+
+    let html = `<div style="display: flex; flex-direction: column; gap: 0.75rem;">`;
+
+    recsData.list.forEach((rec) => {
+        let priColor = "#ef4444"; // red
+        if (rec.priority === "HIGH") priColor = "#f59e0b"; // orange
+        else if (rec.priority === "MEDIUM") priColor = "#eab308"; // yellow
+        else if (rec.priority === "LOW") priColor = "#3b82f6"; // blue
+        
+        const priBadge = `<span style="background: ${priColor}15; color: ${priColor}; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase;">${rec.priority}</span>`;
+        const gainBadge = `<span style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px;">+${rec.estimated_score_gain.toFixed(1)} ATS pts</span>`;
+
+        html += `
+            <div class="rec-card" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.01);">
+                <div class="rec-header" onclick="toggleRecCard(this)" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; cursor: pointer; transition: background 0.2s;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+                        <span class="rec-chevron" style="font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.2s; display: inline-block;">▶</span>
+                        <strong style="color: #fff; font-size: 0.95rem;">${rec.title}</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        ${priBadge}
+                        ${gainBadge}
+                    </div>
+                </div>
+                
+                <div class="rec-content hidden" style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.15); display: none;">
+                    <div style="margin-bottom: 0.75rem;">
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">💡 Actionable Advice</h5>
+                        <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #e2e8f0;">${rec.description}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 0.75rem;">
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">❓ Why We Recommend This</h5>
+                        <p style="margin: 0; font-size: 0.85rem; line-height: 1.4; color: var(--text-secondary);">${rec.reason}</p>
+                    </div>
+        `;
+
+        if (rec.related_skills && rec.related_skills.length > 0) {
+            const skillTags = rec.related_skills.map(s => `<span class="skill-tag" style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); color: #a5b4fc; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 4px; display: inline-block; margin-right: 0.25rem; margin-top: 0.25rem;">${s}</span>`).join('');
+            html += `
+                    <div style="margin-top: 0.5rem;">
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">🏷️ Related Skill(s)</h5>
+                        <div style="display: flex; flex-wrap: wrap;">${skillTags}</div>
+                    </div>
+            `;
+        }
+
+        html += `
                 </div>
             </div>
         `;

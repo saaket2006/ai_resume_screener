@@ -24,14 +24,61 @@ from backend.services.info_extractor import (
 from backend.services.semantic.matcher import SemanticMatcher
 from backend.services.semantic.scorer import SemanticScorer
 from backend.services.metadata_builder import build_analysis_metadata
-from backend.models.models import Resume, ScanResult
+from backend.services.policy.scoring_policy import default_scoring_policy
+from backend.models.models import Resume, ScanResult, ScoringProfile
 from backend.models.enums import ResumeStatus
 
 logger = logging.getLogger("resume_screener")
 
-# ==========================================
-# 1. Pipeline Event / Payload Contracts
-# ==========================================
+class AnalysisContext:
+    """
+    Lightweight, shared context carrying tracing IDs, configurations,
+    and stage execution metrics across all pipeline stages.
+    """
+    def __init__(
+        self,
+        request_id: str,
+        event: Any = None,
+        analysis_id: Optional[int] = None,
+        candidate_id: Optional[int] = None,
+        recruiter_id: Optional[int] = None,
+        profile_id: Optional[int] = None,
+        configuration: Optional[Dict[str, Any]] = None
+    ):
+        self._request_id = request_id
+        self._analysis_id = analysis_id
+        self._candidate_id = candidate_id
+        self._recruiter_id = recruiter_id
+        self._profile_id = profile_id
+        self._timestamps = {"created_at": datetime.datetime.utcnow().isoformat() + "Z"}
+        self.event = event
+        self.logger = logging.getLogger("resume_screener")
+        self.configuration = configuration or {}
+        self.metrics = {}  # {stage_name: {start_time, end_time, duration_ms, status}}
+
+    @property
+    def request_id(self) -> str:
+        return self._request_id
+
+    @property
+    def analysis_id(self) -> Optional[int]:
+        return self._analysis_id
+
+    @property
+    def candidate_id(self) -> Optional[int]:
+        return self._candidate_id
+
+    @property
+    def recruiter_id(self) -> Optional[int]:
+        return self._recruiter_id
+
+    @property
+    def profile_id(self) -> Optional[int]:
+        return self._profile_id
+
+    @property
+    def timestamps(self) -> Dict[str, str]:
+        return self._timestamps
 
 class PipelineEvent:
     """Base class for all pipeline stages' input/output data contracts."""
@@ -73,9 +120,24 @@ class SemanticMatchedEvent(PipelineEvent):
         self.status = skills.status
         self.error_message = skills.error_message
 
-class ScoredEvent(PipelineEvent):
+class ProfileResolvedEvent(PipelineEvent):
     def __init__(self, matching: SemanticMatchedEvent):
         self.matching = matching
+        self.profile_id: Optional[int] = None
+        self.profile_name: str = "General Software Engineer"
+        self.profile_version: str = "1.0.0"
+        self.weights: Dict[str, float] = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+        self.status = matching.status
+        self.error_message = matching.error_message
+
+class ScoredEvent(PipelineEvent):
+    def __init__(self, source: Any):
+        if isinstance(source, ProfileResolvedEvent):
+            self.profile_resolved = source
+            self.matching = source.matching
+        else:
+            self.profile_resolved = None
+            self.matching = source
         self.semantic_score = 0.0
         
         # Candidate Info
@@ -97,8 +159,8 @@ class ScoredEvent(PipelineEvent):
         self.projects_score = 0.0
         self.doc_similarity_score = 0.0
         
-        self.status = matching.status
-        self.error_message = matching.error_message
+        self.status = self.matching.status
+        self.error_message = self.matching.error_message
 
 class ExplanationBuiltEvent(PipelineEvent):
     def __init__(self, scoring: ScoredEvent):
@@ -109,14 +171,21 @@ class ExplanationBuiltEvent(PipelineEvent):
         self.status = scoring.status
         self.error_message = scoring.error_message
 
-class PersistenceEvent(PipelineEvent):
+class RecommendationBuiltEvent(PipelineEvent):
     def __init__(self, explanation: ExplanationBuiltEvent):
         self.explanation = explanation
+        self.recommendations: List[Dict[str, Any]] = []
+        self.status = explanation.status
+        self.error_message = explanation.error_message
+
+class PersistenceEvent(PipelineEvent):
+    def __init__(self, recommendation: RecommendationBuiltEvent):
+        self.recommendation = recommendation
         self.resume_id: Optional[int] = None
         self.scan_result_id: Optional[int] = None
         
-        self.status = explanation.status
-        self.error_message = explanation.error_message
+        self.status = recommendation.status
+        self.error_message = recommendation.error_message
 
 
 # ==========================================
@@ -134,15 +203,21 @@ class PipelineStage(ABC):
 class ResumeTextExtractionStage(PipelineStage):
     """Stage 1: Validates and extracts raw text from resume bytes."""
     
-    def execute(self, event: ResumeExtractedEvent) -> ResumeExtractedEvent:
+    def execute(self, arg: Any) -> Any:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+
         if event.status != "success":
-            return event
+            return arg
             
         # File type validation
         if not any(event.filename.lower().endswith(ext) for ext in settings.ALLOWED_EXTENSIONS):
             logger.warning("Skipping '%s': Unsupported file extension", event.filename)
             event.status = "error"
             event.error_message = "Unsupported/Invalid File"
+            if is_context:
+                arg.event = event
+                return arg
             return event
             
         # File size validation
@@ -151,6 +226,9 @@ class ResumeTextExtractionStage(PipelineStage):
                            event.filename, len(event.content_bytes), settings.MAX_FILE_SIZE)
             event.status = "error"
             event.error_message = "File Too Large (>5MB)"
+            if is_context:
+                arg.event = event
+                return arg
             return event
             
         # Text extraction
@@ -162,15 +240,24 @@ class ResumeTextExtractionStage(PipelineStage):
             event.status = "error"
             event.error_message = "Unreadable File"
             
+        if is_context:
+            arg.event = event
+            return arg
         return event
 
 
 class SkillExtractionStage(PipelineStage):
     """Stage 2: Extracts technical skills from raw text."""
     
-    def execute(self, event: ResumeExtractedEvent) -> SkillsExtractedEvent:
+    def execute(self, arg: Any) -> Any:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+        
         output = SkillsExtractedEvent(event)
         if output.status != "success":
+            if is_context:
+                arg.event = output
+                return arg
             return output
             
         try:
@@ -183,15 +270,24 @@ class SkillExtractionStage(PipelineStage):
             output.status = "error"
             output.error_message = "Skill extraction failed"
             
+        if is_context:
+            arg.event = output
+            return arg
         return output
 
 
 class SemanticMatchingStage(PipelineStage):
     """Stage 3: Performs semantic skill matching using the Semantic Scoring Engine."""
     
-    def execute(self, event: SkillsExtractedEvent) -> SemanticMatchedEvent:
+    def execute(self, arg: Any) -> Any:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+        
         output = SemanticMatchedEvent(event)
         if output.status != "success":
+            if is_context:
+                arg.event = output
+                return arg
             return output
             
         try:
@@ -228,7 +324,7 @@ class SemanticMatchingStage(PipelineStage):
                     "candidate": res.candidate_skill.canonical_name,
                     "confidence": res.confidence,
                     "weight": res.weight,
-                    "reason": res.reason
+                    "reason": res.reason.dict() if hasattr(res.reason, "dict") else res.reason
                 }
                 if res.match_type == "EXACT":
                     exact_list.append(item)
@@ -251,20 +347,96 @@ class SemanticMatchingStage(PipelineStage):
             output.status = "error"
             output.error_message = "Semantic matching failed"
             
+        if is_context:
+            arg.event = output
+            return arg
+        return output
+
+
+class ScoringProfileResolutionStage(PipelineStage):
+    """Stage 4: Resolves the profile weights configuration from profile_id or default."""
+    
+    def __init__(self, db: Optional[Session] = None):
+        self.db = db
+
+    def execute(self, arg: Any) -> Any:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+        
+        output = ProfileResolvedEvent(event)
+        if output.status != "success":
+            if is_context:
+                arg.event = output
+                return arg
+            return output
+            
+        try:
+            profile_id = None
+            if is_context:
+                profile_id = arg.profile_id
+                
+            # If DB session is provided, resolve from DB
+            resolved = None
+            if self.db and profile_id is not None:
+                resolved = self.db.query(ScoringProfile).filter(ScoringProfile.id == profile_id).first()
+            elif self.db:
+                # Resolve default profile
+                resolved = self.db.query(ScoringProfile).filter(ScoringProfile.is_default == True).first()
+                
+            if resolved:
+                output.profile_id = resolved.id
+                output.profile_name = resolved.name
+                # weights might be stringified JSON or dict
+                w = resolved.weights
+                if isinstance(w, str):
+                    import json
+                    w = json.loads(w)
+                output.weights = {k: float(v) for k, v in w.items()}
+                logger.info(f"Resolved scoring profile '{resolved.name}' with weights: {output.weights}")
+            else:
+                # Built-in fallback
+                output.profile_id = None
+                output.profile_name = "General Software Engineer"
+                output.weights = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+                logger.info("Using default general software engineer weights (Fallback)")
+                
+        except Exception as e:
+            logger.error("Scoring profile resolution failed: %s. Falling back to default.", e)
+            output.profile_id = None
+            output.profile_name = "General Software Engineer"
+            output.weights = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+            
+        if is_context:
+            arg.event = output
+            return arg
         return output
 
 
 class ScoringStage(PipelineStage):
     """Stage 4: Scores candidate details (experience, education, projects, document similarity)."""
     
-    def execute(self, event: SemanticMatchedEvent) -> ScoredEvent:
+    def execute(self, arg: Any) -> Any:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+        
         output = ScoredEvent(event)
         if output.status != "success":
+            if is_context:
+                arg.event = output
+                return arg
             return output
             
         try:
-            raw_text = event.skills.extraction.raw_text
-            jd_skills = event.skills.jd_skills_names
+            # Resolve event and weights
+            if isinstance(event, ProfileResolvedEvent):
+                weights = event.weights
+                matching_event = event.matching
+            else:
+                weights = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+                matching_event = event
+                
+            raw_text = matching_event.skills.extraction.raw_text
+            jd_skills = matching_event.skills.jd_skills_names
             
             # Extract candidate metadata details
             output.candidate_name = extract_name(raw_text)
@@ -278,12 +450,12 @@ class ScoringStage(PipelineStage):
             output.candidate_projects = extract_projects(raw_text)
             
             # Pull scores from matching event
-            output.semantic_score = event.semantic_metadata_payload.get("semantic_score", 0.0)
+            output.semantic_score = matching_event.semantic_metadata_payload.get("semantic_score", 0.0)
             output.skill_score = output.semantic_score
             
-            # 1. Experience Score (Max 10 years for 100%)
+            # 1. Experience Score (Max years from policy)
             effective_exp_years = output.candidate_experience + (output.candidate_internships * 0.5)
-            output.experience_score = min((effective_exp_years / 10.0) * 100, 100)
+            output.experience_score = min((effective_exp_years / default_scoring_policy.max_experience_years) * 100, 100)
             
             # 2. Education Score
             education = output.candidate_education
@@ -296,11 +468,21 @@ class ScoringStage(PipelineStage):
             else:
                 output.education_score = 20
                 
-            # 3. Projects Score
-            output.projects_score = (output.candidate_projects / 5.0) * 100
+            # 3. Projects Score (Target count from policy)
+            output.projects_score = (output.candidate_projects / default_scoring_policy.project_target_count) * 100
             
-            # 4. Overall Similarity Score
-            output.similarity_score = (output.skill_score * 0.50) + (output.experience_score * 0.25) + (output.education_score * 0.15) + (output.projects_score * 0.10)
+            # 4. Overall Similarity Score (Weights dynamically from resolved profile weights)
+            skills_w = weights.get("skills", 0.50)
+            experience_w = weights.get("experience", 0.25)
+            education_w = weights.get("education", 0.15)
+            projects_w = weights.get("projects", 0.10)
+            
+            output.similarity_score = (
+                output.skill_score * skills_w +
+                output.experience_score * experience_w +
+                output.education_score * education_w +
+                output.projects_score * projects_w
+            )
             output.similarity_score = round(output.similarity_score, 2)
             
             # 5. TF-IDF Cosine Similarity for Document Similarity Component
@@ -309,7 +491,7 @@ class ScoringStage(PipelineStage):
                 from sklearn.metrics.pairwise import cosine_similarity
                 
                 jd_text = " ".join(jd_skills)
-                cand_text = " ".join(event.matched_serialized)
+                cand_text = " ".join(matching_event.matched_serialized)
                 
                 if jd_text.strip() and cand_text.strip():
                     vectorizer = TfidfVectorizer(stop_words='english')
@@ -331,15 +513,24 @@ class ScoringStage(PipelineStage):
             output.status = "error"
             output.error_message = "Scoring failed"
             
+        if is_context:
+            arg.event = output
+            return arg
         return output
 
 
 class ExplanationBuildingStage(PipelineStage):
     """Stage 5: Builds structured score explanations (XAI)."""
     
-    def execute(self, event: ScoredEvent) -> ExplanationBuiltEvent:
+    def execute(self, arg: Any) -> Any:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+        
         output = ExplanationBuiltEvent(event)
         if output.status != "success":
+            if is_context:
+                arg.event = output
+                return arg
             return output
             
         try:
@@ -421,6 +612,28 @@ class ExplanationBuildingStage(PipelineStage):
                 "explanations": explanations
             }
             
+            # Enrich with Adaptive Scoring Profile details (Part 6)
+            profile_resolved = getattr(event, "profile_resolved", None)
+            if profile_resolved:
+                output.analysis_metadata["profile_id"] = profile_resolved.profile_id
+                output.analysis_metadata["profile_name"] = profile_resolved.profile_name
+                output.analysis_metadata["profile_version"] = profile_resolved.profile_version
+                output.analysis_metadata["component_weights"] = profile_resolved.weights
+            else:
+                output.analysis_metadata["profile_id"] = None
+                output.analysis_metadata["profile_name"] = "General Software Engineer"
+                output.analysis_metadata["profile_version"] = "1.0.0"
+                output.analysis_metadata["component_weights"] = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+            
+            # Store structured score breakdown
+            output.analysis_metadata["score_breakdown"] = {
+                "skill_score": event.skill_score,
+                "experience_score": event.experience_score,
+                "education_score": event.education_score,
+                "projects_score": event.projects_score,
+                "doc_similarity_score": event.doc_similarity_score
+            }
+            
             # Set flat fields for legacy compatibility / logs
             output.xai_explanations = {
                 "skills_summary": explanations.get("skills", {}).get("summary", {}).get("why_awarded", ""),
@@ -435,6 +648,69 @@ class ExplanationBuildingStage(PipelineStage):
             output.status = "error"
             output.error_message = "Explanation building failed"
             
+        if is_context:
+            arg.event = output
+            return arg
+        return output
+
+
+class RecommendationBuildingStage(PipelineStage):
+    """Stage 6: Generates deterministic recommendations for resume improvements."""
+    
+    def execute(self, arg: Any) -> Any:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+        
+        output = RecommendationBuiltEvent(event)
+        if output.status != "success":
+            if is_context:
+                arg.event = output
+                return arg
+            return output
+            
+        try:
+            from backend.services.recommendations.builder import build_resume_recommendations
+            
+            # Build list of Pydantic Recommendation models
+            recs = build_resume_recommendations(event.scoring)
+            
+            # Serialize for JSON database storage with lifecycle and history tracking
+            serialized_recs = []
+            now_iso = datetime.datetime.utcnow().isoformat() + "Z"
+            for r in recs:
+                serialized_recs.append({
+                    "id": r.id,
+                    "title": r.title,
+                    "description": r.description,
+                    "priority": r.priority,
+                    "category": r.category,
+                    "reason": r.reason,
+                    "source": r.source,
+                    "related_skills": r.related_skills,
+                    "estimated_score_gain": r.estimated_score_gain,
+                    "confidence": r.confidence,
+                    "status": "ACTIVE",
+                    "generated_at": now_iso,
+                    "resolved_at": None,
+                    "accepted_by_user": False
+                })
+                
+            output.recommendations = serialized_recs
+            
+            # Inject recommendations block into analysis_metadata
+            event.analysis_metadata["recommendations"] = {
+                "list": serialized_recs,
+                "generated_at": now_iso,
+                "engine_version": "1.0.0"
+            }
+        except Exception as e:
+            logger.error("Recommendation building stage failed: %s", e)
+            output.status = "error"
+            output.error_message = "Recommendation building failed"
+            
+        if is_context:
+            arg.event = output
+            return arg
         return output
 
 
@@ -444,9 +720,15 @@ class PersistenceStage(PipelineStage):
     def __init__(self, db: Session):
         self.db = db
         
-    def execute(self, event: ExplanationBuiltEvent, **kwargs) -> PersistenceEvent:
+    def execute(self, arg: Any, **kwargs) -> PersistenceEvent:
+        is_context = isinstance(arg, AnalysisContext)
+        event = arg.event if is_context else arg
+        
         output = PersistenceEvent(event)
         if output.status != "success":
+            if is_context:
+                arg.event = output
+                return arg
             return output
             
         try:
@@ -459,13 +741,17 @@ class PersistenceStage(PipelineStage):
             ats_score = kwargs.get("ats_score", 0.0)
             elapsed_ms = kwargs.get("elapsed_ms", 0)
             
-            scoring = event.scoring
+            scoring = event.explanation.scoring
             extraction = scoring.matching.skills.extraction
             
             # Build final analysis_metadata with correct overall ats_score and elapsed time
-            meta = event.analysis_metadata
+            meta = event.explanation.analysis_metadata
             meta["score"]["overall"] = ats_score
             meta["engine"]["processing_time_ms"] = elapsed_ms
+            
+            # Save pipeline execution metrics from context (Part 10 / metrics)
+            if is_context:
+                meta["pipeline_metrics"] = arg.metrics
             
             # Save Resume model
             resume = Resume(
@@ -494,8 +780,8 @@ class PersistenceStage(PipelineStage):
             output.resume_id = resume.id
             output.scan_result_id = scan_result.id
             
-            # Sync back to output.explanation.scoring
-            output.explanation.scoring.similarity_score = ats_score
+            # Sync back to output.recommendation.explanation.scoring.similarity_score = ats_score
+            output.recommendation.explanation.scoring.similarity_score = ats_score
             
             logger.info("Pipeline persisted Resume ID %d and ScanResult ID %d successfully", resume.id, scan_result.id)
         except Exception as e:
@@ -518,30 +804,78 @@ class AnalysisPipeline:
         self.extraction_stage = ResumeTextExtractionStage()
         self.skills_stage = SkillExtractionStage()
         self.semantic_stage = SemanticMatchingStage()
+        self.profile_stage = ScoringProfileResolutionStage()
         self.scoring_stage = ScoringStage()
         self.explanation_stage = ExplanationBuildingStage()
+        self.recommendation_stage = RecommendationBuildingStage()
 
-    def run_analysis(self, filename: str, content_bytes: bytes, job_description: str, clean_jd: str) -> ExplanationBuiltEvent:
-        """Runs stages 1 through 5 of the analysis pipeline."""
+    def run_stage_with_metrics(self, stage: PipelineStage, context: AnalysisContext) -> AnalysisContext:
+        stage_name = stage.__class__.__name__
+        start_time = time.time()
+        start_dt = datetime.datetime.utcnow().isoformat() + "Z"
+        status = "success"
+        try:
+            context = stage.execute(context)
+            if hasattr(context.event, "status") and context.event.status != "success":
+                status = "error"
+        except Exception as e:
+            status = "error"
+            context.logger.error(f"Stage {stage_name} failed: {e}")
+            raise e
+        finally:
+            end_time = time.time()
+            end_dt = datetime.datetime.utcnow().isoformat() + "Z"
+            duration_ms = int((end_time - start_time) * 1000)
+            context.metrics[stage_name] = {
+                "start_time": start_dt,
+                "end_time": end_dt,
+                "duration_ms": duration_ms,
+                "status": status
+            }
+        return context
+
+    def run_analysis(
+        self,
+        filename: str,
+        content_bytes: bytes,
+        job_description: str,
+        clean_jd: str,
+        db: Optional[Session] = None,
+        context: Optional[AnalysisContext] = None
+    ) -> RecommendationBuiltEvent:
+        """Runs stages 1 through 7 of the analysis pipeline."""
+        if context is None:
+            import uuid
+            context = AnalysisContext(request_id=str(uuid.uuid4()))
+            
+        # Configure db session on profile resolution stage
+        self.profile_stage.db = db
+        
         # Stage 1: Extraction
-        extraction_event = ResumeExtractedEvent(
+        context.event = ResumeExtractedEvent(
             filename=filename,
             content_bytes=content_bytes,
             job_description=job_description,
             clean_jd=clean_jd
         )
-        extraction_result = self.extraction_stage.execute(extraction_event)
+        context = self.run_stage_with_metrics(self.extraction_stage, context)
         
         # Stage 2: Skill Extraction
-        skills_result = self.skills_stage.execute(extraction_result)
+        context = self.run_stage_with_metrics(self.skills_stage, context)
         
         # Stage 3: Semantic Matching
-        matching_result = self.semantic_stage.execute(skills_result)
+        context = self.run_stage_with_metrics(self.semantic_stage, context)
         
-        # Stage 4: Scoring
-        scoring_result = self.scoring_stage.execute(matching_result)
+        # Stage 4: Scoring Profile Resolution
+        context = self.run_stage_with_metrics(self.profile_stage, context)
         
-        # Stage 5: Explanation Building
-        explanation_result = self.explanation_stage.execute(scoring_result)
+        # Stage 5: Scoring
+        context = self.run_stage_with_metrics(self.scoring_stage, context)
         
-        return explanation_result
+        # Stage 6: Explanation Building
+        context = self.run_stage_with_metrics(self.explanation_stage, context)
+        
+        # Stage 7: Recommendation Building
+        context = self.run_stage_with_metrics(self.recommendation_stage, context)
+        
+        return context.event
