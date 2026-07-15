@@ -104,7 +104,7 @@ export function initRecruiterPage() {
                 formData.append('resumes', file);
             });
 
-            toggleButtonLoading(recProcessBtn, true, "Processing...", "Run ATS Screening");
+            toggleButtonLoading(recProcessBtn, true, "Processing...", "Run Match Screening");
 
             try {
                 const data = await api.screenResumesRecruiter(formData);
@@ -112,7 +112,7 @@ export function initRecruiterPage() {
             } catch (err) {
                 alert(err.message);
             } finally {
-                toggleButtonLoading(recProcessBtn, false, "Processing...", "Run ATS Screening");
+                toggleButtonLoading(recProcessBtn, false, "Processing...", "Run Match Screening");
             }
         });
     }
@@ -388,6 +388,19 @@ window.showCandidateQuickView = (cand) => {
     qvCandScoreBadge.className = `score-badge ${scoreClass}`;
     qvCandScoreBadge.textContent = `${cand.similarity_score}% Match`;
     
+    const qvCtxProfile = document.getElementById('qv-ctx-profile');
+    const qvCtxJd = document.getElementById('qv-ctx-jd');
+    const qvCtxEngine = document.getElementById('qv-ctx-engine');
+    if (qvCtxProfile && qvCtxJd && qvCtxEngine) {
+        const profileName = cand.analysis_metadata?.profile_name || "General Software Engineer";
+        const profileVer = cand.analysis_metadata?.profile_version || "1.0.0";
+        const engineVer = cand.analysis_metadata?.engine_version || "v1.0.0";
+        qvCtxProfile.textContent = `${profileName} (v${profileVer})`;
+        qvCtxJd.textContent = cand.job_description_title || "Selected JD";
+        const cleanEngine = engineVer.replace(/^v/, '');
+        qvCtxEngine.textContent = `ResumeAI Engine v${cleanEngine}`;
+    }
+    
     qvCandEmail.textContent = cand.email !== 'Not Provided' ? cand.email : 'N/A';
     qvCandPhone.textContent = cand.phone !== 'Not Provided' ? cand.phone : 'N/A';
     
@@ -561,8 +574,15 @@ export function renderRecommendations(recsData) {
         else if (rec.priority === "MEDIUM") priColor = "#eab308"; // yellow
         else if (rec.priority === "LOW") priColor = "#3b82f6"; // blue
         
+        let statusColor = "#3b82f6"; // blue for active
+        const statusUpper = (rec.status || "ACTIVE").toUpperCase();
+        if (statusUpper === "COMPLETED") statusColor = "#10b981"; // green
+        else if (statusUpper === "DISMISSED") statusColor = "#6b7280"; // gray
+        else if (statusUpper === "EXPIRED") statusColor = "#ef4444"; // red
+
         const priBadge = `<span style="background: ${priColor}15; color: ${priColor}; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase;">${rec.priority}</span>`;
-        const gainBadge = `<span style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px;">+${rec.estimated_score_gain.toFixed(1)} ATS pts</span>`;
+        const statusBadge = `<span style="background: ${statusColor}15; color: ${statusColor}; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase; margin-right: 0.5rem;">${statusUpper}</span>`;
+        const gainBadge = `<span style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.75rem; font-weight: bold; padding: 0.15rem 0.4rem; border-radius: 4px;">+${rec.estimated_score_gain.toFixed(1)} Match pts</span>`;
 
         html += `
             <div class="rec-card" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.01);">
@@ -572,6 +592,7 @@ export function renderRecommendations(recsData) {
                         <strong style="color: #fff; font-size: 0.95rem;">${rec.title}</strong>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        ${statusBadge}
                         ${priBadge}
                         ${gainBadge}
                     </div>
@@ -596,6 +617,16 @@ export function renderRecommendations(recsData) {
                         <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">🏷️ Related Skill(s)</h5>
                         <div style="display: flex; flex-wrap: wrap;">${skillTags}</div>
                     </div>
+            `;
+        }
+
+        if (statusUpper !== "ACTIVE") {
+            const dateStr = rec.resolved_at ? new Date(rec.resolved_at).toLocaleDateString() : '';
+            html += `
+                <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary);">
+                    <span>Status: <strong>${statusUpper}</strong></span>
+                    ${dateStr ? `<span>Resolved on: ${dateStr}</span>` : ''}
+                </div>
             `;
         }
 

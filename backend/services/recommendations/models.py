@@ -12,4 +12,4 @@ class Recommendation(BaseModel):
     related_skills: List[str] = Field(default_factory=list)
     estimated_score_gain: float
     confidence: float
-    status: str = "active"
+    status: str = "ACTIVE"

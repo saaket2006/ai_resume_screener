@@ -208,6 +208,20 @@ export async function updateCandidateResumeLabel(resumeId, label) {
 }
 
 /**
+ * PUT /api/candidate/resumes/{resume_id}/recommendations/{rec_id}
+ */
+export async function updateRecommendationStatus(resumeId, recId, status, acceptedByUser = null) {
+    const payload = { status };
+    if (acceptedByUser !== null) {
+        payload.accepted_by_user = acceptedByUser;
+    }
+    return request(`${API_ENDPOINTS.CANDIDATE_RESUMES}/${resumeId}/recommendations/${recId}`, {
+        method: "PUT",
+        body: JSON.stringify(payload)
+    });
+}
+
+/**
  * GET /api/recruiter/profiles
  */
 export async function getScoringProfiles() {

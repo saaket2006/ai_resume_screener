@@ -25,6 +25,7 @@ from backend.services.semantic.matcher import SemanticMatcher
 from backend.services.semantic.scorer import SemanticScorer
 from backend.services.metadata_builder import build_analysis_metadata
 from backend.services.policy.scoring_policy import default_scoring_policy
+from backend.services.policy.scoring_profile_policy import default_scoring_profile_policy
 from backend.models.models import Resume, ScanResult, ScoringProfile
 from backend.models.enums import ResumeStatus
 
@@ -397,14 +398,14 @@ class ScoringProfileResolutionStage(PipelineStage):
                 # Built-in fallback
                 output.profile_id = None
                 output.profile_name = "General Software Engineer"
-                output.weights = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+                output.weights = default_scoring_profile_policy.default_weights
                 logger.info("Using default general software engineer weights (Fallback)")
                 
         except Exception as e:
             logger.error("Scoring profile resolution failed: %s. Falling back to default.", e)
             output.profile_id = None
             output.profile_name = "General Software Engineer"
-            output.weights = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+            output.weights = default_scoring_profile_policy.default_weights
             
         if is_context:
             arg.event = output
@@ -432,7 +433,7 @@ class ScoringStage(PipelineStage):
                 weights = event.weights
                 matching_event = event.matching
             else:
-                weights = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+                weights = default_scoring_profile_policy.default_weights
                 matching_event = event
                 
             raw_text = matching_event.skills.extraction.raw_text
@@ -623,7 +624,9 @@ class ExplanationBuildingStage(PipelineStage):
                 output.analysis_metadata["profile_id"] = None
                 output.analysis_metadata["profile_name"] = "General Software Engineer"
                 output.analysis_metadata["profile_version"] = "1.0.0"
-                output.analysis_metadata["component_weights"] = {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10}
+                output.analysis_metadata["component_weights"] = default_scoring_profile_policy.default_weights
+            
+            output.analysis_metadata["engine_version"] = "v1.0.0"
             
             # Store structured score breakdown
             output.analysis_metadata["score_breakdown"] = {

@@ -16,6 +16,10 @@ def generate_heuristics_recommendations(scoring_event: Any) -> List[Recommendati
     """
     recommendations = []
     
+    # Extract scoring profile weights if available
+    profile_resolved = getattr(scoring_event, "profile_resolved", None)
+    weights = profile_resolved.weights if profile_resolved else None
+
     # 1. Missing Technical Skills
     # Extract missing skills from scoring event matching
     missing_skills_info = [] # List of (skill_name, weight)
@@ -46,7 +50,7 @@ def generate_heuristics_recommendations(scoring_event: Any) -> List[Recommendati
         else:
             priority = "LOW"
             
-        gain = estimate_missing_skill_gain(weight)
+        gain = estimate_missing_skill_gain(weight, weights)
         
         recommendations.append(Recommendation(
             id=f"skill_missing_{name.lower().replace(' ', '_')}",
@@ -72,7 +76,7 @@ def generate_heuristics_recommendations(scoring_event: Any) -> List[Recommendati
         else:
             priority = "MEDIUM"
             
-        gain = estimate_experience_gain(exp_years)
+        gain = estimate_experience_gain(exp_years, weights)
         
         recommendations.append(Recommendation(
             id="experience_tenure_gap",
@@ -80,7 +84,7 @@ def generate_heuristics_recommendations(scoring_event: Any) -> List[Recommendati
             description="The role prefers candidates with stronger experience. Ensure you list all previous developer tenures, internships, and freelance projects.",
             priority=priority,
             category="Experience",
-            reason=f"Your current effective experience is {exp_years} year(s), which is below the maximum scoring threshold of 10 years.",
+            reason=f"Your effective experience is {exp_years} year(s), which is below the maximum scoring threshold of 10 years.",
             source="RULE",
             estimated_score_gain=gain,
             confidence=1.0
@@ -91,7 +95,7 @@ def generate_heuristics_recommendations(scoring_event: Any) -> List[Recommendati
     edu_score = scoring_event.education_score
     if edu_level in ("Bachelor", "None"):
         priority = "HIGH" if edu_level == "None" else "MEDIUM"
-        gain = estimate_education_gain(edu_level)
+        gain = estimate_education_gain(edu_level, weights)
         
         recommendations.append(Recommendation(
             id="education_degree_gap",
@@ -109,7 +113,7 @@ def generate_heuristics_recommendations(scoring_event: Any) -> List[Recommendati
     proj_count = scoring_event.candidate_projects
     if proj_count < 5:
         priority = "HIGH" if proj_count < 2 else "MEDIUM"
-        gain = estimate_project_gain(proj_count)
+        gain = estimate_project_gain(proj_count, weights)
         
         recommendations.append(Recommendation(
             id="project_count_gap",
