@@ -100,6 +100,7 @@ export function initCandidatePage() {
             }
 
             toggleButtonLoading(candProcessBtn, true, "Analyzing...", "Analyze Resume");
+            if (window.loadingOverlay) window.loadingOverlay.show();
 
             try {
                 const results = await api.screenResumeCandidate(formData);
@@ -110,6 +111,7 @@ export function initCandidatePage() {
             } catch (err) {
                 alert(err.message);
             } finally {
+                if (window.loadingOverlay) window.loadingOverlay.hide();
                 toggleButtonLoading(candProcessBtn, false, "Analyzing...", "Analyze Resume");
             }
         });

@@ -2854,3 +2854,437 @@ FROM scoring_profiles) AS anon_1]
 2026-07-15 21:30:46,966 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
 2026-07-15 21:30:47,037 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
 2026-07-15 21:30:47,102 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
+2026-07-15 22:54:52,556 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-15 22:54:53,194 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-15 22:54:53,196 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-15 22:54:53,284 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-15 22:54:53,301 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
+2026-07-15 22:59:13,078 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-15 22:59:13,450 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-15 22:59:13,451 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-15 22:59:13,471 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-15 22:59:13,491 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
+2026-07-15 23:00:00,402 | INFO    | resume_screener:auth.py:46 | Login attempt for email: test@test.com
+2026-07-15 23:00:00,405 | WARNING | resume_screener:auth.py:49 | Login failed: invalid credentials for email test@test.com
+2026-07-19 11:25:55,253 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-19 11:25:56,253 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-19 11:25:56,255 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-19 11:25:56,504 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-19 11:25:56,554 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
+2026-07-19 11:33:02,085 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: recruiter_qa@test.com
+2026-07-19 11:33:02,613 | INFO    | resume_screener:auth.py:40 | Successfully registered user: recruiter_qa@test.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-19 11:33:02,656 | INFO    | resume_screener:auth.py:46 | Login attempt for email: recruiter_qa@test.com
+2026-07-19 11:33:03,148 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user recruiter_qa@test.com. Issuing token...
+2026-07-19 11:33:53,179 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_qa@test.com
+2026-07-19 11:33:53,206 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: recruiter_qa@test.com
+2026-07-19 11:33:53,272 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_qa@test.com
+2026-07-19 11:33:53,591 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_qa@test.com
+2026-07-19 11:34:58,075 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:34:58,081 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:34:58,082 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:34:58,202 | INFO    | resume_screener:loader.py:26 | Initializing skill intelligence layer from: G:\Projects\Resume Screener\ai_resume_screener\knowledge_base\skills.json
+2026-07-19 11:34:58,230 | INFO    | resume_screener:loader.py:30 | Skill intelligence layer successfully loaded with 17 structured skills.
+2026-07-19 11:34:58,265 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:34:58,267 | ERROR   | resume_screener:document_service.py:31 | Failed to read DOCX: File is not a zip file
+2026-07-19 11:34:58,268 | ERROR   | resume_screener:pipeline.py:240 | Skipping 'resume_v2.docx': Text extraction failed: Failed to read DOCX file format: File is not a zip file
+2026-07-19 11:34:58,269 | WARNING | resume_screener:screening_service.py:66 | Resume pipeline failed for 'resume_v2.docx': Unreadable File
+2026-07-19 11:34:58,301 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:34:58,303 | INFO    | resume_screener:screening_service.py:144 |   #1 Unreadable File      → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-19 11:34:58,304 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.22s
+2026-07-19 11:34:58,305 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:34:58,308 | ERROR   | resume_screener:recruiter.py:130 | Error during screening:
+Traceback (most recent call last):
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\routers\recruiter.py", line 104, in process_resumes
+    persistence_result = persist_stage.execute(
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\services\pipeline.py", line 730, in execute
+    output = PersistenceEvent(event)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\services\pipeline.py", line 188, in __init__
+    self.status = recommendation.status
+                  ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'status'
+2026-07-19 11:36:07,721 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:36:07,724 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:36:07,726 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:36:07,835 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:36:07,880 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:36:07,962 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:36:07,964 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 9 missing | Semantic Score: 0.0%
+2026-07-19 11:36:07,972 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:36:07,973 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 1.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-19 11:36:07,975 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.25s
+2026-07-19 11:36:07,976 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:36:07,984 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 15 and ScanResult ID 14 successfully
+2026-07-19 11:36:07,996 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 14
+2026-07-19 11:36:13,279 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:36:13,288 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:36:13,289 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:36:13,372 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:36:13,411 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:36:13,417 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:36:13,418 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 9 missing | Semantic Score: 0.0%
+2026-07-19 11:36:13,424 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:36:13,425 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 1.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-19 11:36:13,426 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.14s
+2026-07-19 11:36:13,428 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:36:13,432 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 16 and ScanResult ID 15 successfully
+2026-07-19 11:36:13,442 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 15
+2026-07-19 11:36:17,197 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:36:17,200 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:36:17,202 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:36:17,277 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:36:17,392 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:36:17,410 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:36:17,412 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:36:17,419 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:36:17,421 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 48.0% (Skill: 100.0 | Exp: 0.0 | Edu: 60.0 | Proj: 0.0)
+2026-07-19 11:36:17,422 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.22s
+2026-07-19 11:36:17,423 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:36:17,429 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 17 and ScanResult ID 16 successfully
+2026-07-19 11:36:17,439 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 16
+2026-07-19 11:36:20,782 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:36:20,786 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:36:20,788 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:36:20,874 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:36:20,978 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:36:20,991 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:36:20,993 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:36:20,999 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:36:21,001 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 48.0% (Skill: 100.0 | Exp: 0.0 | Edu: 60.0 | Proj: 0.0)
+2026-07-19 11:36:21,002 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.21s
+2026-07-19 11:36:21,004 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:36:21,007 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 18 and ScanResult ID 17 successfully
+2026-07-19 11:36:21,016 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 17
+2026-07-19 11:36:25,515 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:36:25,519 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:36:25,520 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:36:25,598 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:36:25,830 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:36:25,845 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:36:25,846 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:36:25,852 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:36:25,853 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 46.0% (Skill: 100.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-19 11:36:25,854 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.33s
+2026-07-19 11:36:25,855 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:36:25,860 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 19 and ScanResult ID 18 successfully
+2026-07-19 11:36:25,871 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 18
+2026-07-19 11:37:10,866 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:37:10,871 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:37:10,872 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:37:10,952 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:37:11,228 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:37:11,239 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:37:11,240 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:37:11,245 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:37:11,247 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 66.0% (Skill: 100.0 | Exp: 0.0 | Edu: 20.0 | Proj: 100.0)
+2026-07-19 11:37:11,248 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.38s
+2026-07-19 11:37:11,249 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:37:11,253 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 20 and ScanResult ID 19 successfully
+2026-07-19 11:37:11,262 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 19
+2026-07-19 11:37:25,973 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:37:25,978 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:37:25,980 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:37:26,066 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:37:26,227 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:37:26,238 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:37:26,239 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 0 yrs | Internships: 0 | Skills: 8 matched, 1 missing | Semantic Score: 88.9%
+2026-07-19 11:37:26,246 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:37:26,248 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 45.0% (Skill: 88.9 | Exp: 0.0 | Edu: 100.0 | Proj: 0.0)
+2026-07-19 11:37:26,249 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.27s
+2026-07-19 11:37:26,251 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:37:26,256 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 21 and ScanResult ID 20 successfully
+2026-07-19 11:37:26,265 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 20
+2026-07-19 11:37:28,765 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:37:28,769 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:37:28,770 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:37:28,837 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:37:28,975 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:37:28,985 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:37:28,986 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 0 yrs | Internships: 0 | Skills: 8 matched, 1 missing | Semantic Score: 88.9%
+2026-07-19 11:37:28,992 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:37:28,994 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 45.0% (Skill: 88.9 | Exp: 0.0 | Edu: 100.0 | Proj: 0.0)
+2026-07-19 11:37:28,994 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.22s
+2026-07-19 11:37:28,996 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:37:29,000 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 22 and ScanResult ID 21 successfully
+2026-07-19 11:37:29,014 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 21
+2026-07-19 11:37:41,638 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:37:41,642 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:37:41,644 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:37:41,718 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:37:41,956 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:37:41,966 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:37:41,967 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 0 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:37:41,974 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:37:41,975 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 70.0% (Skill: 100.0 | Exp: 0.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:37:41,976 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.33s
+2026-07-19 11:37:41,978 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:37:41,982 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 23 and ScanResult ID 22 successfully
+2026-07-19 11:37:41,992 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 22
+2026-07-19 11:37:45,021 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:37:45,025 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:37:45,027 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:37:45,106 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:37:45,319 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:37:45,328 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:37:45,329 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 0 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:37:45,335 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:37:45,336 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 70.0% (Skill: 100.0 | Exp: 0.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:37:45,337 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.31s
+2026-07-19 11:37:45,338 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:37:45,342 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 24 and ScanResult ID 23 successfully
+2026-07-19 11:37:45,351 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 23
+2026-07-19 11:38:24,663 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:38:24,669 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:38:24,670 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:38:24,745 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:38:25,066 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:38:25,077 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 12 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:38:25,086 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:38:25,087 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 100.0% (Skill: 100.0 | Exp: 100.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:38:25,089 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.42s
+2026-07-19 11:38:25,090 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:38:25,096 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 25 and ScanResult ID 24 successfully
+2026-07-19 11:38:25,106 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 24
+2026-07-19 11:38:28,808 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:38:28,813 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:38:28,814 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:38:28,892 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:38:29,112 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:38:29,121 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:38:29,123 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 12 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:38:29,129 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:38:29,130 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 100.0% (Skill: 100.0 | Exp: 100.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:38:29,131 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.32s
+2026-07-19 11:38:29,132 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:38:29,136 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 26 and ScanResult ID 25 successfully
+2026-07-19 11:38:29,145 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 25
+2026-07-19 11:39:04,997 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:39:05,001 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:39:05,003 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:39:05,083 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:39:05,313 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:39:05,322 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 11:39:05,326 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 12 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:39:05,332 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:39:05,334 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 100.0% (Skill: 100.0 | Exp: 100.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:39:05,335 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.33s
+2026-07-19 11:39:05,336 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:39:05,341 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 27 and ScanResult ID 26 successfully
+2026-07-19 11:39:05,351 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 26
+2026-07-19 11:39:41,314 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:39:41,318 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:39:41,319 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:39:41,399 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:39:41,740 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:39:41,749 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 12 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:39:41,756 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:39:41,757 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 100.0% (Skill: 100.0 | Exp: 100.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:39:41,758 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.44s
+2026-07-19 11:39:41,759 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:39:41,764 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 28 and ScanResult ID 27 successfully
+2026-07-19 11:39:41,773 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 27
+2026-07-19 11:40:44,878 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:40:44,884 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:40:44,885 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:40:44,958 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:40:45,264 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:40:45,276 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 12 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:40:45,283 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:40:45,284 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 100.0% (Skill: 100.0 | Exp: 100.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:40:45,285 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.40s
+2026-07-19 11:40:45,286 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:40:45,290 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 29 and ScanResult ID 28 successfully
+2026-07-19 11:40:45,300 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 28
+2026-07-19 11:41:39,574 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:41:39,580 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:41:39,581 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:41:39,661 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:41:39,958 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:41:39,966 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 12 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:41:39,973 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:41:39,975 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 100.0% (Skill: 100.0 | Exp: 100.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:41:39,976 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.39s
+2026-07-19 11:41:39,977 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:41:39,981 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 30 and ScanResult ID 29 successfully
+2026-07-19 11:41:39,998 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 29
+2026-07-19 11:42:19,733 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_qa@test.com
+2026-07-19 11:42:19,738 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 11:42:19,738 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 11:42:19,823 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (9): aws, cd, ci, ci/cd, devops, docker, kubernetes, python, terraform
+2026-07-19 11:42:20,203 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'DevOps Engineer' with weights: {'skills': 0.45, 'experience': 0.3, 'education': 0.05, 'projects': 0.2}
+2026-07-19 11:42:20,220 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Alex Mercer' | Edu: PhD | Exp: 12 yrs | Internships: 0 | Skills: 9 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 11:42:20,228 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 11:42:20,230 | INFO    | resume_screener:screening_service.py:144 |   #1 Alex Mercer          → Final: 100.0% (Skill: 100.0 | Exp: 100.0 | Edu: 100.0 | Proj: 100.0)
+2026-07-19 11:42:20,231 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.49s
+2026-07-19 11:42:20,232 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 11:42:20,238 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 31 and ScanResult ID 30 successfully
+2026-07-19 11:42:20,247 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 30
+2026-07-19 11:43:09,133 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_qa@test.com
+2026-07-19 11:43:09,175 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_qa@test.com
+2026-07-19 11:50:42,706 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: candidate@test.com
+2026-07-19 11:50:42,960 | INFO    | resume_screener:auth.py:40 | Successfully registered user: candidate@test.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-19 11:50:42,973 | INFO    | resume_screener:auth.py:46 | Login attempt for email: candidate@test.com
+2026-07-19 11:50:43,212 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user candidate@test.com. Issuing token...
+2026-07-19 11:51:45,315 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: candidate@test.com
+2026-07-19 11:51:45,328 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: candidate@test.com
+2026-07-19 11:51:45,353 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: candidate@test.com
+2026-07-19 11:51:45,409 | INFO    | resume_screener:candidate.py:310 | Candidate stats requested for user: candidate@test.com
+2026-07-19 11:51:45,423 | INFO    | resume_screener:candidate.py:160 | Candidate resumes list requested for user: candidate@test.com
+2026-07-19 11:52:22,922 | INFO    | resume_screener:candidate.py:37 | Candidate endpoint called by user: candidate@test.com
+2026-07-19 11:52:22,923 | ERROR   | resume_screener:document_service.py:18 | Failed to read PDF: EOF marker not found
+2026-07-19 11:52:22,924 | ERROR   | resume_screener:candidate.py:57 | Resume extraction failed: Failed to read PDF file format: EOF marker not found
+2026-07-19 12:19:15,205 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: candidate@test.com
+2026-07-19 12:19:15,214 | INFO    | resume_screener:candidate.py:310 | Candidate stats requested for user: candidate@test.com
+2026-07-19 12:19:15,225 | INFO    | resume_screener:candidate.py:160 | Candidate resumes list requested for user: candidate@test.com
+2026-07-19 12:19:22,405 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: candidate@test.com
+2026-07-19 12:19:24,953 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: candidate@test.com
+2026-07-19 12:19:24,964 | INFO    | resume_screener:candidate.py:310 | Candidate stats requested for user: candidate@test.com
+2026-07-19 12:19:24,972 | INFO    | resume_screener:candidate.py:160 | Candidate resumes list requested for user: candidate@test.com
+2026-07-19 12:19:34,563 | INFO    | resume_screener:candidate.py:37 | Candidate endpoint called by user: candidate@test.com
+2026-07-19 12:19:34,564 | ERROR   | resume_screener:document_service.py:18 | Failed to read PDF: EOF marker not found
+2026-07-19 12:19:34,564 | ERROR   | resume_screener:candidate.py:57 | Resume extraction failed: Failed to read PDF file format: EOF marker not found
+2026-07-19 12:19:41,955 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: candidate@test.com
+2026-07-19 12:21:44,257 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_qa_api@test.com
+2026-07-19 12:21:44,514 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_qa_api@test.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-19 12:22:01,683 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:01,685 | WARNING | resume_screener:auth.py:24 | Sign up failed: email rec_qa_api@test.com already registered
+2026-07-19 12:22:01,691 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:01,947 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:01,954 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:02,195 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:02,202 | INFO    | resume_screener:auth.py:46 | Login attempt for email: nonexistent@test.com
+2026-07-19 12:22:02,203 | WARNING | resume_screener:auth.py:49 | Login failed: invalid credentials for email nonexistent@test.com
+2026-07-19 12:22:02,209 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:02,450 | WARNING | resume_screener:auth.py:49 | Login failed: invalid credentials for email rec_qa_api@test.com
+2026-07-19 12:22:02,472 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_qa_api@test.com
+2026-07-19 12:22:02,724 | INFO    | resume_screener:auth.py:40 | Successfully registered user: cand_qa_api@test.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-19 12:22:02,730 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:02,732 | WARNING | resume_screener:auth.py:24 | Sign up failed: email rec_qa_api@test.com already registered
+2026-07-19 12:22:02,736 | WARNING | resume_screener:auth_deps.py:33 | JWT token decode failed: Not enough segments
+2026-07-19 12:22:02,767 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: rec_qa_api@test.com
+2026-07-19 12:22:02,779 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,787 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,793 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,847 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,854 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,916 | WARNING | resume_screener:auth_deps.py:55 | Access denied: User rec_qa_api@test.com does not have CANDIDATE role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,929 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,939 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,958 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User rec_qa_api@test.com does not have RECRUITER role (role: UserRole.UNASSIGNED)
+2026-07-19 12:22:02,984 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:03,229 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:03,236 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:03,472 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:03,478 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:03,712 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:03,719 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:03,954 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:03,959 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:04,197 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:04,203 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:04,442 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:04,451 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:04,686 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:22:04,692 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa_api@test.com
+2026-07-19 12:22:04,930 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa_api@test.com. Issuing token...
+2026-07-19 12:23:34,639 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_qa2@test.com
+2026-07-19 12:23:34,869 | INFO    | resume_screener:auth.py:40 | Successfully registered user: rec_qa2@test.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-19 12:23:34,874 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa2@test.com
+2026-07-19 12:23:35,087 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa2@test.com. Issuing token...
+2026-07-19 12:23:35,112 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: rec_qa2@test.com
+2026-07-19 12:23:35,118 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: rec_qa2@test.com
+2026-07-19 12:23:35,124 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_qa2@test.com
+2026-07-19 12:23:35,126 | WARNING | resume_screener:auth.py:24 | Sign up failed: email rec_qa2@test.com already registered
+2026-07-19 12:23:35,131 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa2@test.com
+2026-07-19 12:23:35,355 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user rec_qa2@test.com. Issuing token...
+2026-07-19 12:23:35,364 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_qa2@test.com
+2026-07-19 12:23:35,657 | INFO    | resume_screener:auth.py:40 | Successfully registered user: cand_qa2@test.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-19 12:23:35,668 | INFO    | resume_screener:auth.py:46 | Login attempt for email: cand_qa2@test.com
+2026-07-19 12:23:35,892 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user cand_qa2@test.com. Issuing token...
+2026-07-19 12:23:35,904 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: cand_qa2@test.com
+2026-07-19 12:23:35,968 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: cand_qa2@test.com
+2026-07-19 12:23:35,973 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: cand_qa2@test.com
+2026-07-19 12:23:35,975 | WARNING | resume_screener:auth.py:24 | Sign up failed: email cand_qa2@test.com already registered
+2026-07-19 12:23:35,980 | INFO    | resume_screener:auth.py:46 | Login attempt for email: cand_qa2@test.com
+2026-07-19 12:23:36,208 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user cand_qa2@test.com. Issuing token...
+2026-07-19 12:23:36,233 | INFO    | resume_screener:auth.py:46 | Login attempt for email: ghost@test.com
+2026-07-19 12:23:36,234 | WARNING | resume_screener:auth.py:49 | Login failed: invalid credentials for email ghost@test.com
+2026-07-19 12:23:36,240 | INFO    | resume_screener:auth.py:46 | Login attempt for email: rec_qa2@test.com
+2026-07-19 12:23:36,464 | WARNING | resume_screener:auth.py:49 | Login failed: invalid credentials for email rec_qa2@test.com
+2026-07-19 12:23:36,481 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: rec_qa2@test.com
+2026-07-19 12:23:36,483 | WARNING | resume_screener:auth.py:24 | Sign up failed: email rec_qa2@test.com already registered
+2026-07-19 12:23:36,488 | WARNING | resume_screener:auth_deps.py:33 | JWT token decode failed: Not enough segments
+2026-07-19 12:23:36,502 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: rec_qa2@test.com
+2026-07-19 12:23:36,509 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: cand_qa2@test.com
+2026-07-19 12:23:36,573 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: rec_qa2@test.com
+2026-07-19 12:23:36,575 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 12:23:36,576 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 12:23:36,610 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (10): aws, cd, ci, ci/cd, devops, docker, kubernetes, postgresql, python, terraform
+2026-07-19 12:23:36,889 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'General Software Engineer' with weights: {'skills': 0.5, 'experience': 0.25, 'education': 0.15, 'projects': 0.1}
+2026-07-19 12:23:36,894 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 12:23:36,894 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Contact Information' | Edu: Bachelor | Exp: 0 yrs | Internships: 1 | Skills: 10 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 12:23:36,897 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 12:23:36,898 | INFO    | resume_screener:screening_service.py:144 |   #1 Contact Information  → Final: 66.2% (Skill: 100.0 | Exp: 5.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-19 12:23:36,898 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.32s
+2026-07-19 12:23:36,898 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 12:23:36,900 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 32 and ScanResult ID 31 successfully
+2026-07-19 12:23:36,947 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 31
+2026-07-19 12:23:36,957 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: rec_qa2@test.com
+2026-07-19 12:23:36,989 | INFO    | resume_screener:candidate.py:37 | Candidate endpoint called by user: cand_qa2@test.com
+2026-07-19 12:23:37,002 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 12:23:37,003 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 12:23:37,034 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (5): fastapi, git, javascript, python, sql
+2026-07-19 12:23:37,158 | INFO    | resume_screener:pipeline.py:402 | Using default general software engineer weights (Fallback)
+2026-07-19 12:23:37,162 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 12:23:37,163 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Contact Information' | Edu: Bachelor | Exp: 0 yrs | Internships: 0 | Skills: 5 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 12:23:37,165 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 12:23:37,166 | INFO    | resume_screener:screening_service.py:144 |   #1 Contact Information  → Final: 59.0% (Skill: 100.0 | Exp: 0.0 | Edu: 60.0 | Proj: 0.0)
+2026-07-19 12:23:37,166 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.16s
+2026-07-19 12:23:37,167 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 12:23:37,172 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 33 and ScanResult ID 32 successfully
+2026-07-19 12:23:37,220 | INFO    | resume_screener:candidate.py:124 | Candidate resume analysis persisted successfully for ScanResult ID 32
+2026-07-19 12:23:37,231 | INFO    | resume_screener:candidate.py:37 | Candidate endpoint called by user: cand_qa2@test.com
+2026-07-19 12:23:37,243 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 12:23:37,244 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 12:23:37,277 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (5): fastapi, git, javascript, python, sql
+2026-07-19 12:23:37,446 | INFO    | resume_screener:pipeline.py:402 | Using default general software engineer weights (Fallback)
+2026-07-19 12:23:37,451 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 12:23:37,452 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Contact Information' | Edu: Bachelor | Exp: 0 yrs | Internships: 1 | Skills: 4 matched, 1 missing | Semantic Score: 80.0%
+2026-07-19 12:23:37,455 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 12:23:37,456 | INFO    | resume_screener:screening_service.py:144 |   #1 Contact Information  → Final: 56.2% (Skill: 80.0 | Exp: 5.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-19 12:23:37,456 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.21s
+2026-07-19 12:23:37,457 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 12:23:37,466 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 34 and ScanResult ID 33 successfully
+2026-07-19 12:23:37,527 | INFO    | resume_screener:candidate.py:124 | Candidate resume analysis persisted successfully for ScanResult ID 33
+2026-07-19 12:23:37,543 | INFO    | resume_screener:candidate.py:310 | Candidate stats requested for user: cand_qa2@test.com
+2026-07-19 12:23:37,549 | INFO    | resume_screener:candidate.py:160 | Candidate resumes list requested for user: cand_qa2@test.com
+2026-07-19 12:23:37,559 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User cand_qa2@test.com does not have RECRUITER role (role: UserRole.CANDIDATE)
+2026-07-19 12:23:37,563 | WARNING | resume_screener:auth_deps.py:55 | Access denied: User rec_qa2@test.com does not have CANDIDATE role (role: UserRole.RECRUITER)
+2026-07-19 12:23:37,570 | WARNING | resume_screener:auth_deps.py:45 | Access denied: User cand_qa2@test.com does not have RECRUITER role (role: UserRole.CANDIDATE)
+2026-07-19 12:23:37,576 | WARNING | resume_screener:auth_deps.py:55 | Access denied: User rec_qa2@test.com does not have CANDIDATE role (role: UserRole.RECRUITER)
+2026-07-19 12:23:37,576 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: rec_qa2@test.com
+2026-07-19 12:23:37,605 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: rec_qa2@test.com
+2026-07-19 12:23:37,614 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 12:23:37,615 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 12:23:37,629 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (1): jd
+2026-07-19 12:23:37,629 | WARNING | resume_screener:pipeline.py:216 | Skipping 'test.txt': Unsupported file extension
+2026-07-19 12:23:37,630 | WARNING | resume_screener:screening_service.py:66 | Resume pipeline failed for 'test.txt': Unsupported/Invalid File
+2026-07-19 12:23:37,633 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 12:23:37,633 | INFO    | resume_screener:screening_service.py:144 |   #1 Unsupported/Invalid File → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-19 12:23:37,634 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.02s
+2026-07-19 12:23:37,634 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 12:23:37,661 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 34
+2026-07-19 12:23:37,677 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: rec_qa2@test.com
+2026-07-19 12:23:37,683 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-19 12:23:37,684 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-19 12:23:40,456 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (1): docker
+2026-07-19 12:23:41,934 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'General Software Engineer' with weights: {'skills': 0.5, 'experience': 0.25, 'education': 0.15, 'projects': 0.1}
+2026-07-19 12:23:41,938 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-19 12:23:41,939 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Contact Information' | Edu: Bachelor | Exp: 0 yrs | Internships: 1 | Skills: 1 matched, 0 missing | Semantic Score: 100.0%
+2026-07-19 12:23:41,942 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-19 12:23:41,942 | INFO    | resume_screener:screening_service.py:144 |   #1 Contact Information  → Final: 66.2% (Skill: 100.0 | Exp: 5.0 | Edu: 60.0 | Proj: 60.0)
+2026-07-19 12:23:41,943 | INFO    | resume_screener:screening_service.py:148 | Request completed in 4.26s
+2026-07-19 12:23:41,943 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-19 12:23:41,945 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 35 and ScanResult ID 34 successfully
+2026-07-19 12:23:41,969 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 35
