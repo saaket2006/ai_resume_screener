@@ -105,6 +105,7 @@ export function initRecruiterPage() {
             });
 
             toggleButtonLoading(recProcessBtn, true, "Processing...", "Run Match Screening");
+            if (window.loadingOverlay) window.loadingOverlay.show();
 
             try {
                 const data = await api.screenResumesRecruiter(formData);
@@ -112,6 +113,7 @@ export function initRecruiterPage() {
             } catch (err) {
                 alert(err.message);
             } finally {
+                if (window.loadingOverlay) window.loadingOverlay.hide();
                 toggleButtonLoading(recProcessBtn, false, "Processing...", "Run Match Screening");
             }
         });
@@ -324,12 +326,6 @@ export async function initializeRecruiterDashboard() {
     }
 }
 
-/**
- * Initializer for Recruiter Resume Screening view.
- */
-export function initializeRecruiterScreen() {
-    // Screening workspace just waits for user interaction; clear old inputs if needed or preserve
-}
 
 /**
  * Initializer for Recruiter Profile view.
