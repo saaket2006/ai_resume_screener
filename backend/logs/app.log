@@ -3288,6 +3288,7 @@ AttributeError: 'NoneType' object has no attribute 'status'
 2026-07-19 12:23:41,943 | INFO    | resume_screener:screening_service.py:149 | ============================================================
 2026-07-19 12:23:41,945 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 35 and ScanResult ID 34 successfully
 2026-07-19 12:23:41,969 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 35
+<<<<<<< HEAD
 2026-07-20 21:51:54,722 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
 2026-07-20 21:51:55,782 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
 2026-07-20 21:51:55,784 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
@@ -3413,3 +3414,5 @@ AttributeError: 'NoneType' object has no attribute 'status'
 2026-07-20 22:44:51,738 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_sim@example.com
 2026-07-20 22:45:01,884 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_sim@example.com
 2026-07-20 22:45:01,901 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_sim@example.com
+=======
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
