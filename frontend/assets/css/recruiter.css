@@ -39,7 +39,7 @@
 .logo-text {
     font-size: 1.25rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #fff, #a855f7);
+    background: linear-gradient(135deg, #fff, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.02em;
@@ -73,8 +73,8 @@
 
 .sidebar-link.active {
     color: #fff;
-    background: rgba(99, 102, 241, 0.08);
-    border: 1px solid rgba(99, 102, 241, 0.15);
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.15);
 }
 
 .nav-icon {
@@ -169,7 +169,7 @@
 
 /* Welcome Banner */
 .welcome-banner {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.03));
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.02));
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     padding: 2.5rem;
@@ -211,7 +211,7 @@
 .badge-dot {
     width: 6px;
     height: 6px;
-    background: #6366f1;
+    background: #10b981;
     border-radius: 50%;
     margin-right: 6px;
     display: inline-block;
@@ -456,8 +456,8 @@
 }
 
 .quick-view-btn:hover {
-    background: #6366f1;
-    border-color: #6366f1;
+    background: #10b981;
+    border-color: #10b981;
 }
 
 /* Quick View Card Modal details */

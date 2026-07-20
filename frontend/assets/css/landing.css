@@ -1,0 +1,109 @@
+/* Custom Styles for ResumeAI SaaS Landing Page & Animations */
+
+/* Background Aurora Lights */
+.aurora-bg {
+    position: relative;
+    overflow: hidden;
+}
+.aurora-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, rgba(7, 10, 19, 0) 60%);
+    pointer-events: none;
+    animation: rotate-aurora 25s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotate-aurora {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Infinite Scrolling Marquee */
+.marquee-container {
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    position: relative;
+}
+.marquee-content {
+    display: inline-flex;
+    animation: marquee 30s linear infinite;
+}
+.marquee-container:hover .marquee-content {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Stacking Sticky Cards Layout */
+.features-container {
+    position: relative;
+}
+.feature-card-wrapper {
+    position: sticky;
+    top: 100px;
+    height: 480px;
+    margin-bottom: 80px;
+    transition: transform var(--duration-hover) var(--easing-standard);
+}
+
+/* Interactive Demo playground styles */
+.terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: rgba(15, 23, 42, 0.6);
+    border-bottom: 1px solid var(--color-border);
+}
+.terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+/* Processing Overlay Timing and Speed Lines */
+.speed-lines-bg {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(0deg, transparent 24%, rgba(16, 185, 129, 0.03) 25%, rgba(16, 185, 129, 0.03) 26%, transparent 27%, transparent 74%, rgba(16, 185, 129, 0.03) 75%, rgba(16, 185, 129, 0.03) 76%, transparent 77%);
+    background-size: 100px 100px;
+    opacity: 0.8;
+    z-index: -1;
+    animation: speed-lines-move 8s linear infinite;
+}
+
+@keyframes speed-lines-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 1000px; }
+}
+
+/* Pulse Glows & Utility Classes */
+.glow-on-hover:hover {
+    box-shadow: var(--shadow-glow);
+    border-color: var(--color-primary);
+}
+
+.glow-btn {
+    position: relative;
+    overflow: hidden;
+}
+.glow-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+.glow-btn:hover::after {
+    transform: translateX(100%);
+}

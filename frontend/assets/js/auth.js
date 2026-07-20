@@ -16,8 +16,11 @@ export async function checkAuthStatus() {
     const userDisplayNameElem = document.getElementById('user-display-name');
 
     const token = state.getToken();
+    const landingContainer = document.getElementById('landing-container');
+
     if (!token) {
-        authModal.classList.remove('hidden');
+        if (landingContainer) landingContainer.classList.remove('hidden');
+        authModal.classList.add('hidden');
         appContainer.classList.add('hidden');
         onboardingModal.classList.add('hidden');
         recruiterContainer.classList.add('hidden');
@@ -31,10 +34,12 @@ export async function checkAuthStatus() {
         state.setOnboardingStatus(user.profile_completed);
 
         if (user.profile_completed === false) {
+            if (landingContainer) landingContainer.classList.add('hidden');
             showOnboardingWizard();
             return;
         }
 
+        if (landingContainer) landingContainer.classList.add('hidden');
         authModal.classList.add('hidden');
         onboardingModal.classList.add('hidden');
         
@@ -58,7 +63,8 @@ export async function checkAuthStatus() {
     } catch (error) {
         console.error("Auth status verification failed:", error);
         state.clearState();
-        authModal.classList.remove('hidden');
+        if (landingContainer) landingContainer.classList.remove('hidden');
+        authModal.classList.add('hidden');
         appContainer.classList.add('hidden');
         onboardingModal.classList.add('hidden');
         recruiterContainer.classList.add('hidden');
