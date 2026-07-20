@@ -4,11 +4,17 @@ export function initHeroAnimation() {
     // 1. Title fade, blur, and slide up letter by letter
     const headline = document.querySelector('.hero-headline');
     if (headline) {
-        const text = headline.textContent;
-        headline.innerHTML = text.split('').map(char => {
-            if (char === ' ') return `<span style="display:inline-block;">&nbsp;</span>`;
-            return `<span class="hero-letter" style="display:inline-block; opacity:0; filter:blur(10px); transform:translateY(20px);">${char}</span>`;
-        }).join('');
+        // Trim and normalize whitespace
+        const text = headline.textContent.trim().replace(/\s+/g, ' ');
+        // Split by words, wrap each word in its own inline span so that
+        // the browser can still word-wrap between words naturally.
+        const words = text.split(' ');
+        headline.innerHTML = words.map(word => {
+            const letters = word.split('').map(char =>
+                `<span class="hero-letter" style="display:inline-block; opacity:0; filter:blur(10px); transform:translateY(20px);">${char}</span>`
+            ).join('');
+            return `<span style="display:inline-block; white-space:nowrap;">${letters}</span>`;
+        }).join(' ');
 
         gsap.to('.hero-letter', {
             opacity: 1,
@@ -18,11 +24,12 @@ export function initHeroAnimation() {
             stagger: 0.03,
             ease: 'power3.out',
             onComplete: () => {
-                // Return to static spans so responsiveness isn't affected
+                // Return to normal flow so responsiveness isn't affected
                 headline.querySelectorAll('span').forEach(s => {
                     s.style.display = '';
                     s.style.filter = '';
                     s.style.transform = '';
+                    s.style.whiteSpace = '';
                 });
             }
         });
@@ -121,25 +128,73 @@ export function initFeatureStack() {
 }
 
 export function initWalkthrough() {
-    const sections = gsap.utils.toArray('.walkthrough-text-block');
-    if (sections.length === 0) return;
+    const walkthroughSection = document.getElementById('walkthrough');
+    if (!walkthroughSection) return;
 
-    sections.forEach((section) => {
-        const visualId = section.getAttribute('data-visual-target');
-        
-        ScrollTrigger.create({
-            trigger: section,
-            start: 'top 50%',
-            end: 'bottom 50%',
-            onEnter: () => activateVisual(visualId),
-            onEnterBack: () => activateVisual(visualId)
+    const blocks = document.querySelectorAll('.walkthrough-text-block');
+    if (blocks.length === 0) return;
+
+    let activeIndex = 0;
+    const totalSteps = blocks.length;
+    let isTransitioning = false;
+
+    function activateStep(index) {
+        if (index < 0 || index >= totalSteps) return;
+        activeIndex = index;
+
+        blocks.forEach((block, idx) => {
+            const visualId = block.getAttribute('data-visual-target');
+            const visualEl = document.getElementById(visualId);
+
+            if (idx === index) {
+                block.classList.add('border-emerald-500');
+                block.classList.remove('border-slate-800');
+                if (visualEl) {
+                    gsap.to(visualEl, { opacity: 1, scale: 1, duration: 0.4 });
+                }
+            } else {
+                block.classList.remove('border-emerald-500');
+                block.classList.add('border-slate-800');
+                if (visualEl) {
+                    gsap.to(visualEl, { opacity: 0, scale: 0.95, duration: 0.3 });
+                }
+            }
+        });
+    }
+
+    // Set initial state
+    activateStep(0);
+
+    // Bind click trigger
+    blocks.forEach((block, idx) => {
+        block.addEventListener('click', () => {
+            activateStep(idx);
         });
     });
 
-    function activateVisual(id) {
-        gsap.to('.walkthrough-visual-panel', { opacity: 0, scale: 0.95, duration: 0.25 });
-        gsap.to(`#${id}`, { opacity: 1, scale: 1, duration: 0.4, delay: 0.1 });
-    }
+    // Intercept mouse wheel events to cycle walkthrough steps before scrolling the viewport
+    walkthroughSection.addEventListener('wheel', (e) => {
+        if (window.innerWidth < 1024) return; // only hijack scroll on desktop sizes
+
+        // If scrolling down and we have next steps
+        if (e.deltaY > 0 && activeIndex < totalSteps - 1) {
+            e.preventDefault();
+            if (!isTransitioning) {
+                isTransitioning = true;
+                activateStep(activeIndex + 1);
+                setTimeout(() => { isTransitioning = false; }, 600);
+            }
+        }
+        // If scrolling up and we have previous steps
+        else if (e.deltaY < 0 && activeIndex > 0) {
+            e.preventDefault();
+            if (!isTransitioning) {
+                isTransitioning = true;
+                activateStep(activeIndex - 1);
+                setTimeout(() => { isTransitioning = false; }, 600);
+            }
+        }
+    }, { passive: false });
 }
 
 export function initCounters() {

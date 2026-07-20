@@ -3288,3 +3288,128 @@ AttributeError: 'NoneType' object has no attribute 'status'
 2026-07-19 12:23:41,943 | INFO    | resume_screener:screening_service.py:149 | ============================================================
 2026-07-19 12:23:41,945 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 35 and ScanResult ID 34 successfully
 2026-07-19 12:23:41,969 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 35
+2026-07-20 21:51:54,722 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-20 21:51:55,782 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-20 21:51:55,784 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-20 21:51:55,967 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-20 21:51:56,027 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
+2026-07-20 22:14:09,210 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: recruiter_test123@example.com
+2026-07-20 22:14:09,463 | INFO    | resume_screener:auth.py:40 | Successfully registered user: recruiter_test123@example.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-20 22:14:09,483 | INFO    | resume_screener:auth.py:46 | Login attempt for email: recruiter_test123@example.com
+2026-07-20 22:14:09,711 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user recruiter_test123@example.com. Issuing token...
+2026-07-20 22:14:36,076 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_test123@example.com
+2026-07-20 22:14:36,093 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: recruiter_test123@example.com
+2026-07-20 22:14:36,168 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_test123@example.com
+2026-07-20 22:14:36,289 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_test123@example.com
+2026-07-20 22:15:35,264 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_test123@example.com
+2026-07-20 22:15:35,269 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-20 22:15:35,270 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-20 22:15:35,413 | INFO    | resume_screener:loader.py:26 | Initializing skill intelligence layer from: G:\Projects\Resume Screener\ai_resume_screener\knowledge_base\skills.json
+2026-07-20 22:15:35,433 | INFO    | resume_screener:loader.py:30 | Skill intelligence layer successfully loaded with 17 structured skills.
+2026-07-20 22:15:35,465 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (5): docker, javascript, postgresql, python, react
+2026-07-20 22:15:35,467 | ERROR   | resume_screener:document_service.py:18 | Failed to read PDF: EOF marker not found
+2026-07-20 22:15:35,468 | ERROR   | resume_screener:pipeline.py:240 | Skipping 'resume.pdf': Text extraction failed: Failed to read PDF file format: EOF marker not found
+2026-07-20 22:15:35,470 | WARNING | resume_screener:screening_service.py:66 | Resume pipeline failed for 'resume.pdf': Unreadable File
+2026-07-20 22:15:35,488 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-20 22:15:35,489 | INFO    | resume_screener:screening_service.py:144 |   #1 Unreadable File      → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-20 22:15:35,492 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.22s
+2026-07-20 22:15:35,493 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-20 22:15:35,496 | ERROR   | resume_screener:recruiter.py:130 | Error during screening:
+Traceback (most recent call last):
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\routers\recruiter.py", line 104, in process_resumes
+    persistence_result = persist_stage.execute(
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\services\pipeline.py", line 730, in execute
+    output = PersistenceEvent(event)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\services\pipeline.py", line 188, in __init__
+    self.status = recommendation.status
+                  ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'status'
+2026-07-20 22:16:08,527 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_test123@example.com
+2026-07-20 22:16:08,530 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-20 22:16:08,531 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-20 22:16:08,654 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (5): docker, javascript, postgresql, python, react
+2026-07-20 22:16:08,656 | ERROR   | resume_screener:document_service.py:18 | Failed to read PDF: EOF marker not found
+2026-07-20 22:16:08,658 | ERROR   | resume_screener:pipeline.py:240 | Skipping 'resume.pdf': Text extraction failed: Failed to read PDF file format: EOF marker not found
+2026-07-20 22:16:08,659 | WARNING | resume_screener:screening_service.py:66 | Resume pipeline failed for 'resume.pdf': Unreadable File
+2026-07-20 22:16:08,664 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-20 22:16:08,666 | INFO    | resume_screener:screening_service.py:144 |   #1 Unreadable File      → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-20 22:16:08,666 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.14s
+2026-07-20 22:16:08,667 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-20 22:16:08,673 | ERROR   | resume_screener:recruiter.py:130 | Error during screening:
+Traceback (most recent call last):
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\routers\recruiter.py", line 104, in process_resumes
+    persistence_result = persist_stage.execute(
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\services\pipeline.py", line 730, in execute
+    output = PersistenceEvent(event)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Projects\Resume Screener\ai_resume_screener\backend\services\pipeline.py", line 188, in __init__
+    self.status = recommendation.status
+                  ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'status'
+2026-07-20 22:16:20,123 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_test123@example.com
+2026-07-20 22:16:20,126 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-20 22:16:20,127 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-20 22:16:20,253 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (5): docker, javascript, postgresql, python, react
+2026-07-20 22:16:20,349 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'General Software Engineer' with weights: {'skills': 0.5, 'experience': 0.25, 'education': 0.15, 'projects': 0.1}
+2026-07-20 22:16:20,393 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-20 22:16:20,395 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 5 missing | Semantic Score: 0.0%
+2026-07-20 22:16:20,399 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-20 22:16:20,400 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-20 22:16:20,401 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.27s
+2026-07-20 22:16:20,401 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-20 22:16:20,589 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 36 and ScanResult ID 35 successfully
+2026-07-20 22:16:20,596 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 36
+2026-07-20 22:16:25,884 | INFO    | resume_screener:recruiter.py:35 | Recruiter endpoint called by user: recruiter_test123@example.com
+2026-07-20 22:16:25,890 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-20 22:16:25,890 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-20 22:16:25,954 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (5): docker, javascript, postgresql, python, react
+2026-07-20 22:16:26,062 | INFO    | resume_screener:pipeline.py:396 | Resolved scoring profile 'General Software Engineer' with weights: {'skills': 0.5, 'experience': 0.25, 'education': 0.15, 'projects': 0.1}
+2026-07-20 22:16:26,066 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-20 22:16:26,067 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 5 missing | Semantic Score: 0.0%
+2026-07-20 22:16:26,075 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-20 22:16:26,076 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-20 22:16:26,076 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.19s
+2026-07-20 22:16:26,077 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-20 22:16:26,081 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 37 and ScanResult ID 36 successfully
+2026-07-20 22:16:26,103 | INFO    | resume_screener:recruiter.py:118 | Screening persisted successfully for job description ID 37
+2026-07-20 22:18:26,882 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_test123@example.com
+2026-07-20 22:18:46,545 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_test123@example.com
+2026-07-20 22:18:46,725 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_test123@example.com
+2026-07-20 22:20:19,185 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: candidate_test123@example.com
+2026-07-20 22:20:19,437 | INFO    | resume_screener:auth.py:40 | Successfully registered user: candidate_test123@example.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-20 22:20:55,917 | INFO    | resume_screener:auth.py:46 | Login attempt for email: candidate_test123@example.com
+2026-07-20 22:20:56,165 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user candidate_test123@example.com. Issuing token...
+2026-07-20 22:21:54,171 | INFO    | resume_screener:onboarding.py:74 | Candidate onboarding submission for user: candidate_test123@example.com
+2026-07-20 22:21:54,193 | INFO    | resume_screener:onboarding.py:108 | Successfully completed candidate onboarding for user: candidate_test123@example.com
+2026-07-20 22:22:17,766 | INFO    | resume_screener:candidate.py:37 | Candidate endpoint called by user: candidate_test123@example.com
+2026-07-20 22:22:17,769 | INFO    | resume_screener:screening_service.py:25 | ============================================================
+2026-07-20 22:22:17,769 | INFO    | resume_screener:screening_service.py:26 | New screening request started: 1 resume(s) uploaded
+2026-07-20 22:22:17,834 | INFO    | resume_screener:screening_service.py:40 | JD skills extracted (5): docker, javascript, postgresql, python, react
+2026-07-20 22:22:17,933 | INFO    | resume_screener:pipeline.py:402 | Using default general software engineer weights (Fallback)
+2026-07-20 22:22:17,935 | INFO    | resume_screener:llm_enhancer.py:24 | No LLM API keys configured. Skipping LLM enhancement stage.
+2026-07-20 22:22:17,937 | INFO    | resume_screener:screening_service.py:103 | Processed candidate: 'Not Provided' | Edu: None | Exp: 0 yrs | Internships: 0 | Skills: 0 matched, 5 missing | Semantic Score: 0.0%
+2026-07-20 22:22:17,943 | INFO    | resume_screener:screening_service.py:110 | Ranking complete — 1 candidates scored
+2026-07-20 22:22:17,944 | INFO    | resume_screener:screening_service.py:144 |   #1 Not Provided         → Final: 3.0% (Skill: 0.0 | Exp: 0.0 | Edu: 20.0 | Proj: 0.0)
+2026-07-20 22:22:17,945 | INFO    | resume_screener:screening_service.py:148 | Request completed in 0.17s
+2026-07-20 22:22:17,946 | INFO    | resume_screener:screening_service.py:149 | ============================================================
+2026-07-20 22:22:17,954 | INFO    | resume_screener:pipeline.py:789 | Pipeline persisted Resume ID 38 and ScanResult ID 37 successfully
+2026-07-20 22:22:17,965 | INFO    | resume_screener:candidate.py:124 | Candidate resume analysis persisted successfully for ScanResult ID 37
+2026-07-20 22:23:03,036 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: candidate_test123@example.com
+2026-07-20 22:23:03,053 | INFO    | resume_screener:candidate.py:310 | Candidate stats requested for user: candidate_test123@example.com
+2026-07-20 22:23:03,076 | INFO    | resume_screener:candidate.py:160 | Candidate resumes list requested for user: candidate_test123@example.com
+2026-07-20 22:23:16,102 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: candidate_test123@example.com
+2026-07-20 22:36:32,303 | INFO    | resume_screener:auth.py:21 | Sign up attempt for email: recruiter_sim@example.com
+2026-07-20 22:36:32,592 | INFO    | resume_screener:auth.py:40 | Successfully registered user: recruiter_sim@example.com with profile_completed: False and role: UserRole.UNASSIGNED
+2026-07-20 22:36:32,626 | INFO    | resume_screener:auth.py:46 | Login attempt for email: recruiter_sim@example.com
+2026-07-20 22:36:32,893 | INFO    | resume_screener:auth.py:62 | Successfully authenticated user recruiter_sim@example.com. Issuing token...
+2026-07-20 22:37:09,074 | INFO    | resume_screener:onboarding.py:30 | Recruiter onboarding submission for user: recruiter_sim@example.com
+2026-07-20 22:37:09,086 | INFO    | resume_screener:onboarding.py:64 | Successfully completed recruiter onboarding for user: recruiter_sim@example.com
+2026-07-20 22:37:09,116 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_sim@example.com
+2026-07-20 22:37:09,189 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_sim@example.com
+2026-07-20 22:44:51,729 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_sim@example.com
+2026-07-20 22:44:51,738 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_sim@example.com
+2026-07-20 22:45:01,884 | INFO    | resume_screener:main.py:97 | Profile retrieval requested for user: recruiter_sim@example.com
+2026-07-20 22:45:01,901 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_sim@example.com

@@ -57,53 +57,63 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Auth Modal Triggers
     const authModal = document.getElementById('auth-modal');
     
-    // Bind click to open auth modal for get started/sign in buttons
-    document.querySelectorAll('.nav-login-btn, .nav-signup-btn').forEach(btn => {
+    // Bind click to open auth modal to login view
+    document.querySelectorAll('.nav-login-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             if (authModal) {
                 authModal.classList.remove('hidden');
+                const tabLogin = document.getElementById('tab-login');
+                if (tabLogin) tabLogin.click();
             }
         });
     });
 
-    // 5. Interactive Demo Simulation
-    window.runSimulatedPlayground = function() {
-        const stateUpload = document.getElementById('play-state-upload');
-        const stateLoading = document.getElementById('play-state-loading');
-        const stateResult = document.getElementById('play-state-result');
-        const loadingBar = document.getElementById('play-loading-bar');
-        const loadingText = document.getElementById('play-loading-text');
-
-        if (!stateUpload || !stateLoading || !stateResult) return;
-
-        stateUpload.classList.add('hidden');
-        stateLoading.classList.remove('hidden');
-
-        // Progress animation step-by-step
-        let progress = 0;
-        loadingBar.style.width = '0%';
-        loadingText.textContent = "Parsing PDF layout...";
-
-        const interval = setInterval(() => {
-            progress += 10;
-            loadingBar.style.width = `${progress}%`;
-
-            if (progress === 30) {
-                loadingText.textContent = "Extracting skill entities...";
-            } else if (progress === 60) {
-                loadingText.textContent = "Running semantic JD match...";
-            } else if (progress === 90) {
-                loadingText.textContent = "Generating explainable scoring report...";
-            } else if (progress >= 100) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    stateLoading.classList.add('hidden');
-                    stateResult.classList.remove('hidden');
-                }, 500);
+    // Bind click to open auth modal to signup view
+    document.querySelectorAll('.nav-signup-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (authModal) {
+                authModal.classList.remove('hidden');
+                const tabSignup = document.getElementById('tab-signup');
+                if (tabSignup) tabSignup.click();
             }
-        }, 250);
-    };
+        });
+    });
+
+    // Close Auth Modal when clicking outside the dialog card (on the overlay itself)
+    if (authModal) {
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.classList.add('hidden');
+            }
+        });
+    }
+
+    // Close Auth Modal on Esc key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && authModal && !authModal.classList.contains('hidden')) {
+            authModal.classList.add('hidden');
+        }
+    });
+
+    // Landing Logo click soft reload handler
+    const landingLogo = document.getElementById('landing-logo');
+    if (landingLogo) {
+        landingLogo.addEventListener('click', () => {
+            // Reset simulated playground
+            if (window.resetPlaygroundSimulation) {
+                window.resetPlaygroundSimulation();
+            }
+            // Close auth modal
+            if (authModal) {
+                authModal.classList.add('hidden');
+            }
+            // Reset hash route and scroll to top smoothly
+            window.location.hash = "";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
     window.resetPlaygroundSimulation = function() {
         const stateUpload = document.getElementById('play-state-upload');
@@ -116,14 +126,4 @@ document.addEventListener('DOMContentLoaded', () => {
         stateLoading.classList.add('hidden');
         stateUpload.classList.remove('hidden');
     };
-
-    // Bind triggers to demo UI
-    const playBtn = document.getElementById('playground-btn-upload');
-    if (playBtn) {
-        playBtn.addEventListener('click', window.runSimulatedPlayground);
-    }
-    const resetBtn = document.getElementById('playground-btn-reset');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', window.resetPlaygroundSimulation);
-    }
 });
