@@ -30,6 +30,12 @@
     gap: 0.75rem;
     margin-bottom: 2.5rem;
     padding-left: 0.5rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.sidebar-logo:hover {
+    opacity: 0.85;
 }
 
 .logo-emoji {

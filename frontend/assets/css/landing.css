@@ -50,8 +50,8 @@
 .feature-card-wrapper {
     position: sticky;
     top: 100px;
-    height: 480px;
-    margin-bottom: 80px;
+    height: 330px;
+    margin-bottom: 40px;
     transition: transform var(--duration-hover) var(--easing-standard);
 }
 

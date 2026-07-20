@@ -80,4 +80,37 @@ export function initNavbar(clearCandidateStateCallback) {
             window.location.hash = ROUTES.LOGIN;
         });
     }
+
+    // Sidebar Logo: navigate back to landing page
+    const landingContainer = document.getElementById('landing-container');
+
+    const recSidebarLogo = document.getElementById('recruiter-sidebar-logo');
+    if (recSidebarLogo) {
+        recSidebarLogo.addEventListener('click', () => {
+            state.clearState();
+            recruiterContainer.classList.add('hidden');
+            authModal.classList.add('hidden');
+            onboardingModal.classList.add('hidden');
+            appContainer.classList.add('hidden');
+            if (landingContainer) landingContainer.classList.remove('hidden');
+            clearRecruiterWorkspaceState();
+            window.location.hash = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    const candSidebarLogo = document.getElementById('candidate-sidebar-logo');
+    if (candSidebarLogo) {
+        candSidebarLogo.addEventListener('click', () => {
+            state.clearState();
+            candidateContainer.classList.add('hidden');
+            authModal.classList.add('hidden');
+            onboardingModal.classList.add('hidden');
+            appContainer.classList.add('hidden');
+            if (landingContainer) landingContainer.classList.remove('hidden');
+            clearCandidateWorkspaceState();
+            window.location.hash = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 }
