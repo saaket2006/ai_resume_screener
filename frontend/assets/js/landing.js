@@ -57,18 +57,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Auth Modal Triggers
     const authModal = document.getElementById('auth-modal');
     
+<<<<<<< HEAD
     // Bind click to open auth modal to login view
     document.querySelectorAll('.nav-login-btn').forEach(btn => {
+=======
+    // Bind click to open auth modal for get started/sign in buttons
+    document.querySelectorAll('.nav-login-btn, .nav-signup-btn').forEach(btn => {
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             if (authModal) {
                 authModal.classList.remove('hidden');
+<<<<<<< HEAD
                 const tabLogin = document.getElementById('tab-login');
                 if (tabLogin) tabLogin.click();
+=======
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
             }
         });
     });
 
+<<<<<<< HEAD
     // Bind click to open auth modal to signup view
     document.querySelectorAll('.nav-signup-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -114,6 +123,45 @@ document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
+=======
+    // 5. Interactive Demo Simulation
+    window.runSimulatedPlayground = function() {
+        const stateUpload = document.getElementById('play-state-upload');
+        const stateLoading = document.getElementById('play-state-loading');
+        const stateResult = document.getElementById('play-state-result');
+        const loadingBar = document.getElementById('play-loading-bar');
+        const loadingText = document.getElementById('play-loading-text');
+
+        if (!stateUpload || !stateLoading || !stateResult) return;
+
+        stateUpload.classList.add('hidden');
+        stateLoading.classList.remove('hidden');
+
+        // Progress animation step-by-step
+        let progress = 0;
+        loadingBar.style.width = '0%';
+        loadingText.textContent = "Parsing PDF layout...";
+
+        const interval = setInterval(() => {
+            progress += 10;
+            loadingBar.style.width = `${progress}%`;
+
+            if (progress === 30) {
+                loadingText.textContent = "Extracting skill entities...";
+            } else if (progress === 60) {
+                loadingText.textContent = "Running semantic JD match...";
+            } else if (progress === 90) {
+                loadingText.textContent = "Generating explainable scoring report...";
+            } else if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    stateLoading.classList.add('hidden');
+                    stateResult.classList.remove('hidden');
+                }, 500);
+            }
+        }, 250);
+    };
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
 
     window.resetPlaygroundSimulation = function() {
         const stateUpload = document.getElementById('play-state-upload');
@@ -126,4 +174,17 @@ document.addEventListener('DOMContentLoaded', () => {
         stateLoading.classList.add('hidden');
         stateUpload.classList.remove('hidden');
     };
+<<<<<<< HEAD
+=======
+
+    // Bind triggers to demo UI
+    const playBtn = document.getElementById('playground-btn-upload');
+    if (playBtn) {
+        playBtn.addEventListener('click', window.runSimulatedPlayground);
+    }
+    const resetBtn = document.getElementById('playground-btn-reset');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', window.resetPlaygroundSimulation);
+    }
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
 });

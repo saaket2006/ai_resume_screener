@@ -4,6 +4,7 @@ export function initHeroAnimation() {
     // 1. Title fade, blur, and slide up letter by letter
     const headline = document.querySelector('.hero-headline');
     if (headline) {
+<<<<<<< HEAD
         // Trim and normalize whitespace
         const text = headline.textContent.trim().replace(/\s+/g, ' ');
         // Split by words, wrap each word in its own inline span so that
@@ -15,6 +16,13 @@ export function initHeroAnimation() {
             ).join('');
             return `<span style="display:inline-block; white-space:nowrap;">${letters}</span>`;
         }).join(' ');
+=======
+        const text = headline.textContent;
+        headline.innerHTML = text.split('').map(char => {
+            if (char === ' ') return `<span style="display:inline-block;">&nbsp;</span>`;
+            return `<span class="hero-letter" style="display:inline-block; opacity:0; filter:blur(10px); transform:translateY(20px);">${char}</span>`;
+        }).join('');
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
 
         gsap.to('.hero-letter', {
             opacity: 1,
@@ -24,12 +32,19 @@ export function initHeroAnimation() {
             stagger: 0.03,
             ease: 'power3.out',
             onComplete: () => {
+<<<<<<< HEAD
                 // Return to normal flow so responsiveness isn't affected
+=======
+                // Return to static spans so responsiveness isn't affected
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
                 headline.querySelectorAll('span').forEach(s => {
                     s.style.display = '';
                     s.style.filter = '';
                     s.style.transform = '';
+<<<<<<< HEAD
                     s.style.whiteSpace = '';
+=======
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
                 });
             }
         });
@@ -128,6 +143,7 @@ export function initFeatureStack() {
 }
 
 export function initWalkthrough() {
+<<<<<<< HEAD
     const walkthroughSection = document.getElementById('walkthrough');
     if (!walkthroughSection) return;
 
@@ -195,6 +211,27 @@ export function initWalkthrough() {
             }
         }
     }, { passive: false });
+=======
+    const sections = gsap.utils.toArray('.walkthrough-text-block');
+    if (sections.length === 0) return;
+
+    sections.forEach((section) => {
+        const visualId = section.getAttribute('data-visual-target');
+        
+        ScrollTrigger.create({
+            trigger: section,
+            start: 'top 50%',
+            end: 'bottom 50%',
+            onEnter: () => activateVisual(visualId),
+            onEnterBack: () => activateVisual(visualId)
+        });
+    });
+
+    function activateVisual(id) {
+        gsap.to('.walkthrough-visual-panel', { opacity: 0, scale: 0.95, duration: 0.25 });
+        gsap.to(`#${id}`, { opacity: 1, scale: 1, duration: 0.4, delay: 0.1 });
+    }
+>>>>>>> dc05c6166eca03798adf493a35f036286691c78e
 }
 
 export function initCounters() {
