@@ -3416,3 +3416,8 @@ AttributeError: 'NoneType' object has no attribute 'status'
 2026-07-20 22:45:01,901 | INFO    | resume_screener:recruiter.py:285 | Recruiter stats requested for user: recruiter_sim@example.com
 =======
 >>>>>>> dc05c6166eca03798adf493a35f036286691c78e
+2026-07-22 15:36:42,203 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
+2026-07-22 15:36:42,667 | INFO    | resume_screener:database.py:27 | Resolved relative SQLite URL to absolute path: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-22 15:36:42,667 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
+2026-07-22 15:36:42,780 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
+2026-07-22 15:36:42,805 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
