@@ -57,73 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Auth Modal Triggers
     const authModal = document.getElementById('auth-modal');
     
-<<<<<<< HEAD
-    // Bind click to open auth modal to login view
-    document.querySelectorAll('.nav-login-btn').forEach(btn => {
-=======
     // Bind click to open auth modal for get started/sign in buttons
     document.querySelectorAll('.nav-login-btn, .nav-signup-btn').forEach(btn => {
->>>>>>> dc05c6166eca03798adf493a35f036286691c78e
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             if (authModal) {
                 authModal.classList.remove('hidden');
-<<<<<<< HEAD
-                const tabLogin = document.getElementById('tab-login');
-                if (tabLogin) tabLogin.click();
-=======
->>>>>>> dc05c6166eca03798adf493a35f036286691c78e
             }
         });
     });
 
-<<<<<<< HEAD
-    // Bind click to open auth modal to signup view
-    document.querySelectorAll('.nav-signup-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (authModal) {
-                authModal.classList.remove('hidden');
-                const tabSignup = document.getElementById('tab-signup');
-                if (tabSignup) tabSignup.click();
-            }
-        });
-    });
-
-    // Close Auth Modal when clicking outside the dialog card (on the overlay itself)
-    if (authModal) {
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                authModal.classList.add('hidden');
-            }
-        });
-    }
-
-    // Close Auth Modal on Esc key press
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && authModal && !authModal.classList.contains('hidden')) {
-            authModal.classList.add('hidden');
-        }
-    });
-
-    // Landing Logo click soft reload handler
-    const landingLogo = document.getElementById('landing-logo');
-    if (landingLogo) {
-        landingLogo.addEventListener('click', () => {
-            // Reset simulated playground
-            if (window.resetPlaygroundSimulation) {
-                window.resetPlaygroundSimulation();
-            }
-            // Close auth modal
-            if (authModal) {
-                authModal.classList.add('hidden');
-            }
-            // Reset hash route and scroll to top smoothly
-            window.location.hash = "";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-=======
     // 5. Interactive Demo Simulation
     window.runSimulatedPlayground = function() {
         const stateUpload = document.getElementById('play-state-upload');
@@ -161,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 250);
     };
->>>>>>> dc05c6166eca03798adf493a35f036286691c78e
 
     window.resetPlaygroundSimulation = function() {
         const stateUpload = document.getElementById('play-state-upload');
@@ -174,8 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         stateLoading.classList.add('hidden');
         stateUpload.classList.remove('hidden');
     };
-<<<<<<< HEAD
-=======
 
     // Bind triggers to demo UI
     const playBtn = document.getElementById('playground-btn-upload');
@@ -186,5 +126,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetBtn) {
         resetBtn.addEventListener('click', window.resetPlaygroundSimulation);
     }
->>>>>>> dc05c6166eca03798adf493a35f036286691c78e
 });
