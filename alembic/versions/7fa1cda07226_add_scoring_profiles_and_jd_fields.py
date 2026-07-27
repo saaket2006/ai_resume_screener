@@ -39,7 +39,7 @@ def upgrade() -> None:
     op.add_column('job_descriptions', sa.Column('company', sa.String(length=255), nullable=True))
     op.add_column('job_descriptions', sa.Column('optional_notes', sa.Text(), nullable=True))
     op.add_column('job_descriptions', sa.Column('updated_at', sa.DateTime(), nullable=True))
-    op.add_column('job_descriptions', sa.Column('is_archived', sa.Boolean(), server_default=sa.text('0'), nullable=False))
+    op.add_column('job_descriptions', sa.Column('is_archived', sa.Boolean(), server_default=sa.text('false'), nullable=False))
     # ### end Alembic commands ###
 
 
