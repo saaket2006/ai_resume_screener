@@ -1,0 +1,23 @@
+/* Onboarding Wizard Styles */
+.ob-step {
+    animation: authSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ob-role-card:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+}
+
+.ob-role-card.selected {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+}
+
+.modal-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}

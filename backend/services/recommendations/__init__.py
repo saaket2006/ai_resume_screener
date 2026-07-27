@@ -1,0 +1,2 @@
+from backend.services.recommendations.models import Recommendation
+from backend.services.recommendations.builder import build_resume_recommendations

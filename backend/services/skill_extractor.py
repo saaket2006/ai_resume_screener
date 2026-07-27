@@ -5,17 +5,14 @@ import logging
 
 logger = logging.getLogger("resume_screener")
 
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    pass
+from backend.services.nlp_service import nlp
 
 # A comprehensive list of real-world technical skills to ensure accuracy
 TECH_SKILLS = {
     "python", "java", "javascript", "c++", "c#", "ruby", "go", "php", "typescript", "swift",
     "html", "css", "react", "angular", "vue", "django", "flask", "fastapi", "spring", "express",
     "node.js", "next.js", "bootstrap", "tailwind", "jquery", "sass", "less",
-    "sql", "mysql", "postgresql", "mongodb", "redis", "elasticsearch", "cassandra", "oracle",
+    "sql", "mysql", "postgresql", "postgres", "mongodb", "redis", "elasticsearch", "cassandra", "oracle",
     "sqlite", "dynamodb", "mariadb", "couchdb",
     "aws", "azure", "gcp", "docker", "kubernetes", "jenkins", "terraform", "ansible",
     "git", "linux", "jira", "agile", "scrum", "kanban", "github", "gitlab", "bitbucket",
@@ -68,11 +65,9 @@ TECH_SKILLS = {
     "data science", "databases", "cloud computing", "devops", "object-oriented programming", "oop", "nlp"
 }
 
-def extract_skills(text: str) -> List[str]:
+def extract_raw_skill_strings(text: str) -> List[str]:
     """
-    Extracts key skills and technical terms using a robust hybrid approach:
-    1. A comprehensive predefined dictionary of real-world technical skills
-    2. Structural acronym extraction (e.g. API, AWS, CI/CD)
+    Extracts key skills and technical terms as raw strings using a robust hybrid approach.
     """
     doc = nlp(text)
     skills = set()
@@ -100,3 +95,11 @@ def extract_skills(text: str) -> List[str]:
     logger.debug("Total skills extracted after acronym check: %d", len(skills))
             
     return sorted(list(skills))
+
+def extract_skills(text: str):
+    """
+    Extracts key skills and technical terms and returns them as structured Skill domain objects.
+    """
+    from backend.services.skills.extractor import SkillExtractor
+    extractor = SkillExtractor()
+    return extractor.extract(text)

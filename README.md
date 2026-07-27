@@ -1,186 +1,149 @@
-# AI Resume Screening & Candidate Ranking System
+# ResumeAI - AI Hiring Intelligence Platform
 
-An end-to-end AI-powered system designed to analyze candidate resumes against a job description and automatically rank them based on skill relevance, experience, and keyword similarity using Natural Language Processing (NLP) and Machine Learning techniques.
-
----
-
-### 🌐 Live Website: (https://ai-resume-screener-69d23.web.app/)
+An end-to-end, high-performance AI Hiring Intelligence Platform designed to analyze, score, rank, and explain candidate resumes against target job descriptions. Built on top of FastAPI and a multi-agent semantic orchestration pipeline, ResumeAI transforms traditional keyword-parsing into a robust, context-aware visual screening experience.
 
 ---
 
-## ✨ Features
+### 🌐 Live Website: [https://ai-resume-screener-69d23.web.app/](https://ai-resume-screener-69d23.web.app/)
 
-### 🧾 Core Functionality
+---
 
-* **Professional Footer**
-  Persistent dashboard footer with copyright information and developer credits.
+## ✨ Core Features & Platform Layers
 
-* **Multi-Format Document Parsing**
-  Seamlessly extracts text from **PDF** and **DOCX** files.
+### 🎨 Modern SaaS Visual Experience (New)
+* **Global Dark Emerald Theme**: Designed with custom slate background grids, glowing gradients, rounded layouts, glassmorphism card panels, and emerald (`#10b981`) accents governed by CSS custom variables.
+* **GSAP-Driven Animation Engine**: Features smooth letter-by-letter fade-and-blur headline reveals, scroll-driven storytelling timelines, and stacking sticky card decks outlining core features.
+* **HTML Dashboard Mockup**: An interactive hero visual mockup built from HTML elements featuring mouse coordinate tilts, progress metrics, and floating badge panels.
+* **Simulated Run Playground**: A simulated environment letting visitors test the PDF extraction, token classification, and semantic matching engines.
+* **AI Processing Pipeline Overlay**: Redesigned loading screen featuring a full-screen Speed-Line layout. Displays the live status of the active pipeline stage:
+  `Resume Uploaded` → `Resume Parsing` → `Skill Extraction` → `Semantic Matching` → `Multi-Agent Analysis` → `Candidate Ranking` → `Explainability`
+  with states: Completed (✓), Active (⬤), and Pending (○).
 
-* **Candidate Information Extraction**
-  Leverages **Regex** and **NLP heuristics** to extract:
+### ⚙️ Event-Driven Orchestration Pipeline
+ResumeAI carries request context via an `AnalysisContext` object carrying `request_id`, performance timings, and profile metadata across 6 decoupled stages:
+1. **Resume Text Extraction**: Decodes layouts from PDF and DOCX files.
+2. **Skill Extraction**: spaCy Named Entity Recognition and custom regex-based heuristic tokens.
+3. **Semantic Matching**: Resolves aliases, acronyms (e.g. `K8s` ↔ `Kubernetes`), technology hierarchies, and industry namespaces (`future.medical`, `future.finance`).
+4. **Adaptive Scoring**: Computes component scores based on the selected recruiter profile coefficients.
+5. **Explanation Building (XAI)**: Generates detailed, presentation-independent reports containing reasons points were awarded or deducted.
+6. **Persistence Stage**: Commits records transactionally to the relational database.
 
-  * Candidate names
-  * Email addresses
-  * Phone numbers
-  * Social/profile links
-    from unstructured resume content.
+### 🧠 Adaptive Scoring Profiles (New)
+Recruiters can customize matching coefficients dynamically. Component weights are resolved per profile:
+* **Backend Developer**: Skills 45% | Experience 30% | Education 10% | Projects 15%
+* **DevOps Engineer**: Skills 45% | Experience 30% | Education 5% | Projects 20%
+* **AI Engineer**: Skills 50% | Experience 20% | Education 20% | Projects 10%
+* **Fresh Graduate**: Skills 30% | Experience 10% | Education 30% | Projects 30%
+* **General Software Engineer**: Skills 50% | Experience 25% | Education 15% | Projects 10%
 
+### 🔄 Resume Versioning & Comparison Reliability (New)
+Candidates can upload multiple versions of their resume to track score improvements:
+* **Natural Score Gains**: Progress timeline highlights improvements using natural terms (e.g. `Resume Improved: +18 points`).
+* **Comparison Reliability Check**: Automatically compares versions to check consistency of the context. Renders a clear checklist detailing:
+  - `✓ Same Job Description` (or `✗ Different Job Description`)
+  - `✓ Same Profile` (or `✗ Different Profile`)
+  - `✓ Same Engine Version` (or `✗ Different Engine Version`)
+  resulting in a `HIGH ⭐` or `LOW ⚠` reliability badge.
 
-### 🧠 Intelligent Scoring Engine
+### 📋 Recommendation Lifecycle (New)
+Provides candidates with prioritized steps to improve their resumes. Tracks transitions using a lifecycle status state machine:
+* `ACTIVE`: Default suggestions awaiting user action.
+* `COMPLETED`: Triggered once a candidate implements the recommendation.
+* `DISMISSED`: Dismissed by the candidate.
+* `EXPIRED`: Suppressed by subsequent scans.
 
-A powerful ranking system that goes beyond basic keyword matching:
+---
 
-* **Skill Relevance (50%)**
-  Uses *TF-IDF* and *Cosine Similarity* for deep technical alignment.
-
-* **Experience (25%)**
-  Automatically detects and scales years of experience.
-
-* **Education (15%)**
-  Heuristic-based degree classification (*PhD, Master’s, Bachelor’s*).
-
-* **Projects (10%)**
-  Evaluates practical experience through project analysis.
-
-
-### 📊 Explainability & Transparency
-
-* **Detailed Score Breakdown**
-  Expand any candidate to view:
-
-  * Animated progress bars
-  * Weighted scoring contributions
-  * Clear evaluation insights
-
-
-### 📈 Dynamic Visual Dashboard
-
-* **Animated Score Bars**
-  Horizontal charts with intuitive color grading:
-
-  * 🟢 High match
-  * 🟡 Moderate match
-  * 🔴 Low match
-
-* **Attribute Badges**
-  Quick insights into:
-
-  * Experience
-  * Education
-  * Project strength
-
-* **Skill Highlights**
-  Clear distinction between:
-
-  * ✅ Matched skills
-  * ❌ Missing skills
-
-
-### 🔐 Authentication & Security
-
-* **Firebase Authentication**
-
-  * Email/Password login with real-time validation
-  * Google OAuth (one-click sign-in)
-
-* **Secure Session Management**
-  Uses `browserSessionPersistence` for automatic logout on tab close.
-
-
-### 👤 User Profile Management
-
-* Interactive profile menu with hover/click support
-* Instant display name updates
-
-
-### 📱 Responsive Design
-
-* **Mobile & Tablet Optimized**
-
-  * Table → Card layout transformation for better readability
-  * Clean and modern UI across all devices
-
-* **Touch-Friendly Design**
-  All elements follow the **48px touch target standard**.
-
-* **Fluid Scaling**
-  Viewport-aware layout ensures a consistent experience on any screen size.
-
-
-### ⚙️ Backend & Performance
-
-* **FastAPI Backend**
-  High-performance, async-ready REST API.
-
-* **Structured Logging**
-  Tracks:
-
-  * Job description skill extraction
-  * Resume processing lifecycle
-  * Score breakdowns
-  * Ranking results
-  * Total processing time
-
-## Project Structure
+## 📁 Project Structure
 
 ```text
 ├── backend/
-│   ├── main.py                 # FastAPI Application Handlers
-│   └── services/               # Core NLP, Extraction, and Scoring Logic
+│   ├── main.py                 # FastAPI Web Application Entrypoint
+│   ├── models/                 # SQLAlchemy Models (Scans, Profiles, Recommendations)
+│   ├── routers/                # FastAPI Routers (candidate.py, recruiter.py, auth.py)
+│   └── services/               # Core Pipeline Services
+│       ├── policy/             # Profiles Weights Policy & Recruiter Analytics
+│       ├── recommendations/    # Resume Improvement Engine (Lifecycles & Prioritization)
+│       ├── semantic/           # Skill Namespace Mappers & Synonym Resolver
+│       ├── xai/                # Explainable Scoring Engine
+│       └── pipeline.py         # 6-Stage Decoupled Orchestration Engine
 ├── frontend/
-│   ├── index.html              # UI Structure & Auth Modal
-│   ├── style.css               # Premium Styling, Animations & Responsive UI
-│   └── app.js                  # Firebase Integration, UI Logic & Animations
-├── firebase.json               # Firebase Hosting Configuration
-├── .firebaserc                 # Firebase Project Link
-├── requirements.txt            # Python Dependencies
-├── README.md                   # Project Documentation
-└── notebooks/
-    └── evaluation.ipynb        # Jupyter Notebook for scoring evaluation
+│   ├── index.html              # Core HTML Structure, Landing page & Modals
+│   ├── assets/
+│   │   ├── css/
+│   │   │   ├── design-tokens.css # Global CSS Variables & Theme Constants
+│   │   │   ├── landing.css       # Custom SaaS Layouts, Speed-Lines, & Aurora Animations
+│   │   │   └── base.css          # Base Workspace Cards, Grids & Fonts
+│   │   └── js/
+│   │       ├── landing.js        # UI Event Bindings, Simulated Playground & FAQ Toggles
+│   │       ├── animations.js     # GreenSock (GSAP) Entrance, Story & Stacking Timelines
+│   │       ├── loadingOverlay.js # Full-Screen Pipeline Processing Modal
+│   │       └── app.js            # Workspace Client State & Auth Router Hooks
+└── requirements.txt            # Python Dependencies
 ```
 
-## Setup & Local Development
+---
 
-1. **Clone and Setup Virtual Environment:**
-   ```bash
-   git clone https://github.com/saaket2006/ai_resume_screener.git
-   cd ai_resume_screener
-   python -m venv venv
-   venv\Scripts\activate
-   ```
+## 🚀 Setup & Local Development Instructions
 
-2. **Install Dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *(Note: The system will automatically download the required `en_core_web_sm` spaCy model upon first run).*
+Follow these steps to run the complete FastAPI backend and static frontend locally:
 
-3. **Run the Backend API:**
-   ```bash
-   cd backend
-   uvicorn main:app --reload
-   ```
-   The API will be live at `http://127.0.0.1:8000`.
+### 1. Prerequisites
+- Python 3.9+
+- Node.js (Optional, for serving frontend with `npx`)
 
-4. **Launch the Frontend:**
-   Simply open `frontend/index.html` in your web browser, or serve it via a local static server:
-   ```bash
-   # From the root directory
-   npx serve frontend/
-   # OR
-   python -m http.server -d frontend 3000
-   ```
+### 2. Backend Environment Setup
+Navigate to the project root and create a virtual environment:
+```bash
+# Clone the repository
+git clone https://github.com/saaket2006/ai_resume_screener.git
+cd ai_resume_screener
 
-## Demonstration
+# Create virtual environment
+python -m venv venv
 
-1. Open the UI and complete the **Security Login**.
-2. Paste **any** Job Description (e.g., "Looking for a Python backend engineer with FastAPI and NLP experience..."). The pipeline mathematically reacts to whatever keywords you provide.
-3. Upload the resumes (PDF/DOCX) of candidates to be ranked.
-4. Click **Rank Candidates** and observe the highly accurate similarities and highlighted skill gaps!
-5. **Click any candidate row** to expand the score breakdown panel.
+# Activate virtual environment (Windows)
+venv\Scripts\activate
 
-## Evaluation
+# Activate virtual environment (macOS/Linux)
+source venv/bin/activate
 
-Examine `notebooks/evaluation.ipynb` to explore the vector space model, demonstrating how the raw text data is transformed into TF-IDF numerical matrices and how Cosine Similarity calculates spatial relevance between document vectors.
+# Install dependencies
+pip install -r requirements.txt
+```
+*(Note: Upon the first analysis invocation, the system will automatically download the necessary spaCy `en_core_web_sm` model).*
+
+### 3. Run Database Migrations (Automatic SQLite Initialization)
+The application uses SQLite as its local data store. Running the backend server for the first time will automatically create `sql_app.db` in the root directory and run the initialization schemas:
+```bash
+# Start the FastAPI server (running from the root directory)
+python -m uvicorn backend.main:app --reload
+```
+The API server will launch at `http://127.0.0.1:8000`. You can verify API docs at `http://127.0.0.1:8000/docs`.
+
+### 4. Run the Static Frontend
+Serve the `frontend/` directory using any local web server.
+
+**Option A (Python):**
+```bash
+python -m http.server -d frontend 3000
+```
+Open `http://localhost:3000` in your browser.
+
+**Option B (Node.js):**
+```bash
+npx serve frontend
+```
+
+---
+
+## 🧪 Verification & Evaluation
+
+### Running Backend Tests
+To run database schema checks, profile weights, and backward compatibility tests locally:
+```bash
+python scratch/test_backend.py
+```
+
+### Analytical Evaluation
+Explore `notebooks/evaluation.ipynb` to evaluate the VSM (Vector Space Model) calculations, showing how TF-IDF vectors are constructed from resume content and matched against job description coordinate spaces using Cosine Similarity.

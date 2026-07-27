@@ -11,11 +11,578 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/ats.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/onboarding.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/recruiter.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+    
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10b981', /* Emerald 500 */
+                        primaryHover: '#059669', /* Emerald 600 */
+                        dark: '#070a13',
+                        slateDark: '#0b0f19',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 
 <body>
     <div class="background-mesh"></div>
+    <!-- Public Landing Page Container -->
+    <div id="landing-container" class="bg-[#070a13] min-h-screen text-white relative hidden">
+        <!-- Sticky glass navbar -->
+        <header id="navbar-landing" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300 bg-transparent border-transparent">
+            <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-2 font-bold text-white text-lg">
+                    <span class="text-emerald-500 text-xl">🚀</span>
+                    <span>ResumeAI</span>
+                </div>
+                <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+                    <a href="#features" class="hover:text-white transition-colors">Features</a>
+                    <a href="#story" class="hover:text-white transition-colors">Platform Story</a>
+                    <a href="#demo" class="hover:text-white transition-colors">Interactive Demo</a>
+                    <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+                    <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <button class="nav-login-btn text-sm font-medium text-slate-300 hover:text-white transition-colors">Sign In</button>
+                    <button class="nav-signup-btn glow-btn px-4 py-2 text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-all duration-150">Get Started</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-screen pt-32 pb-20 flex items-center justify-center bg-[#070a13] overflow-hidden">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
+            
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+                <div class="text-left space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/10 bg-emerald-500/5 text-xs text-emerald-400 font-mono">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span class="terminal-typewriter">Initializing AI Hiring Intelligence...</span>
+                    </div>
+                    
+                    <h1 class="hero-headline text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                        Next-Gen AI Hiring Intelligence Platform
+                    </h1>
+                    
+                    <p class="text-base sm:text-lg text-slate-400 max-w-xl">
+                        Automate resume screening, calculate spatial semantic matches, and reveal candidate potentials with dynamic explainable scoring engines.
+                    </p>
+                    
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <button class="nav-signup-btn glow-btn px-6 py-3 font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-xl transition-all duration-150 flex items-center gap-2">
+                            <span>Start Screening</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <a href="#demo" class="px-6 py-3 font-semibold text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 bg-slate-900/50 backdrop-blur-sm rounded-xl transition-all duration-150 flex items-center gap-2">
+                            <span>Interactive Demo</span>
+                            <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-mockup-container relative flex justify-center lg:justify-end">
+                    <div class="hero-mockup-wrapper w-full max-w-[460px] bg-[#0b0f19]/70 border border-slate-800 rounded-2xl p-6 shadow-premium backdrop-blur-md relative [transform-style:preserve-3d]">
+                        <div class="terminal-bar border-b border-slate-800/60 pb-3 mb-4 flex justify-between items-center">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                            </div>
+                            <span class="text-xs font-mono text-slate-500">screening_workspace.py</span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-semibold text-white">Senior Backend Engineer</span>
+                                <span class="text-xs px-2 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 font-mono">Backend Profile</span>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span>Python (FastAPI) Match</span>
+                                    <span class="font-semibold text-emerald-400">95%</span>
+                                </div>
+                                <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-emerald-500 w-[95%]"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span>Docker & Kubernetes Match</span>
+                                    <span class="font-semibold text-emerald-400">82%</span>
+                                </div>
+                                <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-emerald-500 w-[82%]"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span>Database Tenure (PostgreSQL)</span>
+                                    <span class="font-semibold text-emerald-400">76%</span>
+                                </div>
+                                <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-emerald-500 w-[76%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="floating-badge-1 absolute -top-6 -left-6 bg-[#0f172a]/95 border border-slate-800 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-premium text-xs text-slate-300 backdrop-blur-sm pointer-events-none">
+                            <span class="text-emerald-500 font-bold">✓</span> Semantic Match
+                        </div>
+                        <div class="floating-badge-2 absolute -bottom-6 -right-6 bg-[#0f172a]/95 border border-slate-800 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-premium text-xs text-slate-300 backdrop-blur-sm pointer-events-none">
+                            <span class="text-emerald-500 font-bold">✓</span> AI Verified
+                        </div>
+                        <div class="floating-badge-3 absolute top-1/2 -right-8 bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-full shadow-glow text-xs pointer-events-none">
+                            92% Match
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trusted Companies Logo Marquee -->
+        <section class="py-12 bg-[#070a13]/80 border-t border-b border-slate-900/50">
+            <div class="max-w-7xl mx-auto px-6 text-center">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-6">Trusted by leading companies worldwide</p>
+                <div class="marquee-container opacity-40">
+                    <div class="marquee-content flex gap-16 text-lg font-bold text-slate-400">
+                        <span>Google</span>
+                        <span>Microsoft</span>
+                        <span>Vercel</span>
+                        <span>Linear</span>
+                        <span>Stripe</span>
+                        <span>ScaleAI</span>
+                        <span>PostHog</span>
+                        <span>Sentry</span>
+                        <span>Google</span>
+                        <span>Microsoft</span>
+                        <span>Vercel</span>
+                        <span>Linear</span>
+                        <span>Stripe</span>
+                        <span>ScaleAI</span>
+                        <span>PostHog</span>
+                        <span>Sentry</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Story Section -->
+        <section id="story" class="py-24 bg-[#070a13] text-center max-w-4xl mx-auto px-6 space-y-16">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The Screening Dilemma</h2>
+            <div class="space-y-12">
+                <div class="story-element text-xl sm:text-2xl text-slate-400 font-medium transition-all duration-300">
+                    📁 1000+ Resumes submitted per job opening.
+                </div>
+                <div class="story-element text-xl sm:text-2xl text-slate-400 font-medium transition-all duration-300">
+                    ⏳ Hours spent manually scanning keywords.
+                </div>
+                <div class="story-element text-xl sm:text-2xl text-slate-400 font-medium transition-all duration-300">
+                    🧠 Human bias filtering out perfect matches.
+                </div>
+                <div class="story-element text-xl sm:text-2xl text-emerald-400 font-bold transition-all duration-300">
+                    🚀 Introducing a smarter, unified semantic methodology.
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Sticky Stacking Section -->
+        <section id="features" class="py-24 bg-[#070a13]/60 relative">
+            <div class="max-w-4xl mx-auto px-6 text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Platform Intelligence Highlights</h2>
+                <p class="text-slate-400">Seven core layers engineered to streamline recruitment and eliminate bias.</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto px-6 features-container">
+                <!-- Card 1 -->
+                <div class="feature-card-wrapper">
+                    <div class="w-full h-full bg-[#0b0f19]/90 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                        <div>
+                            <div class="text-emerald-400 mb-4"><i data-lucide="brain-circuit" class="w-8 h-8"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-2">1. AI Resume Intelligence</h3>
+                            <p class="text-slate-400 text-sm">Deep textual structure analysis mapping entities, achievements, and chronologies.</p>
+                        </div>
+                        <div class="h-32 bg-slate-900/50 rounded-xl border border-slate-800/40 p-4 font-mono text-xs text-slate-500 overflow-hidden">
+                            <span class="text-emerald-500">> parsing resume...</span><br>
+                            <span>Found: 7 years engineering tenure</span><br>
+                            <span>Found: React, Postgres, Python, Docker</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="feature-card-wrapper">
+                    <div class="w-full h-full bg-[#0b0f19]/90 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                        <div>
+                            <div class="text-emerald-400 mb-4"><i data-lucide="git-branch" class="w-8 h-8"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-2">2. Semantic Skill Mapping</h3>
+                            <p class="text-slate-400 text-sm">Translates extracted skills into a multi-dimensional semantic space comparing aliases and abbreviations.</p>
+                        </div>
+                        <div class="h-32 bg-slate-900/50 rounded-xl border border-slate-800/40 p-4 flex gap-4 items-center justify-center">
+                            <div class="flex-1 bg-emerald-500/5 border border-emerald-500/20 p-2.5 rounded-lg text-center">
+                                <span class="text-xs text-emerald-400 font-mono">JS / ES6</span>
+                            </div>
+                            <div class="text-slate-600">↔</div>
+                            <div class="flex-1 bg-emerald-500/5 border border-emerald-500/20 p-2.5 rounded-lg text-center">
+                                <span class="text-xs text-emerald-400 font-mono">JavaScript</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="feature-card-wrapper">
+                    <div class="w-full h-full bg-[#0b0f19]/90 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                        <div>
+                            <div class="text-emerald-400 mb-4"><i data-lucide="sliders" class="w-8 h-8"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-2">3. Adaptive Candidate Scoring</h3>
+                            <p class="text-slate-400 text-sm">Allows recruiters to customize weights dynamically based on role profiles like Backend, DevOps, or Fresh Graduates.</p>
+                        </div>
+                        <div class="h-32 bg-slate-900/50 rounded-xl border border-slate-800/40 p-4 grid grid-cols-4 gap-2 text-center items-center">
+                            <div><div class="text-[10px] text-slate-500">Skills</div><div class="text-xs font-bold text-white">45%</div></div>
+                            <div><div class="text-[10px] text-slate-500">Exp</div><div class="text-xs font-bold text-white">30%</div></div>
+                            <div><div class="text-[10px] text-slate-500">Edu</div><div class="text-xs font-bold text-white">5%</div></div>
+                            <div><div class="text-[10px] text-slate-500">Projects</div><div class="text-xs font-bold text-white">20%</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="feature-card-wrapper">
+                    <div class="w-full h-full bg-[#0b0f19]/90 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                        <div>
+                            <div class="text-emerald-400 mb-4"><i data-lucide="help-circle" class="w-8 h-8"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-2">4. Explainable AI</h3>
+                            <p class="text-slate-400 text-sm">Detailed scoring explanations telling recruiters exactly why a candidate matching score was awarded.</p>
+                        </div>
+                        <div class="h-32 bg-slate-900/50 rounded-xl border border-slate-800/40 p-4 text-xs text-slate-400 space-y-1 overflow-y-auto">
+                            <span class="text-emerald-400">✓ Awarded 45/45 skills points</span>: Matched Python, Docker, Postgres.<br>
+                            <span class="text-yellow-400">⚠ Reduced 5 points for experience</span>: Required 5 years, candidate has 4.2 years.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="feature-card-wrapper">
+                    <div class="w-full h-full bg-[#0b0f19]/90 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                        <div>
+                            <div class="text-emerald-400 mb-4"><i data-lucide="bar-chart-3" class="w-8 h-8"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-2">5. Recruiter Analytics</h3>
+                            <p class="text-slate-400 text-sm">Dashboard metrics summarizing matched talents, common missing skills, and overall matching efficiency.</p>
+                        </div>
+                        <div class="h-32 bg-slate-900/50 rounded-xl border border-slate-800/40 p-4 flex justify-around items-center">
+                            <div class="text-center"><div class="text-2xl font-bold text-white">24</div><div class="text-[9px] text-slate-500">Screened</div></div>
+                            <div class="text-center"><div class="text-2xl font-bold text-emerald-400">82%</div><div class="text-[9px] text-slate-500">Avg Match</div></div>
+                            <div class="text-center"><div class="text-2xl font-bold text-white">8.4</div><div class="text-[9px] text-slate-500">Avg Exp</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="feature-card-wrapper">
+                    <div class="w-full h-full bg-[#0b0f19]/90 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                        <div>
+                            <div class="text-emerald-400 mb-4"><i data-lucide="history" class="w-8 h-8"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-2">6. Resume Version Comparison</h3>
+                            <p class="text-slate-400 text-sm">Tracks career progress across resume versions with built-in Comparison Reliability and score timeline indicators.</p>
+                        </div>
+                        <div class="h-32 bg-slate-900/50 rounded-xl border border-slate-800/40 p-4 flex gap-2 justify-center items-center">
+                            <div class="px-3 py-1.5 rounded bg-slate-800 text-[10px] text-slate-400">V1 (62%)</div>
+                            <div class="text-slate-600">→</div>
+                            <div class="px-3 py-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-bold">V2 (78%)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="feature-card-wrapper">
+                    <div class="w-full h-full bg-[#0b0f19]/90 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                        <div>
+                            <div class="text-emerald-400 mb-4"><i data-lucide="git-merge" class="w-8 h-8"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-2">7. Multi-Agent Pipeline</h3>
+                            <p class="text-slate-400 text-sm">Sequential orchestration pipeline carrying request contexts across semantic, xai, and mapping layers.</p>
+                        </div>
+                        <div class="h-32 bg-slate-900/50 rounded-xl border border-slate-800/40 p-4 flex justify-between items-center text-[10px] font-mono text-slate-500">
+                            <span>Upload</span> → <span>Parse</span> → <span>Match</span> → <span>Score</span> → <span>Explain</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Walkthrough Sticky Section -->
+        <section id="walkthrough" class="py-24 bg-[#070a13] relative">
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div class="sticky top-32 space-y-6">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">How it Works</h2>
+                    <p class="text-slate-400 max-w-md">Follow the automated pipeline from the initial document upload up to explainable recruiter insights.</p>
+                    
+                    <div class="space-y-8 pt-4">
+                        <div class="walkthrough-text-block border-l-2 border-emerald-500 pl-4 cursor-pointer" data-visual-target="visual-upload">
+                            <h4 class="text-lg font-bold text-white">Step 1: Resume Upload</h4>
+                            <p class="text-slate-400 text-sm">Candidates or recruiters upload PDF or Word documents directly into the screening zone.</p>
+                        </div>
+                        <div class="walkthrough-text-block border-l-2 border-slate-800 pl-4 cursor-pointer" data-visual-target="visual-match">
+                            <h4 class="text-lg font-bold text-white">Step 2: Semantic Matching</h4>
+                            <p class="text-slate-400 text-sm">Our parsing algorithms resolve abbreviations, synonyms, and context matches against job descriptions.</p>
+                        </div>
+                        <div class="walkthrough-text-block border-l-2 border-slate-800 pl-4 cursor-pointer" data-visual-target="visual-analytics">
+                            <h4 class="text-lg font-bold text-white">Step 3: Recruiter Analytics</h4>
+                            <p class="text-slate-400 text-sm">Dynamic match score timelines, xai breakdowns, and prioritized improvements appear instantly on the dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative min-h-[360px] flex items-center justify-center bg-[#0b0f19]/40 border border-slate-900 rounded-2xl p-8 backdrop-blur-md overflow-hidden">
+                    <div id="visual-upload" class="walkthrough-visual-panel w-full max-w-[320px] text-center space-y-4">
+                        <div class="p-6 border border-dashed border-emerald-500/20 bg-emerald-500/5 rounded-xl">
+                            <i data-lucide="upload-cloud" class="w-12 h-12 text-emerald-400 mx-auto mb-2 animate-bounce"></i>
+                            <p class="text-sm font-semibold text-white">drag_and_drop_resume.pdf</p>
+                            <p class="text-xs text-slate-500">Ready to parse</p>
+                        </div>
+                    </div>
+                    <div id="visual-match" class="walkthrough-visual-panel w-full max-w-[320px] text-center space-y-4 opacity-0 absolute scale-95 pointer-events-none">
+                        <div class="p-6 border border-emerald-500/10 bg-emerald-500/5 rounded-xl">
+                            <div class="flex justify-between items-center text-xs text-slate-400 font-mono mb-2">
+                                <span>Kubernetes</span>
+                                <span>↔</span>
+                                <span>K8s</span>
+                            </div>
+                            <p class="text-sm font-semibold text-white">100% Concept Equivalence</p>
+                            <p class="text-xs text-emerald-400">Semantic verification complete</p>
+                        </div>
+                    </div>
+                    <div id="visual-analytics" class="walkthrough-visual-panel w-full max-w-[320px] text-center space-y-4 opacity-0 absolute scale-95 pointer-events-none">
+                        <div class="p-6 border border-emerald-500/10 bg-emerald-500/5 rounded-xl">
+                            <div class="text-2xl font-bold text-emerald-400 mb-1">82.5%</div>
+                            <p class="text-xs font-semibold text-white">Excellent Match Score</p>
+                            <p class="text-xs text-slate-500">Calculated under Backend Profile</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Simulated Playground Section -->
+        <section id="demo" class="py-24 bg-[#070a13]/60 relative">
+            <div class="max-w-4xl mx-auto px-6 text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Try a Live Simulation</h2>
+                <p class="text-slate-400">Simulate how the ResumeAI matching engine handles candidate profile screening.</p>
+            </div>
+            
+            <div class="max-w-2xl mx-auto px-6">
+                <div class="bg-[#0b0f19]/70 border border-slate-800 rounded-2xl overflow-hidden shadow-premium">
+                    <div class="terminal-bar border-b border-slate-800/60 pb-3 p-4 flex justify-between items-center bg-[#070a13]/40">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">live_playground_simulation</span>
+                    </div>
+                    
+                    <div class="p-8 text-center space-y-6" id="playground-screen">
+                        <!-- State 1: Drop Zone Simulation -->
+                        <div id="play-state-upload" class="space-y-4 py-8">
+                            <button id="playground-btn-upload" class="w-20 h-20 bg-emerald-500/5 border border-dashed border-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto cursor-pointer hover:bg-emerald-500/10 transition-colors">
+                                <i data-lucide="file-text" class="w-8 h-8 text-emerald-400"></i>
+                            </button>
+                            <div>
+                                <p class="text-sm font-semibold text-white">Click file icon to simulate screening</p>
+                                <p class="text-xs text-slate-500">Click to upload mock_resume_candidate.pdf</p>
+                            </div>
+                        </div>
+
+                        <!-- State 2: Simulated Pipeline Loading -->
+                        <div id="play-state-loading" class="hidden py-8 space-y-4">
+                            <div class="inline-block animate-spin text-emerald-400 mb-2">
+                                <i data-lucide="loader" class="w-6 h-6"></i>
+                            </div>
+                            <p id="play-loading-text" class="text-xs font-mono text-emerald-400">Parsing PDF layout...</p>
+                            <div class="w-full bg-slate-900 h-1 rounded-full overflow-hidden max-w-xs mx-auto">
+                                <div id="play-loading-bar" class="h-full bg-emerald-500 w-0 transition-all duration-300"></div>
+                            </div>
+                        </div>
+
+                        <!-- State 3: Scoring Result View -->
+                        <div id="play-state-result" class="hidden text-left space-y-6">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                                <div>
+                                    <h4 class="text-base font-bold text-white">Alex Mercer</h4>
+                                    <p class="text-xs text-slate-500">File: mock_resume_candidate.pdf</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="score-badge high-score font-bold text-base px-3 py-1">88.0% Match</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800/40">
+                                    <span class="text-slate-500 block mb-1">Matched Skills</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">Python</span>
+                                        <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">FastAPI</span>
+                                        <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">Docker</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800/40">
+                                    <span class="text-slate-500 block mb-1">Missing Skills</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-1.5 py-0.5 rounded bg-red-500/10 text-red-400">Kubernetes</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="playground-btn-reset" class="w-full py-2.5 text-xs font-semibold text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700 bg-slate-900/50 rounded-xl transition-all duration-150">Reset Simulation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metrics Statistics Section -->
+        <section class="py-24 bg-[#070a13] relative border-t border-b border-slate-900/60">
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="space-y-2">
+                    <div class="text-4xl font-extrabold text-white flex items-center justify-center"><span class="stat-counter" data-value="150">0</span><span>K+</span></div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Resumes Screened</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-4xl font-extrabold text-emerald-400 flex items-center justify-center"><span>+</span><span class="stat-counter" data-value="24">0</span><span>%</span></div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Average Improvement</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-4xl font-extrabold text-white flex items-center justify-center"><span class="stat-counter" data-value="8">0</span><span></span></div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Scoring Profiles</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-4xl font-extrabold text-emerald-400 flex items-center justify-center"><span>99.9</span><span>%</span></div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Parser Uptime</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-24 bg-[#070a13]/60 relative">
+            <div class="max-w-4xl mx-auto px-6 text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Recruiter Testimonials</h2>
+                <p class="text-slate-400">Discover how ResumeAI transforms hiring workloads.</p>
+            </div>
+            <div class="max-w-2xl mx-auto px-6">
+                <div class="bg-[#0b0f19]/70 border border-slate-800 rounded-2xl p-8 shadow-premium backdrop-blur-md relative">
+                    <p class="text-base text-slate-300 italic mb-6">"Before ResumeAI, screening 400 applications for a single backend opening took our team 3 full days. Now, we resolve a customizable profile, screen candidates instantly with zero bias, and get clean, explainable match scoring reports within minutes."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">SH</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Sarah Jenkins</h4>
+                            <p class="text-xs text-slate-500">Head of Talent Acquisition, ScaleAI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-24 bg-[#070a13] relative">
+            <div class="max-w-4xl mx-auto px-6 text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Simple, Transparent Pricing</h2>
+                <p class="text-slate-400">Choose the plan that suits your hiring scale.</p>
+            </div>
+            <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                <div class="bg-[#0b0f19]/60 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between shadow-premium">
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-2">Developer / Candidate</h3>
+                        <p class="text-slate-400 text-sm mb-6">Optimize your resume against target JDs.</p>
+                        <div class="text-3xl font-extrabold text-white mb-6">Free</div>
+                        <ul class="space-y-3 text-sm text-slate-400 mb-8">
+                            <li class="flex items-center gap-2">✓ Upload 5 resumes per month</li>
+                            <li class="flex items-center gap-2">✓ Skill extraction & matching</li>
+                            <li class="flex items-center gap-2">✓ Career Timeline progress metrics</li>
+                        </ul>
+                    </div>
+                    <button class="nav-signup-btn w-full py-3 text-xs font-semibold text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 bg-slate-900/50 rounded-xl transition-all duration-150">Get Started Free</button>
+                </div>
+                
+                <div class="bg-[#0b0f19]/90 border-2 border-emerald-500 rounded-2xl p-8 flex flex-col justify-between shadow-glow relative">
+                    <span class="absolute top-0 right-8 -translate-y-1/2 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Recommended</span>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-2">Recruiter / Workspace</h3>
+                        <p class="text-slate-400 text-sm mb-6">Full automation workflow for high-volume pipelines.</p>
+                        <div class="text-3xl font-extrabold text-white mb-6">$99<span class="text-sm font-normal text-slate-500">/mo</span></div>
+                        <ul class="space-y-3 text-sm text-slate-400 mb-8">
+                            <li class="flex items-center gap-2 text-white">✓ Unlimited resume screenings</li>
+                            <li class="flex items-center gap-2 text-white">✓ All 8 Adaptive Scoring Profiles</li>
+                            <li class="flex items-center gap-2 text-white">✓ Job Description Library CRUD</li>
+                            <li class="flex items-center gap-2 text-white">✓ Explainable AI insights</li>
+                        </ul>
+                    </div>
+                    <button class="nav-signup-btn w-full py-3 text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-xl transition-all duration-150">Get Started Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-24 bg-[#070a13]/60 relative">
+            <div class="max-w-4xl mx-auto px-6 text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Frequently Asked Questions</h2>
+            </div>
+            <div class="max-w-2xl mx-auto px-6 space-y-4">
+                <div class="faq-card bg-[#0b0f19]/60 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="faq-header p-5 flex justify-between items-center cursor-pointer select-none">
+                        <span class="font-semibold text-white text-sm">How does the Resume Match Score differ from keyword match?</span>
+                        <span class="faq-icon text-slate-500 text-xs">▼</span>
+                    </div>
+                    <div class="faq-content px-5 pb-5 text-xs text-slate-400 hidden">
+                        Keyword matching requires exact text matching. Our Semantic Matching engine parses aliases (e.g. JavaScript ↔ JS) and understands structural connections in the JD context, ensuring highly qualified candidates aren't filtered out due to terminology differences.
+                    </div>
+                </div>
+                <div class="faq-card bg-[#0b0f19]/60 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="faq-header p-5 flex justify-between items-center cursor-pointer select-none">
+                        <span class="font-semibold text-white text-sm">Can I customize the component weights?</span>
+                        <span class="faq-icon text-slate-500 text-xs">▼</span>
+                    </div>
+                    <div class="faq-content px-5 pb-5 text-xs text-slate-400 hidden">
+                        Yes! Recruiters can resolve different Scoring Profiles (e.g., DevOps Engineer, AI Engineer, Fresh Graduate) which adjusts the component coefficients for Skills, Experience, Education, and Projects dynamically.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Aurora Section -->
+        <section class="py-24 bg-[#070a13] relative border-t border-slate-900/60 overflow-hidden text-center aurora-bg">
+            <div class="max-w-4xl mx-auto px-6 relative z-10 space-y-6">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">Elevate Your Hiring Workflows Today</h2>
+                <p class="text-slate-400 max-w-md mx-auto text-sm">Scale your candidate evaluations dynamically with high-precision semantic filters and zero human bias.</p>
+                <button class="nav-signup-btn glow-btn px-6 py-3 font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-xl transition-all duration-150">Get Started Now</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer border-t border-slate-950 py-10 text-center text-xs text-slate-500">
+            <p>&copy; 2026 AI Resume Screener - Saaket Baldawa. All rights reserved.</p>
+        </footer>
+    </div>
+
     <div class="container hidden" id="app-container">
         <header>
             <div class="header-top">
@@ -126,10 +693,6 @@
                             </button>
                         </div>
                     </div>
-                    <div style="text-align: right; margin-top: -10px; margin-bottom: 15px;">
-                        <a href="#" id="forgot-password-link"
-                            style="color: #6366f1; font-size: 0.85rem; text-decoration: none;">Forgot Password?</a>
-                    </div>
                     <button type="submit" class="glow-btn" id="email-login-btn">
                         <span>Sign In</span>
                     </button>
@@ -139,7 +702,7 @@
             <!-- SIGN UP CONTENT -->
             <div id="signup-plane" class="auth-plane hidden">
                 <h2>Create Account</h2>
-                <p>Register to dynamically rank your candidates</p>
+                <p>Register to customize your profile</p>
                 <form id="signup-form">
                     <div class="form-group">
                         <input type="email" id="signup-email" name="email" autocomplete="username" required
@@ -167,17 +730,148 @@
                     </button>
                 </form>
             </div>
+            
+            <p id="auth-error" class="auth-error-message hidden" style="margin-top: 1rem;"></p>
+        </div>
+    </div>
 
-            <div class="auth-divider">
-                <span>OR</span>
+    <!-- Onboarding Modal -->
+    <div id="onboarding-modal" class="auth-modal-overlay hidden">
+        <div class="glass-card auth-card" style="max-width: 500px;">
+            <!-- Stepper Header -->
+            <div class="onboarding-header" style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left; width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <h3 style="margin: 0; font-size: 1.2rem; color: #fff;">Profile Setup</h3>
+                    <span id="onboarding-step-indicator" style="font-size: 0.85rem; color: var(--text-secondary);">Step 1 of 4</span>
+                </div>
+                <div style="height: 6px; width: 100%; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden;">
+                    <div id="onboarding-progress-bar" style="height: 100%; width: 25%; background: linear-gradient(135deg, #6366f1, #a855f7); transition: width 0.3s ease;"></div>
+                </div>
             </div>
 
-            <button id="google-login-btn" class="google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"
-                    class="google-icon">
-                Continue with Google
-            </button>
-            <p id="auth-error" class="auth-error-message hidden"></p>
+            <!-- STEP 1: WELCOME & ROLE SELECT -->
+            <div id="ob-step-1" class="ob-step active-plane" style="width: 100%;">
+                <h2 style="margin-bottom: 0.5rem; color: #fff;">Welcome!</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Let's personalize your experience. Choose your role:</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; width: 100%;">
+                    <!-- Recruiter Choice Card -->
+                    <div id="ob-role-recruiter" class="ob-role-card" style="flex: 1; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 2px solid rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.75rem;">💼</span>
+                        <strong style="font-size: 1.1rem; display: block; margin-bottom: 0.25rem; color: #fff;">Recruiter</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; line-height: 1.2;">Screen & rank candidates</span>
+                    </div>
+                    <!-- Candidate Choice Card -->
+                    <div id="ob-role-candidate" class="ob-role-card" style="flex: 1; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 2px solid rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.75rem;">🎓</span>
+                        <strong style="font-size: 1.1rem; display: block; margin-bottom: 0.25rem; color: #fff;">Candidate</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; line-height: 1.2;">Review your profile matching</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECRUITER STEP 2: COMPANY NAME -->
+            <div id="ob-rec-step-2" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Company Details</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is the name of your organization?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <input type="text" id="ob-company-name" placeholder="Acme Corp" class="auth-input">
+                </div>
+            </div>
+
+            <!-- RECRUITER STEP 3: COMPANY TYPE -->
+            <div id="ob-rec-step-3" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Company Type</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is the size/category of your company?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <select id="ob-company-type" class="auth-input" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+                        <option value="" style="background: #111;">Select Company Type...</option>
+                        <option value="Startup" style="background: #111;">Startup</option>
+                        <option value="SME" style="background: #111;">SME</option>
+                        <option value="Enterprise" style="background: #111;">Enterprise</option>
+                        <option value="MNC" style="background: #111;">MNC</option>
+                        <option value="Government" style="background: #111;">Government</option>
+                        <option value="Educational Institution" style="background: #111;">Educational Institution</option>
+                        <option value="Consultancy" style="background: #111;">Consultancy</option>
+                        <option value="Non-Profit" style="background: #111;">Non-Profit</option>
+                        <option value="Other" style="background: #111;">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- RECRUITER STEP 4: HIRING DOMAIN -->
+            <div id="ob-rec-step-4" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Hiring Focus</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Select your primary hiring domain:</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <select id="ob-hiring-domain" class="auth-input" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+                        <option value="" style="background: #111;">Select hiring domain...</option>
+                        <option value="Software & IT" style="background: #111;">Software & IT</option>
+                        <option value="Mechanical" style="background: #111;">Mechanical</option>
+                        <option value="Civil" style="background: #111;">Civil</option>
+                        <option value="Electrical" style="background: #111;">Electrical</option>
+                        <option value="Electronics" style="background: #111;">Electronics</option>
+                        <option value="Data Science & AI" style="background: #111;">Data Science & AI</option>
+                        <option value="Finance" style="background: #111;">Finance</option>
+                        <option value="Marketing" style="background: #111;">Marketing</option>
+                        <option value="Healthcare" style="background: #111;">Healthcare</option>
+                        <option value="Education" style="background: #111;">Education</option>
+                        <option value="Legal" style="background: #111;">Legal</option>
+                        <option value="Human Resources" style="background: #111;">Human Resources</option>
+                        <option value="Sales" style="background: #111;">Sales</option>
+                        <option value="Other" style="background: #111;">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CANDIDATE STEP 2: CURRENT STATUS -->
+            <div id="ob-cand-step-2" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Current Status</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your professional status?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <select id="ob-current-status" class="auth-input" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+                        <option value="" style="background: #111;">Select current status...</option>
+                        <option value="Student" style="background: #111;">Student</option>
+                        <option value="Working Professional" style="background: #111;">Working Professional</option>
+                        <option value="Career Switcher" style="background: #111;">Career Switcher</option>
+                        <option value="Freelancer" style="background: #111;">Freelancer</option>
+                        <option value="Job Seeker" style="background: #111;">Job Seeker</option>
+                        <option value="Other" style="background: #111;">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CANDIDATE STEP 3: FIELD OF STUDY -->
+            <div id="ob-cand-step-3" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Field of Study</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your major or specialization?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <input type="text" id="ob-field-study" placeholder="e.g. Computer Science / MBA" class="auth-input">
+                </div>
+            </div>
+
+            <!-- CANDIDATE STEP 4: CURRENT DOMAIN -->
+            <div id="ob-cand-step-4" class="ob-step hidden" style="width: 100%;">
+                <h2 style="color: #fff; margin-bottom: 0.5rem;">Current Domain</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your current domain or expertise?</p>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <input type="text" id="ob-current-domain" placeholder="e.g. Software Development / None" class="auth-input">
+                </div>
+            </div>
+
+
+
+            <!-- ERROR MESSAGE -->
+            <p id="ob-error" class="auth-error-message hidden" style="margin-bottom: 1rem; text-align: center; width: 100%;"></p>
+
+            <!-- Navigation Buttons -->
+            <div class="modal-actions" style="display: flex; gap: 1rem; width: 100%; margin-top: 1rem;">
+                <button type="button" id="ob-back-btn" class="glow-btn secondary hidden" style="flex: 1;">
+                    <span>Back</span>
+                </button>
+                <button type="button" id="ob-next-btn" class="glow-btn" style="flex: 1; display: none;">
+                    <span>Next</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -216,7 +910,497 @@
         </div>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <!-- Recruiter Workspace Container -->
+    <div class="rec-layout hidden" id="recruiter-container">
+        <!-- Sidebar -->
+        <aside class="rec-sidebar">
+            <div class="sidebar-logo">
+                <span class="logo-emoji">🚀</span>
+                <span class="logo-text">Screener AI</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#/recruiter/dashboard" class="sidebar-link active" id="link-rec-dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#/recruiter/screen" class="sidebar-link" id="link-rec-screen">
+                    <span class="nav-icon">🔎</span>
+                    <span>Resume Screening</span>
+                </a>
+                <a href="#/recruiter/profile" class="sidebar-link" id="link-rec-profile">
+                    <span class="nav-icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="rec-sign-out-btn" class="sign-out-btn">
+                    <span class="nav-icon">⏻</span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="rec-main-wrapper">
+            <!-- Topbar -->
+            <header class="rec-topbar">
+                <div class="topbar-title-section">
+                    <h2 id="rec-page-title">Dashboard</h2>
+                </div>
+                <div class="topbar-profile">
+                    <span id="rec-top-user-name" class="topbar-username">Recruiter</span>
+                </div>
+            </header>
+
+            <!-- Dynamic Views -->
+            <main class="rec-content">
+                <!-- VIEW 1: DASHBOARD -->
+                <section id="rec-view-dashboard" class="rec-view active">
+                    <div class="welcome-banner">
+                        <h1 class="welcome-title">Welcome back, <span id="dash-rec-name">...</span>!</h1>
+                        <p class="welcome-subtitle">Here is the latest overview of your workspace at <strong id="dash-comp-name">...</strong> (<span id="dash-comp-type">...</span>).</p>
+                        <div class="welcome-meta-badges">
+                            <span class="meta-badge"><span class="badge-dot"></span> Hiring Focus: <strong id="dash-hiring-domain" style="margin-left: 4px; color: #fff;">...</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="rec-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-title">Total Candidates Screened</span>
+                                <span class="stat-icon">👥</span>
+                            </div>
+                            <div class="stat-value" id="stat-total-screened">0</div>
+                            <p class="stat-description">Cumulative resumes parsed & ranked</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-title">Average Resume Match Score</span>
+                                <span class="stat-icon">📈</span>
+                            </div>
+                            <div class="stat-value" id="stat-avg-score">0.0%</div>
+                            <p class="stat-description">Average spatial semantic relevance match</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-title">Avg Candidate Experience</span>
+                                <span class="stat-icon">⏳</span>
+                            </div>
+                            <div class="stat-value" id="stat-avg-experience">0.0 yrs</div>
+                            <p class="stat-description">Average candidate professional tenure</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-title">Top Education Level</span>
+                                <span class="stat-icon">🎓</span>
+                            </div>
+                            <div class="stat-value" id="stat-common-education">N/A</div>
+                            <p class="stat-description">Most frequent academic qualification</p>
+                        </div>
+                        <div class="stat-card span-two" style="grid-column: span 2; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                            <div class="stat-header">
+                                <span class="stat-title" style="font-weight: 600; color: #fff;">Workspace Intelligence Summary</span>
+                                <span class="stat-icon">💡</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                                <div>
+                                    <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #a5b4fc; font-weight: 600;">Common Missing Skills</h4>
+                                    <ul id="stat-missing-skills-list" style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.4; color: #cbd5e1;"></ul>
+                                </div>
+                                <div>
+                                    <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #a5b4fc; font-weight: 600;">Common Matched Skills</h4>
+                                    <ul id="stat-matched-skills-list" style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.4; color: #cbd5e1;"></ul>
+                                </div>
+                                <div>
+                                    <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #a5b4fc; font-weight: 600;">Top Recommendations</h4>
+                                    <ul id="stat-improvements-list" style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.4; color: #cbd5e1;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 2: RESUME SCREENING -->
+                <section id="rec-view-screen" class="rec-view hidden">
+                     <div class="screening-workspace">
+                        <div class="screening-inputs glass-card">
+                            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label for="rec-profile-select">Scoring Profile</label>
+                                    <select id="rec-profile-select" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); font-family: inherit; font-size: 0.9rem;">
+                                        <option value="">Loading profiles...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="rec-jd-select">Job Description Library</label>
+                                    <select id="rec-jd-select" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); font-family: inherit; font-size: 0.9rem;">
+                                        <option value="">-- Create New (No Library Item Selected) --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="rec-job-description">Job Description</label>
+                                <textarea id="rec-job-description" placeholder="Paste target Job Description here..."></textarea>
+                            </div>
+
+                            <div class="form-group jd-library-actions" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: flex-end;">
+                                <button id="btn-save-jd" class="glow-btn" style="font-size: 0.8rem; padding: 0.5rem 1rem; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 6px; cursor: pointer; color: #a5b4fc;">💾 Save to Library</button>
+                                <button id="btn-archive-jd" class="glow-btn" style="font-size: 0.8rem; padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; cursor: pointer; color: #fca5a5;">🗑️ Archive Selected</button>
+                            </div>
+                            
+                            <div class="form-group file-upload-wrapper">
+                                <label>Upload Resumes (PDF/DOCX)</label>
+                                <div class="file-upload-box" id="rec-drop-zone">
+                                    <span class="upload-icon">📂</span>
+                                    <p>Drag and drop resumes here, or click to browse</p>
+                                    <input type="file" id="rec-resumes" accept=".pdf,.doc,.docx" multiple hidden>
+                                    
+                                    <div id="rec-resumes-header" class="resumes-dropdown-header hidden">
+                                        <span id="rec-resumes-count">Resumes (0)</span>
+                                        <span class="dropdown-chevron">▼</span>
+                                    </div>
+                                    <ul id="rec-file-list" class="file-list"></ul>
+                                </div>
+                            </div>
+                            
+                            <button id="rec-process-btn" class="glow-btn">
+                                <span>Run Match Screening</span>
+                                <div class="loader hidden"></div>
+                            </button>
+                        </div>
+
+                        <!-- Screening Results -->
+                        <div class="results-section hidden" id="rec-results-container" style="margin-top: 2rem;">
+                            <h3>Ranked Candidates</h3>
+                            <div class="rec-results-list" id="rec-results-list">
+                                <!-- Candidate Cards go here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 3: PROFILE -->
+                <section id="rec-view-profile" class="rec-view hidden">
+                    <div class="glass-card profile-details-card">
+                        <div class="profile-card-header">
+                            <div class="profile-avatar">👤</div>
+                            <div class="profile-meta">
+                                <h3 id="profile-rec-name">Recruiter Name</h3>
+                                <p id="profile-rec-email">recruiter@company.com</p>
+                            </div>
+                        </div>
+                        <div class="profile-info-grid">
+                            <div class="info-field">
+                                <span class="info-label">Current Role</span>
+                                <span class="info-value">Recruiter</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Company Name</span>
+                                <span class="info-value" id="profile-comp-name">Acme Corp</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Company Type</span>
+                                <span class="info-value" id="profile-comp-type">Enterprise</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Hiring Domain Focus</span>
+                                <span class="info-value" id="profile-hiring-domain">Software & IT</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Candidate Workspace Container -->
+    <div class="rec-layout hidden" id="candidate-container">
+        <!-- Sidebar -->
+        <aside class="rec-sidebar">
+            <div class="sidebar-logo">
+                <span class="logo-emoji">🚀</span>
+                <span class="logo-text">Screener AI</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#/candidate/dashboard" class="sidebar-link active" id="link-cand-dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#/candidate/screen" class="sidebar-link" id="link-cand-screen">
+                    <span class="nav-icon">🔎</span>
+                    <span>Resume Analysis</span>
+                </a>
+                <a href="#/candidate/profile" class="sidebar-link" id="link-cand-profile">
+                    <span class="nav-icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="cand-sign-out-btn" class="sign-out-btn">
+                    <span class="nav-icon">⏻</span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="rec-main-wrapper">
+            <!-- Topbar -->
+            <header class="rec-topbar">
+                <div class="topbar-title-section">
+                    <h2 id="cand-page-title">Dashboard</h2>
+                </div>
+                <div class="topbar-profile">
+                    <span id="cand-top-user-name" class="topbar-username">Candidate</span>
+                </div>
+            </header>
+
+            <!-- Dynamic Views -->
+            <main class="rec-content">
+                <!-- VIEW 1: CANDIDATE DASHBOARD -->
+                <section id="cand-view-dashboard" class="rec-view active">
+                    <div class="welcome-banner">
+                        <h1 class="welcome-title">Welcome back, <span id="dash-cand-name">...</span>!</h1>
+                        <p class="welcome-subtitle">
+                            Status: <strong id="dash-cand-status" style="color: #fff;">...</strong> | 
+                            Field of Study: <strong id="dash-cand-field" style="color: #fff;">...</strong> | 
+                            Domain: <strong id="dash-cand-domain" style="color: #fff;">...</strong>
+                        </p>
+                    </div>
+
+                    <div id="cand-stats-container">
+                        <!-- Summary card or empty state placeholder populated by JS -->
+                    </div>
+
+                    <div class="analysis-history-section" style="margin-top: 2.5rem;">
+                        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: #fff;">Analysis History</h2>
+                        <div id="candidate-timeline-list" class="timeline-container">
+                            <!-- Populated dynamically via candidate.js -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 2: RESUME ANALYSIS -->
+                <section id="cand-view-screen" class="rec-view hidden">
+                    <div class="screening-workspace">
+                        <div class="screening-inputs glass-card">
+                            <div class="form-group">
+                                <label for="cand-job-description">Job Description</label>
+                                <textarea id="cand-job-description" placeholder="Paste target Job Description here..."></textarea>
+                            </div>
+                            
+                            <div class="form-group file-upload-wrapper">
+                                <label>Upload Your Resume (PDF/DOCX)</label>
+                                <div class="file-upload-box" id="cand-drop-zone">
+                                    <span class="upload-icon">📂</span>
+                                    <p>Drag and drop your resume here, or click to browse</p>
+                                    <input type="file" id="cand-resumes" accept=".pdf,.doc,.docx" hidden>
+                                    
+                                    <div id="cand-resumes-header" class="resumes-dropdown-header hidden">
+                                        <span id="cand-resumes-count">Resume (0)</span>
+                                        <span class="dropdown-chevron">▼</span>
+                                    </div>
+                                    <ul id="cand-file-list" class="file-list"></ul>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-top: 1rem;">
+                                <label for="cand-resume-label">Version Label (Optional)</label>
+                                <input type="text" id="cand-resume-label" placeholder="e.g. Software Engineer Application, V1" class="auth-input" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-sizing: border-box; color: white;">
+                            </div>
+                            
+                            <button id="cand-process-btn" class="glow-btn">
+                                <span>Analyze Resume</span>
+                                <div class="loader hidden"></div>
+                            </button>
+                        </div>
+
+                        <!-- Screening Results -->
+                        <div class="results-section hidden" id="cand-results-container" style="margin-top: 2rem;">
+                            <h3>Analysis Results</h3>
+                            <div class="glass-card" id="cand-results-details" style="padding: 2rem;">
+                                <!-- Dynamic results markup populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 3: MY PROFILE -->
+                <section id="cand-view-profile" class="rec-view hidden">
+                    <div class="glass-card profile-details-card">
+                        <div class="profile-card-header">
+                            <div class="profile-avatar">👤</div>
+                            <div class="profile-meta">
+                                <h3 id="profile-cand-name">Candidate Name</h3>
+                                <p id="profile-cand-email">candidate@email.com</p>
+                            </div>
+                        </div>
+                        <div class="profile-info-grid">
+                            <div class="info-field">
+                                <span class="info-label">Current Role</span>
+                                <span class="info-value">Candidate</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Current Status</span>
+                                <span class="info-value" id="profile-cand-status">Student</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Field of Study</span>
+                                <span class="info-value" id="profile-cand-field">Computer Science</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Current Domain</span>
+                                <span class="info-value" id="profile-cand-domain">N/A</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-label">Member Since</span>
+                                <span class="info-value" id="profile-cand-joined">N/A</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Candidate Quick View Modal -->
+    <div id="rec-quick-view-modal" class="auth-modal-overlay hidden">
+        <div class="glass-card quick-view-card">
+            <div class="quick-view-header">
+                <h2>Candidate Details</h2>
+                <button id="close-quick-view-btn" class="close-modal-btn">✕</button>
+            </div>
+            
+            <div class="quick-view-body">
+                <div class="qv-profile-summary">
+                    <div class="qv-avatar">📄</div>
+                    <div class="qv-meta">
+                        <h3 id="qv-cand-name">Marcus Johnson</h3>
+                        <p id="qv-cand-score-badge" class="score-badge">85.5% Match</p>
+                        <div id="qv-context-card" style="margin-top: 0.5rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; font-size: 0.8rem; line-height: 1.4; text-align: left;">
+                            <span style="color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 0.25rem;">Scored Relative To:</span>
+                            <div style="color: #cbd5e1;">🎯 Profile: <strong id="qv-ctx-profile" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">📋 Job Description: <strong id="qv-ctx-jd" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="qv-ctx-engine" style="color: #fff;">ResumeAI Engine v1.0</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Contact Info</h4>
+                    <div class="qv-info-grid">
+                        <div>📧 <span id="qv-cand-email">...</span></div>
+                        <div>📞 <span id="qv-cand-phone">...</span></div>
+                        <div>🔗 <span id="qv-cand-linkedin">...</span></div>
+                        <div>💻 <span id="qv-cand-github">...</span></div>
+                    </div>
+                </div>
+
+                <div class="qv-section" id="qv-xai-section">
+                    <h4>Explainable AI (XAI) Breakdown</h4>
+                    <div id="qv-xai-container"></div>
+                </div>
+
+                <div class="qv-section" id="qv-recommendations-section">
+                    <h4>Resume Improvement Recommendations</h4>
+                    <div id="qv-recommendations-container"></div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Skills Overview</h4>
+                    <div class="skills-block">
+                        <h5>Extracted Skills</h5>
+                        <div id="qv-cand-extracted-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>✅ Matched Skills</h5>
+                        <div id="qv-cand-matched-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>❌ Missing Skills</h5>
+                        <div id="qv-cand-missing-skills" class="skills-tags-container">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Analysis View Modal -->
+    <div id="cand-analysis-view-modal" class="auth-modal-overlay hidden">
+        <div class="glass-card quick-view-card">
+            <div class="quick-view-header">
+                <h2>Analysis Snapshot</h2>
+                <button id="close-cand-analysis-btn" class="close-modal-btn">✕</button>
+            </div>
+            
+            <div class="quick-view-body">
+                <div class="qv-profile-summary">
+                    <div class="qv-avatar">📄</div>
+                    <div class="qv-meta">
+                        <h3 id="cav-label">Version 1</h3>
+                        <p id="cav-filename" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.25rem;">resume.pdf</p>
+                        <p id="cav-date" style="font-size: 0.8rem; color: var(--text-secondary);">Uploaded on: 2026-07-12</p>
+                        <div id="cav-context-card" style="margin-top: 0.5rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; font-size: 0.8rem; line-height: 1.4;">
+                            <span style="color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 0.25rem;">Scored Relative To:</span>
+                            <div style="color: #cbd5e1;">🎯 Profile: <strong id="cav-ctx-profile" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">📋 Job Description: <strong id="cav-ctx-jd" style="color: #fff;">-</strong></div>
+                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="cav-ctx-engine" style="color: #fff;">ResumeAI Engine v1.0</strong></div>
+                        </div>
+                    </div>
+                    <div style="margin-left: auto;">
+                        <p id="cav-score-badge" class="score-badge" style="font-size: 1.1rem; padding: 0.5rem 1rem;">85.5% Match</p>
+                    </div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Target Job Description</h4>
+                    <p id="cav-jd-title" style="font-weight: 600; color: #fff; margin-bottom: 0.5rem;"></p>
+                    <div style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); white-space: pre-wrap;" id="cav-jd-description"></div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Contact Info in Resume</h4>
+                    <div class="qv-info-grid">
+                        <div>📧 <span id="cav-cand-email">...</span></div>
+                        <div>📞 <span id="cav-cand-phone">...</span></div>
+                        <div>🔗 <span id="cav-cand-linkedin">...</span></div>
+                        <div>💻 <span id="cav-cand-github">...</span></div>
+                    </div>
+                </div>
+
+                <div class="qv-section" id="cav-xai-section">
+                    <h4>Explainable AI (XAI) Breakdown</h4>
+                    <div id="cav-xai-container"></div>
+                </div>
+
+                <div class="qv-section" id="cav-recommendations-section">
+                    <h4>Resume Improvement Recommendations</h4>
+                    <div id="cav-recommendations-container"></div>
+                </div>
+
+                <div class="qv-section">
+                    <h4>Skills Overview</h4>
+                    <div class="skills-block">
+                        <h5>Extracted Skills</h5>
+                        <div id="cav-cand-extracted-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>✅ Matched Skills</h5>
+                        <div id="cav-cand-matched-skills" class="skills-tags-container">...</div>
+                    </div>
+                    <div class="skills-block" style="margin-top: 1rem;">
+                        <h5>❌ Missing Skills</h5>
+                        <div id="cav-cand-missing-skills" class="skills-tags-container">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/loadingOverlay.js"></script>
+    <script type="module" src="assets/js/app.js"></script>
+    <script type="module" src="assets/js/landing.js"></script>
 </body>
 
 </html>
