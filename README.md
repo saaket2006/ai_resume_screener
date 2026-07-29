@@ -10,7 +10,7 @@ An end-to-end, high-performance AI Hiring Intelligence Platform designed to anal
 
 ## ✨ Core Features & Platform Layers
 
-### 🎨 Modern SaaS Visual Experience (New)
+### 🎨 Modern SaaS Visual Experience
 * **Global Dark Emerald Theme**: Designed with custom slate background grids, glowing gradients, rounded layouts, glassmorphism card panels, and emerald (`#10b981`) accents governed by CSS custom variables.
 * **GSAP-Driven Animation Engine**: Features smooth letter-by-letter fade-and-blur headline reveals, scroll-driven storytelling timelines, and stacking sticky card decks outlining core features.
 * **HTML Dashboard Mockup**: An interactive hero visual mockup built from HTML elements featuring mouse coordinate tilts, progress metrics, and floating badge panels.
@@ -28,7 +28,7 @@ ResumeAI carries request context via an `AnalysisContext` object carrying `reque
 5. **Explanation Building (XAI)**: Generates detailed, presentation-independent reports containing reasons points were awarded or deducted.
 6. **Persistence Stage**: Commits records transactionally to the relational database.
 
-### 🧠 Adaptive Scoring Profiles (New)
+### 🧠 Adaptive Scoring Profiles
 Recruiters can customize matching coefficients dynamically. Component weights are resolved per profile:
 * **Backend Developer**: Skills 45% | Experience 30% | Education 10% | Projects 15%
 * **DevOps Engineer**: Skills 45% | Experience 30% | Education 5% | Projects 20%
@@ -36,7 +36,7 @@ Recruiters can customize matching coefficients dynamically. Component weights ar
 * **Fresh Graduate**: Skills 30% | Experience 10% | Education 30% | Projects 30%
 * **General Software Engineer**: Skills 50% | Experience 25% | Education 15% | Projects 10%
 
-### 🔄 Resume Versioning & Comparison Reliability (New)
+### 🔄 Resume Versioning & Comparison Reliability
 Candidates can upload multiple versions of their resume to track score improvements:
 * **Natural Score Gains**: Progress timeline highlights improvements using natural terms (e.g. `Resume Improved: +18 points`).
 * **Comparison Reliability Check**: Automatically compares versions to check consistency of the context. Renders a clear checklist detailing:
@@ -45,12 +45,17 @@ Candidates can upload multiple versions of their resume to track score improveme
   - `✓ Same Engine Version` (or `✗ Different Engine Version`)
   resulting in a `HIGH ⭐` or `LOW ⚠` reliability badge.
 
-### 📋 Recommendation Lifecycle (New)
+### 📋 Recommendation Lifecycle
 Provides candidates with prioritized steps to improve their resumes. Tracks transitions using a lifecycle status state machine:
 * `ACTIVE`: Default suggestions awaiting user action.
 * `COMPLETED`: Triggered once a candidate implements the recommendation.
 * `DISMISSED`: Dismissed by the candidate.
 * `EXPIRED`: Suppressed by subsequent scans.
+
+### 🛡️ System Resilience & Offline Support (New)
+* **Localized Assets**: Removed third-party CDN latency and layout breaks. Core libraries (`gsap.min.js`, `ScrollTrigger.min.js`, `lucide.min.js`) are served locally.
+* **Offline & Maintenance Banner**: Global fetch error interception displays a non-intrusive warning alert if the backend server is offline (e.g., during cold-starts on Render) or down for maintenance, auto-dismissing when connection is restored.
+* **Compiled Tailwind Stylesheet**: Employs locally compiled Tailwind v4 CSS, scanning layout and script files to export a production-minified styles file, removing runtime play CDN performance hits.
 
 ---
 
@@ -59,6 +64,7 @@ Provides candidates with prioritized steps to improve their resumes. Tracks tran
 ```text
 ├── backend/
 │   ├── main.py                 # FastAPI Web Application Entrypoint
+│   ├── config.py               # Settings and Environment Variables
 │   ├── models/                 # SQLAlchemy Models (Scans, Profiles, Recommendations)
 │   ├── routers/                # FastAPI Routers (candidate.py, recruiter.py, auth.py)
 │   └── services/               # Core Pipeline Services
@@ -72,14 +78,24 @@ Provides candidates with prioritized steps to improve their resumes. Tracks tran
 │   ├── assets/
 │   │   ├── css/
 │   │   │   ├── design-tokens.css # Global CSS Variables & Theme Constants
+│   │   │   ├── base.css          # Base Workspace Cards, Grids & Fonts
 │   │   │   ├── landing.css       # Custom SaaS Layouts, Speed-Lines, & Aurora Animations
-│   │   │   └── base.css          # Base Workspace Cards, Grids & Fonts
+│   │   │   └── tailwind.min.css  # Local Compiled & Minified Tailwind Stylesheet
 │   │   └── js/
+│   │       ├── api.js            # Fetch request handler, Token injection & Offline Banner
 │   │       ├── landing.js        # UI Event Bindings, Simulated Playground & FAQ Toggles
 │   │       ├── animations.js     # GreenSock (GSAP) Entrance, Story & Stacking Timelines
 │   │       ├── loadingOverlay.js # Full-Screen Pipeline Processing Modal
-│   │       └── app.js            # Workspace Client State & Auth Router Hooks
-└── requirements.txt            # Python Dependencies
+│   │       ├── app.js            # Workspace Client State & Auth Router Hooks
+│   │       └── vendor/           # Localised Offline Script Libraries (GSAP, Lucide)
+├── scratch/
+│   ├── migrate_to_supabase.py  # SQLite to Supabase Postgres Migration script
+│   ├── cleanup_db.py           # Database Cleanup script
+│   └── test_backend.py         # Backend validation tests
+├── tailwind.config.js          # Tailwind CSS Scanning configurations
+├── requirements.txt            # Python Dependencies
+├── package.json                # Frontend Package Scripts and Build utilities
+└── alembic/                    # Schema Migration histories
 ```
 
 ---
@@ -90,7 +106,7 @@ Follow these steps to run the complete FastAPI backend and static frontend local
 
 ### 1. Prerequisites
 - Python 3.9+
-- Node.js (Optional, for serving frontend with `npx`)
+- Node.js (For local asset compiling)
 
 ### 2. Backend Environment Setup
 Navigate to the project root and create a virtual environment:
@@ -113,15 +129,56 @@ pip install -r requirements.txt
 ```
 *(Note: Upon the first analysis invocation, the system will automatically download the necessary spaCy `en_core_web_sm` model).*
 
-### 3. Run Database Migrations (Automatic SQLite Initialization)
-The application uses SQLite as its local data store. Running the backend server for the first time will automatically create `sql_app.db` in the root directory and run the initialization schemas:
+### 3. Database Configurations
+The application supports both local SQLite and cloud PostgreSQL (Supabase) connections.
+
+#### Local SQLite Setup (Default)
+If no `DATABASE_URL` is configured in your `.env` file, the server automatically defaults to a local SQLite store at `backend/database/resume_screener.db`.
+
+#### Supabase PostgreSQL Setup
+To connect to your cloud PostgreSQL database (e.g. Supabase connection pooler), add `DATABASE_URL` to your `.env` file:
+```env
+DATABASE_URL="postgresql://postgres.<username>:<password>@<host>:5432/postgres"
+JWT_SECRET="your-strong-randomly-generated-key"
+```
+
+#### Run Database Migrations
+Run Alembic schema migrations on your database:
 ```bash
-# Start the FastAPI server (running from the root directory)
+alembic upgrade head
+```
+
+#### Migrate SQLite to PostgreSQL
+If you want to migrate existing records from your local SQLite database to Supabase:
+```bash
+python scratch/migrate_to_supabase.py
+```
+
+#### Clean Local Databases
+To clean up/reset any local `.db` files created on disk during testing:
+```bash
+python scratch/cleanup_db.py
+```
+
+### 4. Compile Tailwind CSS (Optional)
+If you modify frontend utility classes, compile the minified stylesheet:
+```bash
+# Install CLI tool
+npm install
+
+# Run compilation
+npm run build:css
+```
+
+### 5. Run the Servers
+
+#### Run Backend Server
+```bash
 python -m uvicorn backend.main:app --reload
 ```
-The API server will launch at `http://127.0.0.1:8000`. You can verify API docs at `http://127.0.0.1:8000/docs`.
+The API server will launch at `http://127.0.0.1:8000`. Verify API docs at `http://127.0.0.1:8000/docs`.
 
-### 4. Run the Static Frontend
+#### Run Frontend Server
 Serve the `frontend/` directory using any local web server.
 
 **Option A (Python):**
