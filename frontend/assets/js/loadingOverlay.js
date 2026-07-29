@@ -118,12 +118,12 @@ export const loadingOverlay = {
 
             if (i < index) {
                 // Completed
-                circle.innerHTML = '✓';
+                circle.innerHTML = '\u2713';
                 circle.className = 'w-6 h-6 rounded-full flex items-center justify-center border-none text-[10px] font-bold text-white bg-emerald-500 transition-all duration-300';
                 label.className = 'text-sm font-semibold text-emerald-400 transition-colors duration-300';
             } else if (i === index) {
                 // Active
-                circle.innerHTML = '⬤';
+                circle.innerHTML = '\u2B24';
                 circle.className = 'w-6 h-6 rounded-full flex items-center justify-center border-emerald-500/40 text-[8px] font-bold text-emerald-400 bg-emerald-500/10 animate-pulse transition-all duration-300';
                 label.className = 'text-sm font-bold text-white transition-colors duration-300';
             } else {

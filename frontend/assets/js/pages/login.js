@@ -53,7 +53,7 @@ export function initLoginPage() {
 
             const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
             inputElement.setAttribute('type', type);
-            iconElement.textContent = type === 'password' ? '👁️' : '🙈';
+            iconElement.textContent = type === 'password' ? '\uD83D\uDC41\uFE0F' : '\uD83D\uDE48';
         });
     });
 

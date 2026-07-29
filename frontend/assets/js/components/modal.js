@@ -28,4 +28,32 @@ export function initModals() {
     if (changeNameBtn) {
         changeNameBtn.style.display = "none";
     }
+
+    // Close Auth Modal
+    const authModal = document.getElementById('auth-modal');
+    const authCloseBtn = document.getElementById('auth-close-btn');
+    if (authModal) {
+        if (authCloseBtn) {
+            authCloseBtn.addEventListener('click', () => {
+                authModal.classList.add('hidden');
+                window.location.hash = '';
+            });
+        }
+
+        // Close on clicking the backdrop outside of the auth card
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.classList.add('hidden');
+                window.location.hash = '';
+            }
+        });
+
+        // Close on Escape keypress
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !authModal.classList.contains('hidden')) {
+                authModal.classList.add('hidden');
+                window.location.hash = '';
+            }
+        });
+    }
 }

@@ -25,6 +25,8 @@ export async function checkAuthStatus() {
         onboardingModal.classList.add('hidden');
         recruiterContainer.classList.add('hidden');
         candidateContainer.classList.add('hidden');
+        // Handle unauthenticated hash routes (#/login, #/signup)
+        handleRouting();
         return;
     }
 

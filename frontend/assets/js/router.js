@@ -85,22 +85,35 @@ export function handleCandidateRouting(hash) {
  */
 export function handleRouting() {
     const user = state.getUser();
-    if (!user) return; // Not authenticated yet
+    const hash = window.location.hash;
 
-    const hash = window.location.hash || (user.role === ROLES.RECRUITER ? ROUTES.DASHBOARD : ROUTES.CANDIDATE_DASHBOARD);
+    if (!user) {
+        if (hash === ROUTES.LOGIN || hash === ROUTES.SIGNUP) {
+            const authModal = document.getElementById('auth-modal');
+            if (authModal) {
+                authModal.classList.remove('hidden');
+                const tabId = hash === ROUTES.LOGIN ? 'tab-login' : 'tab-signup';
+                const tabBtn = document.getElementById(tabId);
+                if (tabBtn) tabBtn.click();
+            }
+        }
+        return;
+    }
+
+    const currentHash = hash || (user.role === ROLES.RECRUITER ? ROUTES.DASHBOARD : ROUTES.CANDIDATE_DASHBOARD);
 
     if (user.role === ROLES.RECRUITER) {
-        if (hash.startsWith("#/candidate")) {
+        if (currentHash.startsWith("#/candidate")) {
             window.location.hash = ROUTES.DASHBOARD;
             return;
         }
-        handleRecruiterRouting(hash);
+        handleRecruiterRouting(currentHash);
     } else if (user.role === ROLES.CANDIDATE) {
-        if (hash.startsWith("#/recruiter")) {
+        if (currentHash.startsWith("#/recruiter")) {
             window.location.hash = ROUTES.CANDIDATE_DASHBOARD;
             return;
         }
-        handleCandidateRouting(hash);
+        handleCandidateRouting(currentHash);
     }
 }
 

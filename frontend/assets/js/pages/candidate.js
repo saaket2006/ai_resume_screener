@@ -222,7 +222,7 @@ export async function initializeCandidateDashboard() {
                     </div>
                 `).join(`
                     <div style="height: 4px; flex-grow: 1; min-width: 40px; background: rgba(255,255,255,0.08); margin-top: 24px; position: relative; z-index: 1;">
-                        <div style="position: absolute; top: -8px; left: calc(50% - 6px); color: var(--text-secondary); font-size: 0.9rem;">→</div>
+                        <div style="position: absolute; top: -8px; left: calc(50% - 6px); color: var(--text-secondary); font-size: 0.9rem;">&#x2192;</div>
                     </div>
                 `);
 
@@ -257,13 +257,13 @@ export async function initializeCandidateDashboard() {
                     let reliabilityDetailsHTML = `
                         <div style="font-size: 0.75rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.2rem; opacity: 0.85;">
                             <div style="color: ${sameJD ? '#10b981' : '#ef4444'}; font-weight: 500;">
-                                ${sameJD ? '✓ Same Job Description' : '✗ Different Job Description'}
+                                ${sameJD ? '&#x2713; Same Job Description' : '&#x2717; Different Job Description'}
                             </div>
                             <div style="color: ${sameProfile ? '#10b981' : '#ef4444'}; font-weight: 500;">
-                                ${sameProfile ? '✓ Same Profile' : '✗ Different Profile'}
+                                ${sameProfile ? '&#x2713; Same Profile' : '&#x2717; Different Profile'}
                             </div>
                             <div style="color: ${sameEngine ? '#10b981' : '#ef4444'}; font-weight: 500;">
-                                ${sameEngine ? '✓ Same Engine Version' : '✗ Different Engine Version'}
+                                ${sameEngine ? '&#x2713; Same Engine Version' : '&#x2717; Different Engine Version'}
                             </div>
                         </div>
                     `;
@@ -272,12 +272,12 @@ export async function initializeCandidateDashboard() {
                         progressStatsHTML = `
                             <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.25rem;">
                                 <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15); padding: 0.6rem 0.9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.5rem; color: #34d399; font-weight: bold; font-size: 0.9rem; width: fit-content;">
-                                    <span>🚀 Resume Improved:</span>
+                                    <span>&#x1F680; Resume Improved:</span>
                                     <span style="font-size: 1.05rem; color: #10b981;">+${scoreDiff.toFixed(1)} points</span>
                                     <span style="font-weight: normal; color: #a7f3d0; font-size: 0.8rem;">in ${timeText}</span>
                                 </div>
                                 <div style="font-size: 0.8rem; color: ${isReliable ? '#10b981' : '#f59e0b'}; font-weight: 600; margin-top: 0.25rem;">
-                                    Comparison Reliability: ${isReliable ? 'HIGH ⭐' : 'LOW ⚠'}
+                                    Comparison Reliability: ${isReliable ? 'HIGH &#x2B50;' : 'LOW &#x26A0;'}
                                 </div>
                                 ${reliabilityDetailsHTML}
                             </div>
@@ -286,7 +286,7 @@ export async function initializeCandidateDashboard() {
                         progressStatsHTML = `
                             <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
                                 <div style="font-size: 0.8rem; color: ${isReliable ? '#10b981' : '#f59e0b'}; font-weight: 600;">
-                                    Comparison Reliability: ${isReliable ? 'HIGH ⭐' : 'LOW ⚠'}
+                                    Comparison Reliability: ${isReliable ? 'HIGH &#x2B50;' : 'LOW &#x26A0;'}
                                 </div>
                                 ${reliabilityDetailsHTML}
                             </div>
@@ -297,8 +297,8 @@ export async function initializeCandidateDashboard() {
                 progressTimelineHTML = `
                     <div class="stat-card span-two" style="grid-column: span 2; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
                         <div class="stat-header" style="margin-bottom: 1rem;">
-                            <span class="stat-title" style="font-weight: 600; color: #fff;">📈 Career Progress Timeline</span>
-                            <span class="stat-icon">🔥</span>
+                            <span class="stat-title" style="font-weight: 600; color: #fff;">&#x1F4C8; Career Progress Timeline</span>
+                            <span class="stat-icon">&#x1F525;</span>
                         </div>
                         <div style="display: flex; align-items: center; overflow-x: auto; padding: 0.5rem 0; width: 100%; gap: 0.25rem;">
                             ${timelineSteps}
@@ -313,7 +313,7 @@ export async function initializeCandidateDashboard() {
                     <div class="stat-card">
                         <div class="stat-header">
                             <span class="stat-title">Latest Resume Match Score</span>
-                            <span class="stat-icon">📈</span>
+                            <span class="stat-icon">&#x1F4C8;</span>
                         </div>
                         <div class="stat-value" id="cand-stat-latest-score">${stats.latest_ats_score}%</div>
                         <p class="stat-description">Most recent semantic relevance match</p>
@@ -321,7 +321,7 @@ export async function initializeCandidateDashboard() {
                     <div class="stat-card">
                         <div class="stat-header">
                             <span class="stat-title">Last Analysis Date</span>
-                            <span class="stat-icon">📅</span>
+                            <span class="stat-icon">&#x1F4C5;</span>
                         </div>
                         <div class="stat-value" style="font-size: 1.5rem; margin-top: 0.5rem;" id="cand-stat-last-date">${formattedDate}</div>
                         <p class="stat-description">Timestamp of the last run</p>
@@ -375,16 +375,15 @@ function renderTimelineList(historyList) {
                             <h3 style="margin: 0; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
                                 <span>${item.label}</span>
                                 <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: normal;">(V${item.version})</span>
-                            </h3>
-                            <button onclick="renameCandidateAnalysis(${item.id}, '${item.label.replace(/'/g, "\\'")}')" class="footer-link-btn" style="background: none; border: none; font-size: 0.9rem; cursor: pointer; color: #94a3b8; padding: 0;" title="Rename Label">✒️</button>
+                            </h3>                            <button onclick="renameCandidateAnalysis(${item.id}, '${item.label.replace(/'/g, "\\'")}')" class="footer-link-btn" style="background: none; border: none; font-size: 0.9rem; cursor: pointer; color: #94a3b8; padding: 0;" title="Rename Label">&#x2712;&#xFE0F;</button>
                         </div>
                         <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem;">
-                            <span>📁 ${item.original_filename}</span>
-                            <span>•</span>
-                            <span>📅 ${uploadDate}</span>
+                            <span>&#x1F4C1; ${item.original_filename}</span>
+                            <span>&bull;</span>
+                            <span>&#x1F4C5; ${uploadDate}</span>
                         </p>
                         <p style="margin: 0; font-size: 0.85rem; color: #94a3b8; background: rgba(0,0,0,0.15); padding: 0.5rem; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-                            <strong>JD:</strong> ${item.job_description_title} — ${item.job_description_summary}
+                            <strong>JD:</strong> ${item.job_description_title} &#x2014; ${item.job_description_summary}
                         </p>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; min-width: 150px;">
@@ -536,7 +535,7 @@ export function renderRecommendations(recsData, resumeId = null) {
             <div class="rec-card" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.01);">
                 <div class="rec-header" onclick="toggleRecCard(this)" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; cursor: pointer; transition: background 0.2s;">
                     <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
-                        <span class="rec-chevron" style="font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.2s; display: inline-block;">▶</span>
+                        <span class="rec-chevron" style="font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.2s; display: inline-block;">&#x25B6;</span>
                         <strong style="color: #fff; font-size: 0.95rem;">${rec.title}</strong>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -548,12 +547,12 @@ export function renderRecommendations(recsData, resumeId = null) {
                 
                 <div class="rec-content hidden" style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.15); display: none;">
                     <div style="margin-bottom: 0.75rem;">
-                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">💡 Actionable Advice</h5>
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">&#x1F4A1; Actionable Advice</h5>
                         <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #e2e8f0;">${rec.description}</p>
                     </div>
                     
                     <div style="margin-bottom: 0.75rem;">
-                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">❓ Why We Recommend This</h5>
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">&#x2753; Why We Recommend This</h5>
                         <p style="margin: 0; font-size: 0.85rem; line-height: 1.4; color: var(--text-secondary);">${rec.reason}</p>
                     </div>
         `;
@@ -562,7 +561,7 @@ export function renderRecommendations(recsData, resumeId = null) {
             const skillTags = rec.related_skills.map(s => `<span class="skill-tag" style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); color: #a5b4fc; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 4px; display: inline-block; margin-right: 0.25rem; margin-top: 0.25rem;">${s}</span>`).join('');
             html += `
                     <div style="margin-top: 0.5rem;">
-                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">🏷️ Related Skill(s)</h5>
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">&#x1F3F7;&#xFE0F; Related Skill(s)</h5>
                         <div style="display: flex; flex-wrap: wrap;">${skillTags}</div>
                     </div>
             `;
@@ -572,10 +571,10 @@ export function renderRecommendations(recsData, resumeId = null) {
             html += `
                 <div style="display: flex; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
                     <button onclick="event.stopPropagation(); updateRecommendationStatus(${resumeId}, '${rec.id}', 'COMPLETED')" class="glow-btn" style="font-size: 0.8rem; padding: 0.35rem 0.75rem; background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; cursor: pointer;">
-                        <span>✓ Mark Completed</span>
+                        <span>&#x2713; Mark Completed</span>
                     </button>
                     <button onclick="event.stopPropagation(); updateRecommendationStatus(${resumeId}, '${rec.id}', 'DISMISSED')" class="glow-btn secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem; border-color: rgba(255,255,255,0.2); color: #ccc; cursor: pointer;">
-                        <span>✕ Dismiss</span>
+                        <span>&#x2715; Dismiss</span>
                     </button>
                 </div>
             `;
@@ -671,7 +670,7 @@ export function renderXaiContent(xaiData) {
         </div>
 
         <div style="background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.05rem; color: #fff;">💡 Overall Summary</h4>
+            <h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.05rem; color: #fff;">&#x1F4A1; Overall Summary</h4>
             <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #cbd5e1;">${xaiData.overall_summary}</p>
         </div>
 
@@ -698,7 +697,7 @@ export function renderXaiContent(xaiData) {
             <div class="xai-accordion-item" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.01);">
                 <div class="xai-accordion-header" onclick="toggleXaiAccordion(this)" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; cursor: pointer; transition: background 0.2s;">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <span class="xai-chevron" style="font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.2s; display: inline-block;">▶</span>
+                        <span class="xai-chevron" style="font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.2s; display: inline-block;">&#x25B6;</span>
                         <strong style="color: #fff; font-size: 0.95rem;">${comp.name}</strong>
                         <span style="font-size: 0.85rem; color: var(--text-secondary);">(${comp.weight * 100}% weight)</span>
                     </div>
@@ -710,19 +709,19 @@ export function renderXaiContent(xaiData) {
                 
                 <div class="xai-accordion-content hidden" style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.15); display: none;">
                     <div style="margin-bottom: 0.75rem;">
-                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">✅ Points Awarded</h5>
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">&#x2705; Points Awarded</h5>
                         <p class="xai-text-awarded-summary" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #e2e8f0;">${summaryExpl.why_awarded}</p>
                         <p class="xai-text-awarded-detailed" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #e2e8f0; display: none;">${detailedExpl.why_awarded}</p>
                     </div>
                     
                     <div style="margin-bottom: 1rem;">
-                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #ef4444; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">❌ Deductions & Gaps</h5>
+                        <h5 style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #ef4444; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">&#x274C; Deductions &amp; Gaps</h5>
                         <p class="xai-text-deducted-summary" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #cbd5e1;">${summaryExpl.why_deducted || 'No deductions applied.'}</p>
                         <p class="xai-text-deducted-detailed" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; display: none;">${detailedExpl.why_deducted || 'No deductions applied.'}</p>
                     </div>
 
                     <div>
-                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">📂 Supporting Evidence</h5>
+                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.8rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">&#x1F4C2; Supporting Evidence</h5>
                         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                             ${comp.evidence.map(ev => {
                                 let impColor = "#10b981";
@@ -841,7 +840,7 @@ function renderCandidateAnalysisResults(cand) {
 
     resultsDetails.innerHTML = `
         <div class="qv-profile-summary" style="display: flex; align-items: center; gap: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem;">
-            <div class="qv-avatar" style="font-size: 3rem; background: rgba(255,255,255,0.02); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">📄</div>
+            <div class="qv-avatar" style="font-size: 3rem; background: rgba(255,255,255,0.02); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&#x1F4C4;</div>
             <div class="qv-meta">
                 <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">${cand.name}</h2>
                 <p class="score-badge ${scoreClass}" style="font-size: 1.25rem; font-weight: bold; margin: 0;">${cand.similarity_score}% Match</p>
@@ -875,11 +874,11 @@ function renderCandidateAnalysisResults(cand) {
                         <div class="skills-tags-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">${extractedTags}</div>
                     </div>
                     <div>
-                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.8rem; color: #cbd5e1; font-weight: 600;">✅ Matched Skills</h5>
+                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.8rem; color: #cbd5e1; font-weight: 600;">&#x2705; Matched Skills</h5>
                         <div class="skills-tags-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">${matchedTags}</div>
                     </div>
                     <div>
-                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.8rem; color: #cbd5e1; font-weight: 600;">❌ Missing Skills</h5>
+                        <h5 style="margin: 0 0 0.5rem 0; font-size: 0.8rem; color: #cbd5e1; font-weight: 600;">&#x274C; Missing Skills</h5>
                         <div class="skills-tags-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">${missingTags}</div>
                     </div>
                 </div>

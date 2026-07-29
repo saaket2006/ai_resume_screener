@@ -34,14 +34,14 @@ export function getCandidateRowHTML(cand) {
         <td><span class="rank-badge ${rankClass}">#${cand.rank}</span></td>
         <td>
             <strong>${cand.name}</strong><br>
-            <small style="color:var(--text-secondary); display:block; margin-top:2px;">📧 ${email}</small>
-            <small style="color:var(--text-secondary); display:block; margin-top:2px;">📞 ${phone}</small>
-            <small style="color:var(--text-secondary); display:block; margin-top:2px;">🔗 ${linkedin}</small>
-            <small style="color:var(--text-secondary); display:block; margin-top:2px;">💻 ${github}</small>
+            <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4E7; ${email}</small>
+            <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4DE; ${phone}</small>
+            <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F517; ${linkedin}</small>
+            <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4BB; ${github}</small>
             <div class="candidate-stats">
-                <span class="stat-badge">🎓 ${cand.education || 'None'}</span>
-                <span class="stat-badge">💼 ${cand.experience || 0} Yrs</span>
-                <span class="stat-badge">🚀 Proj: ${cand.projects || 0}/5</span>
+                <span class="stat-badge">&#x1F393; ${cand.education || 'None'}</span>
+                <span class="stat-badge">&#x1F4BC; ${cand.experience || 0} Yrs</span>
+                <span class="stat-badge">&#x1F680; Proj: ${cand.projects || 0}/5</span>
             </div>
         </td>
         <td style="min-width: 150px;">
@@ -50,7 +50,7 @@ export function getCandidateRowHTML(cand) {
                 <div class="score-bar-fill ${fillClass}" style="width: 0%" data-target="${Math.min(cand.similarity_score, 100)}%"></div>
             </div>
         </td>
-        <td class="expand-hint-cell"><span class="expand-chevron">▶</span></td>
+        <td class="expand-hint-cell"><span class="expand-chevron">&#x25B6;</span></td>
     `;
 }
 
@@ -96,15 +96,15 @@ export function getCandidateDetailRowHTML(cand) {
         <td colspan="4" class="detail-cell">
             <div class="detail-panel">
                 <div class="detail-section">
-                    <h4>📊 Score Breakdown</h4>
+                    <h4>&#x1F4CA; Score Breakdown</h4>
                     <div class="breakdown-grid">${breakdownHtml}</div>
                 </div>
                 <div class="detail-section">
-                    <h4>✅ Matched Skills</h4>
+                    <h4>&#x2705; Matched Skills</h4>
                     <div class="skills-list">${matchedHtml || '<span style="color:#666">None</span>'}</div>
                 </div>
                 <div class="detail-section">
-                    <h4>❌ Missing Skills</h4>
+                    <h4>&#x274C; Missing Skills</h4>
                     <div class="skills-list">${missingHtml || '<span style="color:#666">None</span>'}</div>
                 </div>
             </div>

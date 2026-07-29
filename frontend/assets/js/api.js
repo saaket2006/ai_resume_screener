@@ -41,6 +41,15 @@ async function request(endpoint, options = {}) {
             throw new Error("Session expired. Please log in again.");
         }
 
+        if (!response.ok) {
+            // Handle HTTP errors (500, 502, 503, etc.)
+            if (response.status >= 500) {
+                showOfflineBanner("Database or Server is currently undergoing maintenance. Please try again later.");
+            }
+        } else {
+            hideOfflineBanner();
+        }
+
         const contentType = response.headers.get("content-type");
         let data;
         if (contentType && contentType.includes("application/json")) {
@@ -60,7 +69,86 @@ async function request(endpoint, options = {}) {
         if (error.name === "AbortError") {
             throw new Error("Request timed out");
         }
+        // Handle network/connection failure
+        showOfflineBanner("Cannot connect to server. The backend may be starting up (cold start) or your connection is offline.");
         throw error;
+    }
+}
+
+/**
+ * Global functions to manage the offline warning banner
+ */
+function showOfflineBanner(message) {
+    let banner = document.getElementById("offline-warning-banner");
+    if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "offline-warning-banner";
+        banner.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(239, 68, 68, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 9999;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            margin-top: -10px;
+        `;
+        
+        const textSpan = document.createElement("span");
+        textSpan.id = "offline-warning-text";
+        banner.appendChild(textSpan);
+        
+        const closeBtn = document.createElement("button");
+        closeBtn.innerHTML = "&times;";
+        closeBtn.style.cssText = `
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+            transition: color 0.2s;
+            margin-left: 8px;
+        `;
+        closeBtn.addEventListener("mouseover", () => closeBtn.style.color = "#fff");
+        closeBtn.addEventListener("mouseout", () => closeBtn.style.color = "rgba(255, 255, 255, 0.8)");
+        closeBtn.onclick = () => hideOfflineBanner();
+        banner.appendChild(closeBtn);
+        
+        document.body.appendChild(banner);
+        
+        // Trigger reflow to animate
+        banner.offsetHeight;
+        banner.style.opacity = "1";
+        banner.style.marginTop = "0px";
+    }
+    const textSpan = document.getElementById("offline-warning-text");
+    if (textSpan) {
+        textSpan.innerHTML = `&#x26A0;&#xFE0F; ${message}`;
+    }
+}
+
+function hideOfflineBanner() {
+    const banner = document.getElementById("offline-warning-banner");
+    if (banner) {
+        banner.style.opacity = "0";
+        banner.style.marginTop = "-10px";
+        setTimeout(() => banner.remove(), 300);
     }
 }
 

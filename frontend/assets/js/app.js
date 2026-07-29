@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.innerHTML = `
                 <span>${file.name}</span>
-                <span style="color: #ef4444; cursor:pointer;" onclick="removeFile(${index})">✕</span>
+                <span style="color: #ef4444; cursor:pointer;" onclick="removeFile(${index})">&times;</span>
             `;
             fileList.appendChild(li);
         });
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.addEventListener('click', (e) => {
                 if (e.target.tagName === 'A') return;
                 const isOpen = detailTr.classList.toggle('open');
-                tr.querySelector('.expand-chevron').textContent = isOpen ? '▼' : '▶';
+                tr.querySelector('.expand-chevron').textContent = isOpen ? '\u25BC' : '\u25B6';
 
                 // Animate breakdown bars when opening
                 if (isOpen) {

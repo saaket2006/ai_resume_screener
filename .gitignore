@@ -18,6 +18,19 @@ env/
 ENV/
 .venv/
 
+# Logs
+*/logs/
+*.log
+backend/logs/
+logs/
+
+# Database files
+*.db
+backend/database/*.db
+
+# Scratch files/folders
+scratch/
+
 # Environment variables
 .env
 frontend/firebase-config.js

@@ -20,30 +20,12 @@
     <link rel="stylesheet" href="assets/css/recruiter.css">
     <link rel="stylesheet" href="assets/css/landing.css">
     
-    <!-- Tailwind Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#10b981', /* Emerald 500 */
-                        primaryHover: '#059669', /* Emerald 600 */
-                        dark: '#070a13',
-                        slateDark: '#0b0f19',
-                    },
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- GSAP CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="assets/css/tailwind.min.css">
+    <!-- Lucide Icons -->
+    <script src="assets/js/vendor/lucide.min.js"></script>
+    <!-- GSAP -->
+    <script src="assets/js/vendor/gsap.min.js"></script>
+    <script src="assets/js/vendor/ScrollTrigger.min.js"></script>
 </head>
 
 <body>
@@ -54,7 +36,7 @@
         <header id="navbar-landing" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300 bg-transparent border-transparent">
             <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
                 <div class="flex items-center gap-2 font-bold text-white text-lg">
-                    <span class="text-emerald-500 text-xl">🚀</span>
+                    <span class="text-emerald-500 text-xl">&#x1F680;</span>
                     <span>ResumeAI</span>
                 </div>
                 <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
@@ -667,6 +649,7 @@
     <!-- Auth Modal -->
     <div id="auth-modal" class="auth-modal-overlay">
         <div class="glass-card auth-card">
+            <button class="auth-close-btn" id="auth-close-btn" aria-label="Close authentication modal">&times;</button>
             <div class="auth-tabs">
                 <button class="auth-tab active" id="tab-login">Login</button>
                 <button class="auth-tab" id="tab-signup">Sign Up</button>
@@ -1386,11 +1369,11 @@
                         <div id="cav-cand-extracted-skills" class="skills-tags-container">...</div>
                     </div>
                     <div class="skills-block" style="margin-top: 1rem;">
-                        <h5>✅ Matched Skills</h5>
+                        <h5>&#x2705; Matched Skills</h5>
                         <div id="cav-cand-matched-skills" class="skills-tags-container">...</div>
                     </div>
                     <div class="skills-block" style="margin-top: 1rem;">
-                        <h5>❌ Missing Skills</h5>
+                        <h5>&#x274C; Missing Skills</h5>
                         <div id="cav-cand-missing-skills" class="skills-tags-container">...</div>
                     </div>
                 </div>

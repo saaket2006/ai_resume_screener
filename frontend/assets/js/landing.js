@@ -42,14 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Close all others
             document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '▼');
+            document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '\u25BC');
 
             if (isHidden) {
                 content.classList.remove('hidden');
-                icon.textContent = '▲';
+                icon.textContent = '\u25B2';
             } else {
                 content.classList.add('hidden');
-                icon.textContent = '▼';
+                icon.textContent = '\u25BC';
             }
         });
     });
@@ -61,8 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.nav-login-btn, .nav-signup-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            const isLogin = btn.classList.contains('nav-login-btn');
+            window.location.hash = isLogin ? '#/login' : '#/signup';
+            // Fallback in case hash doesn't trigger change
             if (authModal) {
                 authModal.classList.remove('hidden');
+                const tabId = isLogin ? 'tab-login' : 'tab-signup';
+                const tabBtn = document.getElementById(tabId);
+                if (tabBtn) tabBtn.click();
             }
         });
     });
