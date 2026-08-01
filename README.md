@@ -88,10 +88,6 @@ Provides candidates with prioritized steps to improve their resumes. Tracks tran
 │   │       ├── loadingOverlay.js # Full-Screen Pipeline Processing Modal
 │   │       ├── app.js            # Workspace Client State & Auth Router Hooks
 │   │       └── vendor/           # Localised Offline Script Libraries (GSAP, Lucide)
-├── scratch/
-│   ├── migrate_to_supabase.py  # SQLite to Supabase Postgres Migration script
-│   ├── cleanup_db.py           # Database Cleanup script
-│   └── test_backend.py         # Backend validation tests
 ├── tailwind.config.js          # Tailwind CSS Scanning configurations
 ├── requirements.txt            # Python Dependencies
 ├── package.json                # Frontend Package Scripts and Build utilities
