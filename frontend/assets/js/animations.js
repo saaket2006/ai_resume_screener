@@ -1,5 +1,9 @@
 /* GSAP Scroll Animations & Timelines Module */
 
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
+
 export function initHeroAnimation() {
     // 1. Title fade, blur, and slide up letter by letter
     const headline = document.querySelector('.hero-headline');
