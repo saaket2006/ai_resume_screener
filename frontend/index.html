@@ -35,20 +35,18 @@
         <!-- Sticky glass navbar -->
         <header id="navbar-landing" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300 bg-transparent border-transparent">
             <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                <div class="flex items-center gap-2 font-bold text-white text-lg">
+                <a href="/" class="flex items-center gap-2 font-bold text-white text-lg hover:opacity-80 transition-opacity cursor-pointer">
                     <span class="text-emerald-500 text-xl">&#x1F680;</span>
                     <span>ResumeAI</span>
-                </div>
+                </a>
                 <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
                     <a href="#features" class="hover:text-white transition-colors">Features</a>
                     <a href="#story" class="hover:text-white transition-colors">Platform Story</a>
-                    <a href="#demo" class="hover:text-white transition-colors">Interactive Demo</a>
-                    <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
                     <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
                 </nav>
                 <div class="flex items-center gap-4">
-                    <button class="nav-login-btn px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors border border-transparent hover:border-slate-700 rounded-lg">Sign In</button>
-                    <button class="nav-signup-btn glow-btn px-4 py-2 text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-all duration-150">Get Started</button>
+                    <button class="nav-login-btn px-4 py-2 text-sm font-semibold text-slate-300 whitespace-nowrap hover:text-white transition-colors border border-slate-700 hover:bg-slate-800 rounded-lg">Sign In</button>
+                    <button class="nav-signup-btn glow-btn px-4 py-2 text-sm font-semibold text-white whitespace-nowrap bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-all duration-150">Get Started</button>
                 </div>
             </div>
         </header>
@@ -72,10 +70,6 @@
                             <span>Start Screening</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
-                        <a href="#demo" class="px-6 py-3 font-semibold text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 bg-slate-900/50 backdrop-blur-sm rounded-xl transition-all duration-150 flex items-center gap-2">
-                            <span>Interactive Demo</span>
-                            <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
-                        </a>
                     </div>
                 </div>
                 
@@ -461,7 +455,7 @@
     </div>
 
     <!-- Auth Modal -->
-    <div id="auth-modal" class="auth-modal-overlay">
+    <div id="auth-modal" class="auth-modal-overlay hidden">
         <div class="glass-card auth-card">
             <button class="auth-close-btn" id="auth-close-btn" aria-label="Close authentication modal">&times;</button>
             <div class="auth-tabs">
