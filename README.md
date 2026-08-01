@@ -192,15 +192,3 @@ Open `http://localhost:3000` in your browser.
 npx serve frontend
 ```
 
----
-
-## 🧪 Verification & Evaluation
-
-### Running Backend Tests
-To run database schema checks, profile weights, and backward compatibility tests locally:
-```bash
-python scratch/test_backend.py
-```
-
-### Analytical Evaluation
-Explore `notebooks/evaluation.ipynb` to evaluate the VSM (Vector Space Model) calculations, showing how TF-IDF vectors are constructed from resume content and matched against job description coordinate spaces using Cosine Similarity.
