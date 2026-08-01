@@ -5,10 +5,14 @@ export function initHeroAnimation() {
     const headline = document.querySelector('.hero-headline');
     if (headline) {
         const text = headline.textContent;
-        headline.innerHTML = text.split('').map(char => {
-            if (char === ' ') return `<span style="display:inline-block;">&nbsp;</span>`;
-            return `<span class="hero-letter" style="display:inline-block; opacity:0; filter:blur(10px); transform:translateY(20px);">${char}</span>`;
-        }).join('');
+        const trimmed = text.trim().replace(/\s+/g, ' ');
+        const words = trimmed.split(' ');
+        headline.innerHTML = words.map(word => {
+            const wordHTML = word.split('').map(char => {
+                return `<span class="hero-letter" style="display:inline-block; opacity:0; filter:blur(10px); transform:translateY(20px);">${char}</span>`;
+            }).join('');
+            return `<span class="hero-word" style="display:inline-block;">${wordHTML}</span>`;
+        }).join(' ');
 
         gsap.to('.hero-letter', {
             opacity: 1,
