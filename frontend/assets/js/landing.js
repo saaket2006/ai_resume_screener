@@ -7,7 +7,7 @@ import {
     initNavbarEffects
 } from './animations.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+function initLanding() {
     // 1. Initialize animations
     initHeroAnimation();
     initStoryAnimation();
@@ -132,4 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetBtn) {
         resetBtn.addEventListener('click', window.resetPlaygroundSimulation);
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLanding);
+} else {
+    initLanding();
+}

@@ -174,7 +174,11 @@ npm run build:css
 
 #### Run Backend Server
 ```bash
-python -m uvicorn backend.main:app --reload
+# Run via virtual environment executable (Windows)
+venv\Scripts\python.exe -m uvicorn backend.main:app --reload
+
+# Run via virtual environment executable (macOS/Linux)
+./venv/bin/python -m uvicorn backend.main:app --reload
 ```
 The API server will launch at `http://127.0.0.1:8000`. Verify API docs at `http://127.0.0.1:8000/docs`.
 
