@@ -137,8 +137,12 @@ export function initWalkthrough() {
     });
 
     function activateVisual(id) {
-        gsap.to('.walkthrough-visual-panel', { opacity: 0, scale: 0.95, duration: 0.25 });
-        gsap.to(`#${id}`, { opacity: 1, scale: 1, duration: 0.4, delay: 0.1 });
+        gsap.to('.walkthrough-visual-panel', { opacity: 0, scale: 0.95, duration: 0.25, onComplete: () => {
+            document.querySelectorAll('.walkthrough-visual-panel').forEach(el => el.classList.add('pointer-events-none'));
+        }});
+        gsap.to(`#${id}`, { opacity: 1, scale: 1, duration: 0.4, delay: 0.25, onStart: () => {
+            document.getElementById(id).classList.remove('pointer-events-none');
+        }});
     }
 }
 
