@@ -28,13 +28,8 @@ class UserResponse(BaseModel):
     created_at: datetime
 
     class Config:
-        from_attributes = True  # Pydantic v2 support
-        orm_mode = True         # Pydantic v1 backward compatibility
-
-class RecruiterProfileCreate(BaseModel):
-    company_name: str = Field(..., min_length=1)
-    company_type: CompanyType
-    hiring_domain: str = Field(..., min_length=1)
+        from_attributes = True
+        orm_mode = True
 
 class RecruiterProfileResponse(BaseModel):
     id: int
@@ -46,11 +41,6 @@ class RecruiterProfileResponse(BaseModel):
     class Config:
         from_attributes = True
         orm_mode = True
-
-class CandidateProfileCreate(BaseModel):
-    current_status: str = Field(..., min_length=1)
-    field_of_study: str = Field(..., min_length=1)
-    current_domain: str = Field(..., min_length=1)
 
 class CandidateProfileResponse(BaseModel):
     id: int
@@ -79,3 +69,9 @@ class UserProfileResponse(BaseModel):
 class OnboardingStatusResponse(BaseModel):
     profile_completed: bool
     role: Optional[UserRole] = None
+
+class OnboardingSubmission(BaseModel):
+    role: UserRole
+    question_1: str = Field(..., min_length=1)
+    question_2: str = Field(..., min_length=1)
+    question_3: str = Field(..., min_length=1)

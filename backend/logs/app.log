@@ -3421,19 +3421,3 @@ AttributeError: 'NoneType' object has no attribute 'status'
 2026-07-22 15:36:42,667 | INFO    | resume_screener:database.py:36 | Connecting to database: sqlite:///G:\Projects\Resume Screener\ai_resume_screener\backend\database\resume_screener.db
 2026-07-22 15:36:42,780 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
 2026-07-22 15:36:42,805 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
-2026-08-01 11:07:03,798 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
-2026-08-01 11:07:05,105 | INFO    | resume_screener:database.py:36 | Connecting to database: postgresql://postgres.zdilhdnacvuvyhtuzkui:airesumescreener@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres
-2026-08-01 11:07:05,276 | CRITICAL | resume_screener:database.py:43 | Database connection failed for URL: postgresql://postgres.zdilhdnacvuvyhtuzkui:airesumescreener@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres. Application stopping. Error: No module named 'psycopg2'
-2026-08-01 11:07:05,277 | CRITICAL | resume_screener:main.py:49 | Startup Validation Failed: Database connection could not be established. Error: Database connection failed: No module named 'psycopg2'
-2026-08-01 11:08:58,159 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
-2026-08-01 11:08:59,184 | INFO    | resume_screener:database.py:36 | Connecting to database: postgresql://postgres.zdilhdnacvuvyhtuzkui:airesumescreener@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres
-2026-08-01 11:09:02,144 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
-2026-08-01 11:09:02,210 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
-2026-08-01 11:09:36,975 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
-2026-08-01 11:09:37,603 | INFO    | resume_screener:database.py:36 | Connecting to database: postgresql://postgres.zdilhdnacvuvyhtuzkui:airesumescreener@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres
-2026-08-01 11:09:40,173 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
-2026-08-01 11:09:40,232 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
-2026-08-01 11:24:07,946 | INFO    | resume_screener:logging_config.py:33 | Logging initialized. Log file saved at: G:\Projects\Resume Screener\ai_resume_screener\backend\logs\app.log
-2026-08-01 11:24:09,086 | INFO    | resume_screener:database.py:36 | Connecting to database: postgresql://postgres.zdilhdnacvuvyhtuzkui:airesumescreener@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres
-2026-08-01 11:24:12,065 | INFO    | resume_screener:database.py:41 | Database connection established successfully.
-2026-08-01 11:24:12,118 | INFO    | resume_screener:main.py:40 | Startup Validation: Database connection verified successfully.
