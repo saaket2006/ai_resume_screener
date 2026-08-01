@@ -19,14 +19,12 @@ ENV/
 .venv/
 
 # Logs
-*/logs/
-*.log
 backend/logs/
-logs/
 
 # Database files
 *.db
 backend/database/*.db
+alembic
 
 # Scratch files/folders
 scratch/
@@ -43,3 +41,7 @@ frontend/firebase-config.js
 # OS files
 .DS_Store
 Thumbs.db
+
+# Graphs
+.codegraph
+graphify-out/cache/

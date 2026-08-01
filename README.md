@@ -88,10 +88,6 @@ Provides candidates with prioritized steps to improve their resumes. Tracks tran
 │   │       ├── loadingOverlay.js # Full-Screen Pipeline Processing Modal
 │   │       ├── app.js            # Workspace Client State & Auth Router Hooks
 │   │       └── vendor/           # Localised Offline Script Libraries (GSAP, Lucide)
-├── scratch/
-│   ├── migrate_to_supabase.py  # SQLite to Supabase Postgres Migration script
-│   ├── cleanup_db.py           # Database Cleanup script
-│   └── test_backend.py         # Backend validation tests
 ├── tailwind.config.js          # Tailwind CSS Scanning configurations
 ├── requirements.txt            # Python Dependencies
 ├── package.json                # Frontend Package Scripts and Build utilities
@@ -192,15 +188,3 @@ Open `http://localhost:3000` in your browser.
 npx serve frontend
 ```
 
----
-
-## 🧪 Verification & Evaluation
-
-### Running Backend Tests
-To run database schema checks, profile weights, and backward compatibility tests locally:
-```bash
-python scratch/test_backend.py
-```
-
-### Analytical Evaluation
-Explore `notebooks/evaluation.ipynb` to evaluate the VSM (Vector Space Model) calculations, showing how TF-IDF vectors are constructed from resume content and matched against job description coordinate spaces using Cosine Similarity.
