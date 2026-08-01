@@ -199,21 +199,15 @@ export async function getRecruiterStats() {
     });
 }
 
-/**
- * POST /api/onboarding/recruiter
- */
-export async function submitRecruiterOnboarding(payload) {
-    return request(API_ENDPOINTS.ONBOARDING_RECRUITER, {
-        method: "POST",
-        body: JSON.stringify(payload)
-    });
-}
+
+
+
 
 /**
- * POST /api/onboarding/candidate
+ * POST /api/onboarding
  */
-export async function submitCandidateOnboarding(payload) {
-    return request(API_ENDPOINTS.ONBOARDING_CANDIDATE, {
+export async function submitOnboarding(payload) {
+    return request(API_ENDPOINTS.ONBOARDING, {
         method: "POST",
         body: JSON.stringify(payload)
     });

@@ -164,19 +164,20 @@ async function submitOnboarding() {
     try {
         if (selectedRole === ROLES.RECRUITER) {
             payload = {
-                company_name: obCompanyName.value.trim(),
-                company_type: obCompanyType.value,
-                hiring_domain: obHiringDomain.value
+                role: selectedRole,
+                question_1: obCompanyName.value.trim(),
+                question_2: obCompanyType.value,
+                question_3: obHiringDomain.value
             };
-            await api.submitRecruiterOnboarding(payload);
         } else {
             payload = {
-                current_status: obCurrentStatus.value,
-                field_of_study: obFieldStudy.value.trim(),
-                current_domain: obCurrentDomain.value.trim()
+                role: selectedRole,
+                question_1: obCurrentStatus.value,
+                question_2: obFieldStudy.value.trim(),
+                question_3: obCurrentDomain.value.trim()
             };
-            await api.submitCandidateOnboarding(payload);
         }
+        await api.submitOnboarding(payload);
         
         onboardingModal.classList.add('hidden');
         await checkAuthStatus();
