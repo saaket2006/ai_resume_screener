@@ -1,0 +1,137 @@
+<div class="rec-layout hidden" id="candidate-container">
+<!-- Sidebar -->
+<aside class="rec-sidebar">
+<div class="sidebar-logo">
+<span class="logo-emoji">🚀</span>
+<span class="logo-text">Screener AI</span>
+</div>
+<nav class="sidebar-nav">
+<a class="sidebar-link active" href="#/candidate/dashboard" id="link-cand-dashboard">
+<span class="nav-icon">📊</span>
+<span>Dashboard</span>
+</a>
+<a class="sidebar-link" href="#/candidate/screen" id="link-cand-screen">
+<span class="nav-icon">🔎</span>
+<span>Resume Analysis</span>
+</a>
+<a class="sidebar-link" href="#/candidate/profile" id="link-cand-profile">
+<span class="nav-icon">👤</span>
+<span>My Profile</span>
+</a>
+</nav>
+<div class="sidebar-footer">
+<button class="sign-out-btn" id="cand-sign-out-btn">
+<span class="nav-icon">⏻</span>
+<span>Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="rec-main-wrapper">
+<!-- Topbar -->
+<header class="rec-topbar">
+<div class="topbar-title-section">
+<h2 id="cand-page-title">Dashboard</h2>
+</div>
+<div class="topbar-profile">
+<span class="topbar-username" id="cand-top-user-name">Candidate</span>
+</div>
+</header>
+<!-- Dynamic Views -->
+<main class="rec-content">
+<!-- VIEW 1: CANDIDATE DASHBOARD -->
+<section class="rec-view active" id="cand-view-dashboard">
+<div class="welcome-banner">
+<h1 class="welcome-title">Welcome back, <span id="dash-cand-name">...</span>!</h1>
+<p class="welcome-subtitle">
+                            Status: <strong id="dash-cand-status" style="color: #fff;">...</strong> | 
+                            Field of Study: <strong id="dash-cand-field" style="color: #fff;">...</strong> | 
+                            Domain: <strong id="dash-cand-domain" style="color: #fff;">...</strong>
+</p>
+</div>
+<div id="cand-stats-container">
+<!-- Summary card or empty state placeholder populated by JS -->
+</div>
+<div class="analysis-history-section" style="margin-top: 2.5rem;">
+<h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: #fff;">Analysis History</h2>
+<div class="timeline-container" id="candidate-timeline-list">
+<!-- Populated dynamically via candidate.js -->
+</div>
+</div>
+</section>
+<!-- VIEW 2: RESUME ANALYSIS -->
+<section class="rec-view hidden" id="cand-view-screen">
+<div class="screening-workspace">
+<div class="screening-inputs glass-card">
+<div class="form-group">
+<label for="cand-job-description">Job Description</label>
+<textarea id="cand-job-description" placeholder="Paste target Job Description here..."></textarea>
+</div>
+<div class="form-group file-upload-wrapper">
+<label>Upload Your Resume (PDF/DOCX)</label>
+<div class="file-upload-box" id="cand-drop-zone">
+<span class="upload-icon">📂</span>
+<p>Drag and drop your resume here, or click to browse</p>
+<input accept=".pdf,.doc,.docx" hidden="" id="cand-resumes" type="file"/>
+<div class="resumes-dropdown-header hidden" id="cand-resumes-header">
+<span id="cand-resumes-count">Resume (0)</span>
+<span class="dropdown-chevron">▼</span>
+</div>
+<ul class="file-list" id="cand-file-list"></ul>
+</div>
+</div>
+<div class="form-group" style="margin-top: 1rem;">
+<label for="cand-resume-label">Version Label (Optional)</label>
+<input class="auth-input" id="cand-resume-label" placeholder="e.g. Software Engineer Application, V1" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-sizing: border-box; color: white;" type="text"/>
+</div>
+<button class="glow-btn" id="cand-process-btn">
+<span>Analyze Resume</span>
+<div class="loader hidden"></div>
+</button>
+</div>
+<!-- Screening Results -->
+<div class="results-section hidden" id="cand-results-container" style="margin-top: 2rem;">
+<h3>Analysis Results</h3>
+<div class="glass-card" id="cand-results-details" style="padding: 2rem;">
+<!-- Dynamic results markup populated by JS -->
+</div>
+</div>
+</div>
+</section>
+<!-- VIEW 3: MY PROFILE -->
+<section class="rec-view hidden" id="cand-view-profile">
+<div class="glass-card profile-details-card">
+<div class="profile-card-header">
+<div class="profile-avatar">👤</div>
+<div class="profile-meta">
+<h3 id="profile-cand-name">Candidate Name</h3>
+<p id="profile-cand-email">candidate@email.com</p>
+</div>
+</div>
+<div class="profile-info-grid">
+<div class="info-field">
+<span class="info-label">Current Role</span>
+<span class="info-value">Candidate</span>
+</div>
+<div class="info-field">
+<span class="info-label">Current Status</span>
+<span class="info-value" id="profile-cand-status">Student</span>
+</div>
+<div class="info-field">
+<span class="info-label">Field of Study</span>
+<span class="info-value" id="profile-cand-field">Computer Science</span>
+</div>
+<div class="info-field">
+<span class="info-label">Current Domain</span>
+<span class="info-value" id="profile-cand-domain">N/A</span>
+</div>
+<div class="info-field">
+<span class="info-label">Member Since</span>
+<span class="info-value" id="profile-cand-joined">N/A</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</div>
