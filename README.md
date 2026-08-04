@@ -126,10 +126,7 @@ pip install -r requirements.txt
 *(Note: Upon the first analysis invocation, the system will automatically download the necessary spaCy `en_core_web_sm` model).*
 
 ### 3. Database Configurations
-The application supports both local SQLite and cloud PostgreSQL (Supabase) connections.
-
-#### Local SQLite Setup (Default)
-If no `DATABASE_URL` is configured in your `.env` file, the server automatically defaults to a local SQLite store at `backend/database/resume_screener.db`.
+The application connects to a cloud PostgreSQL (Supabase) database.
 
 #### Supabase PostgreSQL Setup
 To connect to your cloud PostgreSQL database (e.g. Supabase connection pooler), add `DATABASE_URL` to your `.env` file:
@@ -145,15 +142,9 @@ alembic upgrade head
 ```
 
 #### Migrate SQLite to PostgreSQL
-If you want to migrate existing records from your local SQLite database to Supabase:
+If you want to migrate legacy records from an old local SQLite database file to Supabase:
 ```bash
 python scratch/migrate_to_supabase.py
-```
-
-#### Clean Local Databases
-To clean up/reset any local `.db` files created on disk during testing:
-```bash
-python scratch/cleanup_db.py
 ```
 
 ### 4. Compile Tailwind CSS (Optional)

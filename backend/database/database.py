@@ -8,27 +8,15 @@ logger = logging.getLogger("resume_screener")
 
 DATABASE_URL = settings.DATABASE_URL
 
-# Safe fallback/resolution for local SQLite development
 if not DATABASE_URL:
-    db_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(db_dir, "resume_screener.db")
-    DATABASE_URL = f"sqlite:///{db_path}"
-    logger.info("DATABASE_URL not configured. Defaulting to persistent SQLite: %s", DATABASE_URL)
-elif DATABASE_URL.startswith("sqlite:///"):
-    # Extract path and make it absolute if it is relative
-    path = DATABASE_URL[10:]
-    if not os.path.isabs(path):
-        db_dir = os.path.dirname(os.path.abspath(__file__))
-        filename = os.path.basename(path) or "resume_screener.db"
-        if filename == "sql_app.db":
-            filename = "resume_screener.db"
-        db_path = os.path.abspath(os.path.join(db_dir, filename))
-        DATABASE_URL = f"sqlite:///{db_path}"
-        logger.info("Resolved relative SQLite URL to absolute path: %s", DATABASE_URL)
+    logger.critical("Startup Configuration Failed: DATABASE_URL is not set.")
+    raise RuntimeError("DATABASE_URL is not set. A PostgreSQL/Supabase connection is required.")
+
+if not (DATABASE_URL.startswith("postgresql://") or DATABASE_URL.startswith("postgres://")):
+    logger.critical("Startup Configuration Failed: ONLY PostgreSQL (Supabase) is supported. Received: %s", DATABASE_URL)
+    raise RuntimeError("Only PostgreSQL (Supabase) connections are allowed. Local SQLite databases are disabled.")
 
 def create_db_engine(url: str):
-    if url.startswith("sqlite"):
-        return create_engine(url, connect_args={"check_same_thread": False})
     return create_engine(url)
 
 # Attempt connection to the configured database. If it fails, fail fast.

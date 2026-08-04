@@ -29,7 +29,7 @@ class Settings:
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO").upper()
     
     # Database Settings
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./sql_app.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "")
     
     # JWT Authentication Settings
     JWT_SECRET: str = os.getenv("JWT_SECRET", "supersecretjwtkeythatisreallylongandsecure")
