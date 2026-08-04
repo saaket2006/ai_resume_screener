@@ -28,6 +28,8 @@ alembic
 
 # Scratch files/folders
 scratch/
+start.bat
+start.ps1
 
 # Environment variables
 .env
