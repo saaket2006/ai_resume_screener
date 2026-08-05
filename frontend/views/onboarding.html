@@ -1,0 +1,127 @@
+<div class="auth-modal-overlay hidden" id="onboarding-modal">
+<div class="glass-card auth-card" style="max-width: 500px;">
+<!-- Stepper Header -->
+<div class="onboarding-header" style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.5rem; text-align: left; width: 100%;">
+<div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+<h3 style="margin: 0; font-size: 1.2rem; color: #fff;">Profile Setup</h3>
+<span id="onboarding-step-indicator" style="font-size: 0.85rem; color: var(--text-secondary);">Step 1 of 4</span>
+</div>
+<div style="height: 6px; width: 100%; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden;">
+<div id="onboarding-progress-bar" style="height: 100%; width: 25%; background: linear-gradient(135deg, #6366f1, #a855f7); transition: width 0.3s ease;"></div>
+</div>
+</div>
+<!-- STEP 1: WELCOME & ROLE SELECT -->
+<div class="ob-step active-plane" id="ob-step-1" style="width: 100%;">
+<h2 style="margin-bottom: 0.5rem; color: #fff;">Welcome!</h2>
+<p style="color: var(--text-secondary); margin-bottom: 2rem;">Let's personalize your experience. Choose your role:</p>
+<div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; width: 100%;">
+<!-- Recruiter Choice Card -->
+<div class="ob-role-card" id="ob-role-recruiter" style="flex: 1; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 2px solid rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
+<span style="font-size: 2.5rem; display: block; margin-bottom: 0.75rem;">💼</span>
+<strong style="font-size: 1.1rem; display: block; margin-bottom: 0.25rem; color: #fff;">Recruiter</strong>
+<span style="font-size: 0.8rem; color: var(--text-secondary); display: block; line-height: 1.2;">Screen &amp; rank candidates</span>
+</div>
+<!-- Candidate Choice Card -->
+<div class="ob-role-card" id="ob-role-candidate" style="flex: 1; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 2px solid rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
+<span style="font-size: 2.5rem; display: block; margin-bottom: 0.75rem;">🎓</span>
+<strong style="font-size: 1.1rem; display: block; margin-bottom: 0.25rem; color: #fff;">Candidate</strong>
+<span style="font-size: 0.8rem; color: var(--text-secondary); display: block; line-height: 1.2;">Review your profile matching</span>
+</div>
+</div>
+</div>
+<!-- RECRUITER STEP 2: COMPANY NAME -->
+<div class="ob-step hidden" id="ob-rec-step-2" style="width: 100%;">
+<h2 style="color: #fff; margin-bottom: 0.5rem;">Company Details</h2>
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is the name of your organization?</p>
+<div class="form-group" style="margin-bottom: 2rem;">
+<input class="auth-input" id="ob-company-name" placeholder="Acme Corp" type="text"/>
+</div>
+</div>
+<!-- RECRUITER STEP 3: COMPANY TYPE -->
+<div class="ob-step hidden" id="ob-rec-step-3" style="width: 100%;">
+<h2 style="color: #fff; margin-bottom: 0.5rem;">Company Type</h2>
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is the size/category of your company?</p>
+<div class="form-group" style="margin-bottom: 2rem;">
+<select class="auth-input" id="ob-company-type" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+<option style="background: #111;" value="">Select Company Type...</option>
+<option style="background: #111;" value="Startup">Startup</option>
+<option style="background: #111;" value="SME">SME</option>
+<option style="background: #111;" value="Enterprise">Enterprise</option>
+<option style="background: #111;" value="MNC">MNC</option>
+<option style="background: #111;" value="Government">Government</option>
+<option style="background: #111;" value="Educational Institution">Educational Institution</option>
+<option style="background: #111;" value="Consultancy">Consultancy</option>
+<option style="background: #111;" value="Non-Profit">Non-Profit</option>
+<option style="background: #111;" value="Other">Other</option>
+</select>
+</div>
+</div>
+<!-- RECRUITER STEP 4: HIRING DOMAIN -->
+<div class="ob-step hidden" id="ob-rec-step-4" style="width: 100%;">
+<h2 style="color: #fff; margin-bottom: 0.5rem;">Hiring Focus</h2>
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Select your primary hiring domain:</p>
+<div class="form-group" style="margin-bottom: 2rem;">
+<select class="auth-input" id="ob-hiring-domain" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+<option style="background: #111;" value="">Select hiring domain...</option>
+<option style="background: #111;" value="Software &amp; IT">Software &amp; IT</option>
+<option style="background: #111;" value="Mechanical">Mechanical</option>
+<option style="background: #111;" value="Civil">Civil</option>
+<option style="background: #111;" value="Electrical">Electrical</option>
+<option style="background: #111;" value="Electronics">Electronics</option>
+<option style="background: #111;" value="Data Science &amp; AI">Data Science &amp; AI</option>
+<option style="background: #111;" value="Finance">Finance</option>
+<option style="background: #111;" value="Marketing">Marketing</option>
+<option style="background: #111;" value="Healthcare">Healthcare</option>
+<option style="background: #111;" value="Education">Education</option>
+<option style="background: #111;" value="Legal">Legal</option>
+<option style="background: #111;" value="Human Resources">Human Resources</option>
+<option style="background: #111;" value="Sales">Sales</option>
+<option style="background: #111;" value="Other">Other</option>
+</select>
+</div>
+</div>
+<!-- CANDIDATE STEP 2: CURRENT STATUS -->
+<div class="ob-step hidden" id="ob-cand-step-2" style="width: 100%;">
+<h2 style="color: #fff; margin-bottom: 0.5rem;">Current Status</h2>
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your professional status?</p>
+<div class="form-group" style="margin-bottom: 2rem;">
+<select class="auth-input" id="ob-current-status" style="width:100%; background: rgba(0, 0, 0, 0.4); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-family: inherit;">
+<option style="background: #111;" value="">Select current status...</option>
+<option style="background: #111;" value="Student">Student</option>
+<option style="background: #111;" value="Working Professional">Working Professional</option>
+<option style="background: #111;" value="Career Switcher">Career Switcher</option>
+<option style="background: #111;" value="Freelancer">Freelancer</option>
+<option style="background: #111;" value="Job Seeker">Job Seeker</option>
+<option style="background: #111;" value="Other">Other</option>
+</select>
+</div>
+</div>
+<!-- CANDIDATE STEP 3: FIELD OF STUDY -->
+<div class="ob-step hidden" id="ob-cand-step-3" style="width: 100%;">
+<h2 style="color: #fff; margin-bottom: 0.5rem;">Field of Study</h2>
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your major or specialization?</p>
+<div class="form-group" style="margin-bottom: 2rem;">
+<input class="auth-input" id="ob-field-study" placeholder="e.g. Computer Science / MBA" type="text"/>
+</div>
+</div>
+<!-- CANDIDATE STEP 4: CURRENT DOMAIN -->
+<div class="ob-step hidden" id="ob-cand-step-4" style="width: 100%;">
+<h2 style="color: #fff; margin-bottom: 0.5rem;">Current Domain</h2>
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">What is your current domain or expertise?</p>
+<div class="form-group" style="margin-bottom: 2rem;">
+<input class="auth-input" id="ob-current-domain" placeholder="e.g. Software Development / None" type="text"/>
+</div>
+</div>
+<!-- ERROR MESSAGE -->
+<p class="auth-error-message hidden" id="ob-error" style="margin-bottom: 1rem; text-align: center; width: 100%;"></p>
+<!-- Navigation Buttons -->
+<div class="modal-actions" style="display: flex; gap: 1rem; width: 100%; margin-top: 1rem;">
+<button class="glow-btn secondary hidden" id="ob-back-btn" style="flex: 1;" type="button">
+<span>Back</span>
+</button>
+<button class="glow-btn" id="ob-next-btn" style="flex: 1; display: none;" type="button">
+<span>Next</span>
+</button>
+</div>
+</div>
+</div>

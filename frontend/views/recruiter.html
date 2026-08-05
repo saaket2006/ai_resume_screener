@@ -1,0 +1,191 @@
+<div class="rec-layout hidden" id="recruiter-container">
+<!-- Sidebar -->
+<aside class="rec-sidebar">
+<div class="sidebar-logo">
+<span class="logo-emoji">🚀</span>
+<span class="logo-text">Screener AI</span>
+</div>
+<nav class="sidebar-nav">
+<a class="sidebar-link active" href="#/recruiter/dashboard" id="link-rec-dashboard">
+<span class="nav-icon">📊</span>
+<span>Dashboard</span>
+</a>
+<a class="sidebar-link" href="#/recruiter/screen" id="link-rec-screen">
+<span class="nav-icon">🔎</span>
+<span>Resume Screening</span>
+</a>
+<a class="sidebar-link" href="#/recruiter/profile" id="link-rec-profile">
+<span class="nav-icon">👤</span>
+<span>My Profile</span>
+</a>
+</nav>
+<div class="sidebar-footer">
+<button class="sign-out-btn" id="rec-sign-out-btn">
+<span class="nav-icon">⏻</span>
+<span>Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="rec-main-wrapper">
+<!-- Topbar -->
+<header class="rec-topbar">
+<div class="topbar-title-section">
+<h2 id="rec-page-title">Dashboard</h2>
+</div>
+<div class="topbar-profile">
+<span class="topbar-username" id="rec-top-user-name">Recruiter</span>
+</div>
+</header>
+<!-- Dynamic Views -->
+<main class="rec-content">
+<!-- VIEW 1: DASHBOARD -->
+<section class="rec-view active" id="rec-view-dashboard">
+<div class="welcome-banner">
+<h1 class="welcome-title">Welcome back, <span id="dash-rec-name">...</span>!</h1>
+<p class="welcome-subtitle">Here is the latest overview of your workspace at <strong id="dash-comp-name">...</strong> (<span id="dash-comp-type">...</span>).</p>
+<div class="welcome-meta-badges">
+<span class="meta-badge"><span class="badge-dot"></span> Hiring Focus: <strong id="dash-hiring-domain" style="margin-left: 4px; color: #fff;">...</strong></span>
+</div>
+</div>
+<div class="rec-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Total Candidates Screened</span>
+<span class="stat-icon">👥</span>
+</div>
+<div class="stat-value" id="stat-total-screened">0</div>
+<p class="stat-description">Cumulative resumes parsed &amp; ranked</p>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Average Resume Match Score</span>
+<span class="stat-icon">📈</span>
+</div>
+<div class="stat-value" id="stat-avg-score">0.0%</div>
+<p class="stat-description">Average spatial semantic relevance match</p>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Avg Candidate Experience</span>
+<span class="stat-icon">⏳</span>
+</div>
+<div class="stat-value" id="stat-avg-experience">0.0 yrs</div>
+<p class="stat-description">Average candidate professional tenure</p>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Top Education Level</span>
+<span class="stat-icon">🎓</span>
+</div>
+<div class="stat-value" id="stat-common-education">N/A</div>
+<p class="stat-description">Most frequent academic qualification</p>
+</div>
+<div class="stat-card span-two" style="grid-column: span 2; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+<div class="stat-header">
+<span class="stat-title" style="font-weight: 600; color: #fff;">Workspace Intelligence Summary</span>
+<span class="stat-icon">💡</span>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+<div>
+<h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #a5b4fc; font-weight: 600;">Common Missing Skills</h4>
+<ul id="stat-missing-skills-list" style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.4; color: #cbd5e1;"></ul>
+</div>
+<div>
+<h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #a5b4fc; font-weight: 600;">Common Matched Skills</h4>
+<ul id="stat-matched-skills-list" style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.4; color: #cbd5e1;"></ul>
+</div>
+<div>
+<h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #a5b4fc; font-weight: 600;">Top Recommendations</h4>
+<ul id="stat-improvements-list" style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.4; color: #cbd5e1;"></ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- VIEW 2: RESUME SCREENING -->
+<section class="rec-view hidden" id="rec-view-screen">
+<div class="screening-workspace">
+<div class="screening-inputs glass-card">
+<div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+<div>
+<label for="rec-profile-select">Scoring Profile</label>
+<select id="rec-profile-select" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); font-family: inherit; font-size: 0.9rem;">
+<option value="">Loading profiles...</option>
+</select>
+</div>
+<div>
+<label for="rec-jd-select">Job Description Library</label>
+<select id="rec-jd-select" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); font-family: inherit; font-size: 0.9rem;">
+<option value="">-- Create New (No Library Item Selected) --</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label for="rec-job-description">Job Description</label>
+<textarea id="rec-job-description" placeholder="Paste target Job Description here..."></textarea>
+</div>
+<div class="form-group jd-library-actions" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: flex-end;">
+<button class="glow-btn" id="btn-save-jd" style="font-size: 0.8rem; padding: 0.5rem 1rem; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 6px; cursor: pointer; color: #a5b4fc;">💾 Save to Library</button>
+<button class="glow-btn" id="btn-archive-jd" style="font-size: 0.8rem; padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; cursor: pointer; color: #fca5a5;">🗑️ Archive Selected</button>
+</div>
+<div class="form-group file-upload-wrapper">
+<label>Upload Resumes (PDF/DOCX)</label>
+<div class="file-upload-box" id="rec-drop-zone">
+<span class="upload-icon">📂</span>
+<p>Drag and drop resumes here, or click to browse</p>
+<input accept=".pdf,.doc,.docx" hidden="" id="rec-resumes" multiple="" type="file"/>
+<div class="resumes-dropdown-header hidden" id="rec-resumes-header">
+<span id="rec-resumes-count">Resumes (0)</span>
+<span class="dropdown-chevron">▼</span>
+</div>
+<ul class="file-list" id="rec-file-list"></ul>
+</div>
+</div>
+<button class="glow-btn" id="rec-process-btn">
+<span>Run Match Screening</span>
+<div class="loader hidden"></div>
+</button>
+</div>
+<!-- Screening Results -->
+<div class="results-section hidden" id="rec-results-container" style="margin-top: 2rem;">
+<h3>Ranked Candidates</h3>
+<div class="rec-results-list" id="rec-results-list">
+<!-- Candidate Cards go here -->
+</div>
+</div>
+</div>
+</section>
+<!-- VIEW 3: PROFILE -->
+<section class="rec-view hidden" id="rec-view-profile">
+<div class="glass-card profile-details-card">
+<div class="profile-card-header">
+<div class="profile-avatar">👤</div>
+<div class="profile-meta">
+<h3 id="profile-rec-name">Recruiter Name</h3>
+<p id="profile-rec-email">recruiter@company.com</p>
+</div>
+</div>
+<div class="profile-info-grid">
+<div class="info-field">
+<span class="info-label">Current Role</span>
+<span class="info-value">Recruiter</span>
+</div>
+<div class="info-field">
+<span class="info-label">Company Name</span>
+<span class="info-value" id="profile-comp-name">Acme Corp</span>
+</div>
+<div class="info-field">
+<span class="info-label">Company Type</span>
+<span class="info-value" id="profile-comp-type">Enterprise</span>
+</div>
+<div class="info-field">
+<span class="info-label">Hiring Domain Focus</span>
+<span class="info-value" id="profile-hiring-domain">Software &amp; IT</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</div>

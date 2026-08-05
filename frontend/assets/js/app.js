@@ -1,3 +1,5 @@
+import { initLanding } from './landing.js';
+import { initLanding } from './landing.js';
 import { checkAuthStatus } from './auth.js';
 import { initLoginPage, initializeLoginPage } from './pages/login.js';
 import { initSignupPage, initializeSignupPage } from './pages/signup.js';
@@ -14,7 +16,32 @@ import { MESSAGES } from './constants.js';
 
 let uploadedFiles = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+
+    // --- Dynamic View Loading ---
+    const loadView = async (url, placeholderId) => {
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                const html = await response.text();
+                const placeholder = document.getElementById(placeholderId);
+                if (placeholder) {
+                    placeholder.outerHTML = html;
+                }
+            }
+        } catch (e) {
+            console.error(`Failed to load view ${url}:`, e);
+        }
+    };
+    await Promise.all([
+        loadView('./views/landing.html', 'landing-container-placeholder'),
+        loadView('./views/onboarding.html', 'onboarding-modal-placeholder'),
+        loadView('./views/recruiter.html', 'recruiter-container-placeholder'),
+        loadView('./views/candidate.html', 'candidate-container-placeholder')
+    ]);
+    // ----------------------------
+    initLanding();
+
     // 1. Initialize Page/Component Modules once (bind event listeners)
     initLoginPage();
     initSignupPage();

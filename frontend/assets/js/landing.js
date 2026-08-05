@@ -7,7 +7,8 @@ import {
     initNavbarEffects
 } from './animations.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+export function initLanding() {
+
     // 1. Initialize animations
     initHeroAnimation();
     initStoryAnimation();
@@ -24,14 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 entry.target.classList.remove('opacity-0', 'translate-y-8');
                 fadeObserver.unobserve(entry.target);
             }
-        });
-    }, { threshold: 0.1 });
+        }
+    }, { threshold: 0.1 }
 
     // Mark sections to fade in (other than the hero/story which have custom scroll triggers)
     document.querySelectorAll('#pricing, #faq, #walkthrough h2, #walkthrough p').forEach(el => {
         el.classList.add('opacity-0', 'translate-y-8', 'transition-all', 'duration-700', 'ease-out');
         fadeObserver.observe(el);
-    });
+    });););
 
     // 3. FAQ Accordion Handler
     document.querySelectorAll('.faq-header').forEach(header => {
@@ -51,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 content.classList.add('hidden');
                 icon.textContent = '\u25BC';
             }
-        });
-    });
+        }
+    }
 
     // 4. Auth Modal Triggers
     const authModal = document.getElementById('auth-modal');
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tabBtn = document.getElementById(tabId);
                 if (tabBtn) tabBtn.click();
             }
-        });
-    });
+        }
+    }
 
-});
+}
