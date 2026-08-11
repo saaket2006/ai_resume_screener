@@ -103,29 +103,96 @@ export function initFeatureStack() {
 }
 
 export function initWalkthrough() {
-    const sections = gsap.utils.toArray('.walkthrough-text-block');
-    if (sections.length === 0) return;
+    const section = document.querySelector('#walkthrough');
+    const blocks = document.querySelectorAll('.walkthrough-text-block');
+    const panels = document.querySelectorAll('.walkthrough-visual-panel');
+    if (!section || blocks.length === 0 || panels.length === 0) return;
 
-    sections.forEach((section) => {
-        const visualId = section.getAttribute('data-visual-target');
-        
-        ScrollTrigger.create({
-            trigger: section,
-            start: 'top 50%',
-            end: 'bottom 50%',
-            onEnter: () => activateVisual(visualId),
-            onEnterBack: () => activateVisual(visualId)
+    let activeIndex = -1;
+
+    function activateStepByIndex(index) {
+        if (activeIndex === index || index < 0 || index >= blocks.length) return;
+        activeIndex = index;
+
+        const activeBlock = blocks[index];
+        const targetId = activeBlock.getAttribute('data-visual-target');
+
+        // 1. Highlight active text step block & dim inactive ones
+        blocks.forEach((block, idx) => {
+            if (idx === index) {
+                block.classList.remove('border-slate-800', 'opacity-50');
+                block.classList.add('border-emerald-500', 'opacity-100');
+            } else {
+                block.classList.remove('border-emerald-500', 'opacity-100');
+                block.classList.add('border-slate-800', 'opacity-50');
+            }
         });
+
+        // 2. Animate corresponding visual panel on right side
+        panels.forEach((panel) => {
+            if (panel.id === targetId) {
+                panel.style.display = 'block';
+                gsap.fromTo(panel,
+                    { opacity: 0, scale: 0.9, y: 15 },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        duration: 0.4,
+                        ease: 'power2.out',
+                        onStart: () => panel.classList.remove('pointer-events-none')
+                    }
+                );
+            } else {
+                gsap.to(panel, {
+                    opacity: 0,
+                    scale: 0.9,
+                    y: -15,
+                    duration: 0.25,
+                    ease: 'power2.in',
+                    onComplete: () => {
+                        panel.style.display = 'none';
+                        panel.classList.add('pointer-events-none');
+                    }
+                });
+            }
+        });
+    }
+
+    // Set initial step 1 active
+    activateStepByIndex(0);
+
+    // Create GSAP ScrollTrigger Pinned Timeline for "#walkthrough"
+    // Pins "#walkthrough" while scrolling through the 3 steps
+    const st = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top+=80px',
+        end: '+=180%',
+        pin: true,
+        pinSpacing: true,
+        onUpdate: (self) => {
+            const progress = self.progress;
+            if (progress < 0.33) {
+                activateStepByIndex(0);
+            } else if (progress < 0.66) {
+                activateStepByIndex(1);
+            } else {
+                activateStepByIndex(2);
+            }
+        }
     });
 
-    function activateVisual(id) {
-        gsap.to('.walkthrough-visual-panel', { opacity: 0, scale: 0.95, duration: 0.25, onComplete: () => {
-            document.querySelectorAll('.walkthrough-visual-panel').forEach(el => el.classList.add('pointer-events-none'));
-        }});
-        gsap.to(`#${id}`, { opacity: 1, scale: 1, duration: 0.4, delay: 0.25, onStart: () => {
-            document.getElementById(id).classList.remove('pointer-events-none');
-        }});
-    }
+    // Add click listeners for step blocks
+    blocks.forEach((block, idx) => {
+        block.addEventListener('click', () => {
+            activateStepByIndex(idx);
+            if (st) {
+                const targetProgress = idx === 0 ? 0.05 : (idx === 1 ? 0.45 : 0.85);
+                const scrollPos = st.start + targetProgress * (st.end - st.start);
+                window.scrollTo({ top: scrollPos, behavior: 'smooth' });
+            }
+        });
+    });
 }
 
 export function initCounters() {
