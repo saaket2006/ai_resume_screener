@@ -15,19 +15,27 @@ import { MESSAGES } from './constants.js';
 let uploadedFiles = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initialize Page/Component Modules once (bind event listeners)
-    initLoginPage();
-    initSignupPage();
-    initOnboarding();
-    initRecruiterPage();
-    initCandidatePage();
-    initRouter();
-    initModals();
-    initNavbar(clearCandidateState);
+    const pathname = window.location.pathname;
 
-    // Initial resets for page view states
-    initializeLoginPage();
-    initializeSignupPage();
+    // Initialize modules conditionally based on page
+    if (pathname.endsWith('index.html') || pathname === '/') {
+        initLoginPage();
+        initSignupPage();
+        initializeLoginPage();
+        initializeSignupPage();
+    } else if (pathname.endsWith('onboarding.html')) {
+        initOnboarding();
+    } else if (pathname.endsWith('recruiter.html')) {
+        initRecruiterPage();
+        initRouter();
+        initNavbar(clearCandidateState);
+    } else if (pathname.endsWith('candidate.html')) {
+        initCandidatePage();
+        initRouter();
+        initNavbar(clearCandidateState);
+    }
+
+    initModals();
 
     // 2. Candidate ATS Functionality
     const dropZone = document.getElementById('drop-zone');
@@ -173,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.addEventListener('click', (e) => {
                 if (e.target.tagName === 'A') return;
                 const isOpen = detailTr.classList.toggle('open');
-                tr.querySelector('.expand-chevron').textContent = isOpen ? '\u25BC' : '\u25B6';
+                tr.querySelector('.expand-chevron').textContent = isOpen ? '▼' : '▶';
 
                 // Animate breakdown bars when opening
                 if (isOpen) {
