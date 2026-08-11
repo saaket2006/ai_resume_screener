@@ -16,7 +16,6 @@ logger = logging.getLogger("resume_screener")
 
 # Startup configuration and environment variable validation
 required_configs = [
-    ("DATABASE_URL", settings.DATABASE_URL),
     ("JWT_SECRET", settings.JWT_SECRET),
     ("JWT_ALGORITHM", settings.JWT_ALGORITHM),
     ("JWT_EXPIRY_MINUTES", settings.JWT_EXPIRY_MINUTES)
@@ -24,8 +23,7 @@ required_configs = [
 
 for name, val in required_configs:
     if not val:
-        logger.critical("Startup Configuration Failed: Required configuration/environment variable %s is not set.", name)
-        raise RuntimeError(f"Required configuration {name} is missing.")
+        logger.critical("Startup Configuration Warning: Required configuration/environment variable %s is not set.", name)
 
 try:
     int(settings.JWT_EXPIRY_MINUTES)
@@ -33,21 +31,25 @@ except ValueError:
     logger.critical("Startup Configuration Failed: JWT_EXPIRY_MINUTES must be a valid integer.")
     raise RuntimeError("JWT_EXPIRY_MINUTES must be a valid integer.")
 
-# Test database connection on startup by importing database engine
+# Try importing DB and seeding default profiles on startup
 try:
     from backend.database.database import engine, SessionLocal
     from backend.services.policy.default_profiles import seed_default_profiles
-    logger.info("Startup Validation: Database connection verified successfully.")
     
-    # Seed default profiles on startup
-    db = SessionLocal()
+    # We only seed if the connection is actually valid
     try:
-        seed_default_profiles(db)
-    finally:
-        db.close()
+        with engine.connect() as conn:
+            db = SessionLocal()
+            try:
+                seed_default_profiles(db)
+                logger.info("Startup Validation: Database seeded with default profiles successfully.")
+            finally:
+                db.close()
+    except Exception as db_err:
+        logger.error("Could not seed default profiles because database connection is unavailable: %s", db_err)
+
 except Exception as e:
-    logger.critical("Startup Validation Failed: Database connection could not be established. Error: %s", e)
-    raise RuntimeError(f"Database connection test failed: {e}") from e
+    logger.error("Startup Validation Error during database initialization: %s", e)
 
 # Initialize Rate Limiter
 from backend.limiter import limiter

@@ -180,7 +180,7 @@ async function submitOnboarding() {
         await api.submitOnboarding(payload);
         
         onboardingModal.classList.add('hidden');
-        await checkAuthStatus();
+        window.location.href = user.role === ROLES.RECRUITER ? 'recruiter.html' : 'candidate.html';
     } catch (error) {
         showObError(error.message);
         nextSpan.textContent = originalText;

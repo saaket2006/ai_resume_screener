@@ -1,32 +1,18 @@
 import * as api from './api.js';
 import * as state from './state.js';
 import { ROLES } from './constants.js';
-import { showOnboardingWizard } from './pages/onboarding.js';
-import { handleRouting } from './router.js';
 
 /**
  * Checks authentication status and routes appropriately based on user profile completion and role.
  */
 export async function checkAuthStatus() {
-    const authModal = document.getElementById('auth-modal');
-    const appContainer = document.getElementById('app-container');
-    const onboardingModal = document.getElementById('onboarding-modal');
-    const recruiterContainer = document.getElementById('recruiter-container');
-    const candidateContainer = document.getElementById('candidate-container');
-    const userDisplayNameElem = document.getElementById('user-display-name');
-
     const token = state.getToken();
-    const landingContainer = document.getElementById('landing-container');
+    const pathname = window.location.pathname;
 
     if (!token) {
-        if (landingContainer) landingContainer.classList.remove('hidden');
-        authModal.classList.add('hidden');
-        appContainer.classList.add('hidden');
-        onboardingModal.classList.add('hidden');
-        recruiterContainer.classList.add('hidden');
-        candidateContainer.classList.add('hidden');
-        // Handle unauthenticated hash routes (#/login, #/signup)
-        handleRouting();
+        if (!pathname.endsWith('index.html') && pathname !== '/') {
+            window.location.href = 'index.html';
+        }
         return;
     }
 
@@ -36,40 +22,26 @@ export async function checkAuthStatus() {
         state.setOnboardingStatus(user.profile_completed);
 
         if (user.profile_completed === false) {
-            if (landingContainer) landingContainer.classList.add('hidden');
-            showOnboardingWizard();
+            if (!pathname.endsWith('onboarding.html')) {
+                window.location.href = 'onboarding.html';
+            }
             return;
         }
-
-        if (landingContainer) landingContainer.classList.add('hidden');
-        authModal.classList.add('hidden');
-        onboardingModal.classList.add('hidden');
         
         if (user.role === ROLES.RECRUITER) {
-            appContainer.classList.add('hidden');
-            candidateContainer.classList.add('hidden');
-            recruiterContainer.classList.remove('hidden');
-            handleRouting();
+            if (!pathname.endsWith('recruiter.html')) {
+                window.location.href = 'recruiter.html';
+            }
         } else if (user.role === ROLES.CANDIDATE) {
-            appContainer.classList.add('hidden');
-            recruiterContainer.classList.add('hidden');
-            candidateContainer.classList.remove('hidden');
-            handleRouting();
-        } else {
-            // UNASSIGNED or other (redirect to legacy or fallback)
-            recruiterContainer.classList.add('hidden');
-            candidateContainer.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-            userDisplayNameElem.textContent = user.email.split('@')[0];
+            if (!pathname.endsWith('candidate.html')) {
+                window.location.href = 'candidate.html';
+            }
         }
     } catch (error) {
         console.error("Auth status verification failed:", error);
         state.clearState();
-        if (landingContainer) landingContainer.classList.remove('hidden');
-        authModal.classList.add('hidden');
-        appContainer.classList.add('hidden');
-        onboardingModal.classList.add('hidden');
-        recruiterContainer.classList.add('hidden');
-        candidateContainer.classList.add('hidden');
+        if (!pathname.endsWith('index.html') && pathname !== '/') {
+            window.location.href = 'index.html';
+        }
     }
 }
