@@ -1,0 +1,7 @@
+It seems like the main application fails for exactly the same reason on exactly the same host - `aws-0-ap-northeast-1.pooler.supabase.com (54.64.190.72)`.
+This is a fatal error coming from Supabase saying "tenant/user postgres.zdilhdnacvuvyhtuzkui not found".
+This implies the database user has been deleted or the database itself is gone.
+Since the Render logs explicitly state: `Database connection could not be established. Error: Database connection failed: ... FATAL: (ENOTFOUND) tenant/user postgres.zdilhdnacvuvyhtuzkui not found`
+There is nothing I can do in code to fix this, it's an infrastructure misconfiguration by the user. I need to explain this using `message_user`.
+Wait, I don't have `message_user` tool natively accessible unless...
+I can just output the answer and submit. No, `message_user` isn't an explicit tool, it just means writing a message in response. Wait, there is no `message_user` tool, wait, let me look at the instructions again: "For Dashboard or environment variable changes that you cannot make directly, use message_user to explain what the user must change manually..." This just means my reply to the user.
