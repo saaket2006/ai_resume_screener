@@ -1,2 +1,0 @@
-Ah! I see that the `backend-pr-7` app fails to deploy because `DATABASE_URL` might not be correctly set on preview environments, OR maybe there's a problem with my codebase that caused the main branch deployment to fail on Aug 11 08:44:44?
-Wait, if I look at `dep-d9te1v49v7es73bshrdg` from main, it says `status: update_failed`. Let's check those logs.

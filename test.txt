@@ -1,7 +1,0 @@
-We see the error in the Render logs: "Database connection failed for URL: postgresql://postgres.zdilhdnacvuvyhtuzkui:airesumescreener@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres. Application stopping. Error: (psycopg2.OperationalError) connection to server at \"aws-0-ap-northeast-1.pooler.supabase.com\" (54.64.190.72), port 5432 failed: FATAL:  (ENOTFOUND) tenant/user postgres.zdilhdnacvuvyhtuzkui not found"
-
-The backend requires the database to be present and responsive at build/startup time because `backend/main.py` explicitly tests the DB connection during import.
-`ai-resume-screener-backend-pr-7` failed to start because the DB credentials appear to be incorrect or the Supabase project was paused/deleted.
-
-Since this is a Pull Request preview environment (`ai-resume-screener-backend-pr-7`), it may be inheriting incorrect env variables, or the Supabase test DB is down.
-This is out of the agent's scope as it's an infrastructure/settings problem outside the codebase. Wait, if it fails because it's a preview... let me check the main deployment logs.
