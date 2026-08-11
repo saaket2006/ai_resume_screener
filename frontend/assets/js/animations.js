@@ -1,35 +1,13 @@
 /* GSAP Scroll Animations & Timelines Module */
 
 export function initHeroAnimation() {
-    // 1. Title fade, blur, and slide up letter by letter
+    // 1. Title fade, blur, and slide up (smooth container animation - avoids DOM text splitting layout shifts)
     const headline = document.querySelector('.hero-headline');
     if (headline) {
-        const text = headline.textContent;
-        const trimmed = text.trim().replace(/\s+/g, ' ');
-        const words = trimmed.split(' ');
-        headline.innerHTML = words.map(word => {
-            const wordHTML = word.split('').map(char => {
-                return `<span class="hero-letter" style="display:inline-block; opacity:0; filter:blur(10px); transform:translateY(20px);">${char}</span>`;
-            }).join('');
-            return `<span class="hero-word" style="display:inline-block;">${wordHTML}</span>`;
-        }).join(' ');
-
-        gsap.to('.hero-letter', {
-            opacity: 1,
-            filter: 'blur(0px)',
-            y: 0,
-            duration: 0.8,
-            stagger: 0.03,
-            ease: 'power3.out',
-            onComplete: () => {
-                // Return to static spans so responsiveness isn't affected
-                headline.querySelectorAll('span').forEach(s => {
-                    s.style.display = '';
-                    s.style.filter = '';
-                    s.style.transform = '';
-                });
-            }
-        });
+        gsap.fromTo(headline,
+            { opacity: 0, y: 30, filter: 'blur(10px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }
+        );
     }
 
     // 2. Terminal typewriter
