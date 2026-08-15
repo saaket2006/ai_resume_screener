@@ -1,5 +1,8 @@
 # ResumeAI - AI Hiring Intelligence Platform
 
+---
+⚠️ Update in progress 
+---
 An end-to-end, high-performance AI Hiring Intelligence Platform designed to analyze, score, rank, and explain candidate resumes against target job descriptions. Built on top of FastAPI and a multi-agent semantic orchestration pipeline, ResumeAI transforms traditional keyword-parsing into a robust, context-aware visual screening experience.
 
 ---
