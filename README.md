@@ -1,9 +1,9 @@
-# ResumeAI - AI Hiring Intelligence Platform
+# Nipun - AI Hiring Intelligence Platform
 
 ---
 ⚠️ Update in progress 
 ---
-An end-to-end, high-performance AI Hiring Intelligence Platform designed to analyze, score, rank, and explain candidate resumes against target job descriptions. Built on top of FastAPI and a multi-agent semantic orchestration pipeline, ResumeAI transforms traditional keyword-parsing into a robust, context-aware visual screening experience.
+An end-to-end, high-performance AI Hiring Intelligence Platform designed to analyze, score, rank, and explain candidate resumes against target job descriptions. Built on top of FastAPI and a multi-agent semantic orchestration pipeline, Nipun transforms traditional keyword-parsing into a robust, context-aware visual screening experience.
 
 ---
 
@@ -23,7 +23,7 @@ An end-to-end, high-performance AI Hiring Intelligence Platform designed to anal
   with states: Completed (✓), Active (⬤), and Pending (○).
 
 ### ⚙️ Event-Driven Orchestration Pipeline
-ResumeAI carries request context via an `AnalysisContext` object carrying `request_id`, performance timings, and profile metadata across 6 decoupled stages:
+Nipun carries request context via an `AnalysisContext` object carrying `request_id`, performance timings, and profile metadata across 6 decoupled stages:
 1. **Resume Text Extraction**: Decodes layouts from PDF and DOCX files.
 2. **Skill Extraction**: spaCy Named Entity Recognition and custom regex-based heuristic tokens.
 3. **Semantic Matching**: Resolves aliases, acronyms (e.g. `K8s` ↔ `Kubernetes`), technology hierarchies, and industry namespaces (`future.medical`, `future.finance`).

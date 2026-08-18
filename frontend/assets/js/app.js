@@ -1,10 +1,10 @@
 import { checkAuthStatus } from './auth.js';
 import { initLoginPage, initializeLoginPage } from './pages/login.js';
 import { initSignupPage, initializeSignupPage } from './pages/signup.js';
-import { initOnboarding } from './pages/onboarding.js';
+import { initOnboarding, showOnboardingWizard } from './pages/onboarding.js';
 import { initRecruiterPage } from './pages/recruiter.js';
 import { initCandidatePage } from './pages/candidate.js';
-import { initRouter } from './router.js';
+import { initRouter, handleRouting } from './router.js';
 import { initModals } from './components/modal.js';
 import { initNavbar } from './components/navbar.js';
 import * as api from './api.js';
@@ -23,8 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
         initSignupPage();
         initializeLoginPage();
         initializeSignupPage();
+        initRouter();
+        handleRouting();
+
+        // Bind navbar and landing buttons to navigate to auth hashes
+        const loginBtns = document.querySelectorAll('.nav-login-btn');
+        loginBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.location.hash = '#/login';
+            });
+        });
+
+        const signupBtns = document.querySelectorAll('.nav-signup-btn');
+        signupBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.location.hash = '#/signup';
+            });
+        });
     } else if (pathname.endsWith('onboarding.html')) {
         initOnboarding();
+        showOnboardingWizard();
     } else if (pathname.endsWith('recruiter.html')) {
         initRecruiterPage();
         initRouter();

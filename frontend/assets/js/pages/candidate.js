@@ -439,7 +439,7 @@ window.viewCandidateAnalysis = async (resumeId) => {
             cavCtxProfile.textContent = `${profileName} (v${profileVer})`;
             cavCtxJd.textContent = details.job_description?.title || "N/A";
             const cleanEngine = engineVer.replace(/^v/, '');
-            cavCtxEngine.textContent = `ResumeAI Engine v${cleanEngine}`;
+            cavCtxEngine.textContent = `Nipun Engine v${cleanEngine}`;
         }
 
         document.getElementById('cav-jd-title').textContent = details.job_description?.title || "N/A";

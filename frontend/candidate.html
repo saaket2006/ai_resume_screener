@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Resume Screener & Ranking System</title>
+    <title>Nipun - AI Resume Screener & Ranking System</title>
     <!-- App Icon / Favicon -->
-    <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <link rel="icon" type="image/png" href="assets/title_logo.png">
     <!-- Preload critical font weight so the browser loads it immediately without FOUT -->
     <link rel="preload" href="assets/fonts/Outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
     <!-- Self-hosted Outfit font declarations with font-display: block -->
@@ -34,9 +33,9 @@
     <div class="rec-layout hidden" id="candidate-container">
         <!-- Sidebar -->
         <aside class="rec-sidebar">
-            <div class="sidebar-logo">
-                <span class="logo-emoji">🚀</span>
-                <span class="logo-text">Screener AI</span>
+            <div class="sidebar-logo flex items-center gap-2">
+                <img src="assets/title_logo.png" alt="Nipun Logo" style="height: 32px; width: auto;">
+                <span class="logo-text">Nipun</span>
             </div>
             <nav class="sidebar-nav">
                 <a href="#/candidate/dashboard" class="sidebar-link active" id="link-cand-dashboard">
@@ -199,7 +198,7 @@
                             <span style="color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 0.25rem;">Scored Relative To:</span>
                             <div style="color: #cbd5e1;">🎯 Profile: <strong id="qv-ctx-profile" style="color: #fff;">-</strong></div>
                             <div style="color: #cbd5e1;">📋 Job Description: <strong id="qv-ctx-jd" style="color: #fff;">-</strong></div>
-                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="qv-ctx-engine" style="color: #fff;">ResumeAI Engine v1.0</strong></div>
+                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="qv-ctx-engine" style="color: #fff;">Nipun Engine v1.0</strong></div>
                         </div>
                     </div>
                 </div>
@@ -263,7 +262,7 @@
                             <span style="color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 0.25rem;">Scored Relative To:</span>
                             <div style="color: #cbd5e1;">🎯 Profile: <strong id="cav-ctx-profile" style="color: #fff;">-</strong></div>
                             <div style="color: #cbd5e1;">📋 Job Description: <strong id="cav-ctx-jd" style="color: #fff;">-</strong></div>
-                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="cav-ctx-engine" style="color: #fff;">ResumeAI Engine v1.0</strong></div>
+                            <div style="color: #cbd5e1;">⚙️ Engine: <strong id="cav-ctx-engine" style="color: #fff;">Nipun Engine v1.0</strong></div>
                         </div>
                     </div>
                     <div style="margin-left: auto;">

@@ -394,7 +394,7 @@ window.showCandidateQuickView = (cand) => {
         qvCtxProfile.textContent = `${profileName} (v${profileVer})`;
         qvCtxJd.textContent = cand.job_description_title || "Selected JD";
         const cleanEngine = engineVer.replace(/^v/, '');
-        qvCtxEngine.textContent = `ResumeAI Engine v${cleanEngine}`;
+        qvCtxEngine.textContent = `Nipun Engine v${cleanEngine}`;
     }
     
     qvCandEmail.textContent = cand.email !== 'Not Provided' ? cand.email : 'N/A';

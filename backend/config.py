@@ -7,7 +7,7 @@ load_dotenv()
 
 class Settings:
     # API Settings
-    API_TITLE: str = os.getenv("API_TITLE", "AI Resume Screener API")
+    API_TITLE: str = os.getenv("API_TITLE", "Nipun API")
     DEBUG: bool = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
     
     # CORS Settings

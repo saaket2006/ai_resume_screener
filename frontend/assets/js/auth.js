@@ -12,6 +12,11 @@ export async function checkAuthStatus() {
     if (!token) {
         if (!pathname.endsWith('index.html') && pathname !== '/') {
             window.location.href = 'index.html';
+        } else {
+            const landingContainer = document.getElementById('landing-container');
+            if (landingContainer) {
+                landingContainer.classList.remove('hidden');
+            }
         }
         return;
     }
@@ -24,6 +29,9 @@ export async function checkAuthStatus() {
         if (user.profile_completed === false) {
             if (!pathname.endsWith('onboarding.html')) {
                 window.location.href = 'onboarding.html';
+            } else {
+                const onboardingModal = document.getElementById('onboarding-modal');
+                if (onboardingModal) onboardingModal.classList.remove('hidden');
             }
             return;
         }
@@ -31,10 +39,16 @@ export async function checkAuthStatus() {
         if (user.role === ROLES.RECRUITER) {
             if (!pathname.endsWith('recruiter.html')) {
                 window.location.href = 'recruiter.html';
+            } else {
+                const recruiterContainer = document.getElementById('recruiter-container');
+                if (recruiterContainer) recruiterContainer.classList.remove('hidden');
             }
         } else if (user.role === ROLES.CANDIDATE) {
             if (!pathname.endsWith('candidate.html')) {
                 window.location.href = 'candidate.html';
+            } else {
+                const candidateContainer = document.getElementById('candidate-container');
+                if (candidateContainer) candidateContainer.classList.remove('hidden');
             }
         }
     } catch (error) {

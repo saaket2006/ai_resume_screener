@@ -80,7 +80,7 @@ app.add_middleware(
 # Root and Health check endpoints
 @app.get("/")
 def read_root():
-    return {"message": "AI Resume Screener API running."}
+    return {"message": "Nipun API running."}
 
 @app.api_route("/health", methods=["GET", "HEAD"])
 def health():
