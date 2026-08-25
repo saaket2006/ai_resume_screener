@@ -12,7 +12,7 @@ class Settings:
     
     # CORS Settings
     ALLOWED_ORIGINS: List[str] = [
-        origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",") if origin.strip()
+        origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "").split(",") if origin.strip()
     ]
     
     # Rate Limiting
