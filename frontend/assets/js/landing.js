@@ -91,33 +91,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 5. FAQ Accordion Logic
-        const faqItems = document.querySelectorAll('.faq-item');
-        faqItems.forEach(item => {
-            const button = item.querySelector('button');
-            const answer = item.querySelector('.faq-answer');
-            const icon = item.querySelector('.faq-icon');
+        const faqCards = document.querySelectorAll('.faq-card');
+        faqCards.forEach(card => {
+            const header = card.querySelector('.faq-header');
+            const content = card.querySelector('.faq-content');
+            const icon = card.querySelector('.faq-icon');
 
-            button.addEventListener('click', () => {
-                const isOpen = item.classList.contains('active');
+            if (header && content && icon) {
+                // Ensure smooth transition style is present on icon
+                icon.style.transition = 'transform 0.2s ease';
 
-                // Close all other FAQs
-                faqItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                    const otherAnswer = otherItem.querySelector('.faq-answer');
-                    const otherIcon = otherItem.querySelector('.faq-icon');
-                    otherAnswer.style.maxHeight = '0px';
-                    otherAnswer.style.opacity = '0';
-                    otherIcon.style.transform = 'rotate(0deg)';
+                header.addEventListener('click', () => {
+                    const isOpen = !content.classList.contains('hidden');
+
+                    // Close all FAQs
+                    faqCards.forEach(otherCard => {
+                        const otherContent = otherCard.querySelector('.faq-content');
+                        const otherIcon = otherCard.querySelector('.faq-icon');
+                        if (otherContent) otherContent.classList.add('hidden');
+                        if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                    });
+
+                    // Open this one if it was closed
+                    if (!isOpen) {
+                        content.classList.remove('hidden');
+                        icon.style.transform = 'rotate(180deg)';
+                    }
                 });
-
-                // Toggle current FAQ
-                if (!isOpen) {
-                    item.classList.add('active');
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                    answer.style.opacity = '1';
-                    icon.style.transform = 'rotate(45deg)';
-                }
-            });
+            }
         });
     }
 });

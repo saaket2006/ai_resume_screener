@@ -15,10 +15,15 @@ import { MESSAGES } from './constants.js';
 let uploadedFiles = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    const pathname = window.location.pathname;
+    const pathname = window.location.pathname.toLowerCase();
+
+    const isLandingPage = pathname === '/' || pathname.endsWith('index.html') || pathname === '';
+    const isOnboardingPage = pathname.includes('onboarding');
+    const isRecruiterPage = pathname.includes('recruiter');
+    const isCandidatePage = pathname.includes('candidate');
 
     // Initialize modules conditionally based on page
-    if (pathname.endsWith('index.html') || pathname === '/') {
+    if (isLandingPage) {
         initLoginPage();
         initSignupPage();
         initializeLoginPage();
@@ -40,14 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.hash = '#/signup';
             });
         });
-    } else if (pathname.endsWith('onboarding.html')) {
+    } else if (isOnboardingPage) {
         initOnboarding();
         showOnboardingWizard();
-    } else if (pathname.endsWith('recruiter.html')) {
+    } else if (isRecruiterPage) {
         initRecruiterPage();
         initRouter();
         initNavbar(clearCandidateState);
-    } else if (pathname.endsWith('candidate.html')) {
+    } else if (isCandidatePage) {
         initCandidatePage();
         initRouter();
         initNavbar(clearCandidateState);

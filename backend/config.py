@@ -35,6 +35,7 @@ class Settings:
     JWT_SECRET: str = os.getenv("JWT_SECRET", "supersecretjwtkeythatisreallylongandsecure")
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     JWT_EXPIRY_MINUTES: int = int(os.getenv("JWT_EXPIRY_MINUTES", "1440")) # Default 24 hours
+    FIREBASE_PROJECT_ID: str = os.getenv("VITE_FIREBASE_PROJECT_ID", "ai-resume-screener-69d23")
 
 
 settings = Settings()

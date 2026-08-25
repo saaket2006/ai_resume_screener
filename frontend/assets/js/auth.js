@@ -7,10 +7,15 @@ import { ROLES } from './constants.js';
  */
 export async function checkAuthStatus() {
     const token = state.getToken();
-    const pathname = window.location.pathname;
+    const pathname = window.location.pathname.toLowerCase();
+
+    const isLandingPage = pathname === '/' || pathname.endsWith('index.html') || pathname === '';
+    const isOnboardingPage = pathname.includes('onboarding');
+    const isRecruiterPage = pathname.includes('recruiter');
+    const isCandidatePage = pathname.includes('candidate');
 
     if (!token) {
-        if (!pathname.endsWith('index.html') && pathname !== '/') {
+        if (!isLandingPage) {
             window.location.href = 'index.html';
         } else {
             const landingContainer = document.getElementById('landing-container');
@@ -27,7 +32,7 @@ export async function checkAuthStatus() {
         state.setOnboardingStatus(user.profile_completed);
 
         if (user.profile_completed === false) {
-            if (!pathname.endsWith('onboarding.html')) {
+            if (!isOnboardingPage) {
                 window.location.href = 'onboarding.html';
             } else {
                 const onboardingModal = document.getElementById('onboarding-modal');
@@ -37,14 +42,14 @@ export async function checkAuthStatus() {
         }
         
         if (user.role === ROLES.RECRUITER) {
-            if (!pathname.endsWith('recruiter.html')) {
+            if (!isRecruiterPage) {
                 window.location.href = 'recruiter.html';
             } else {
                 const recruiterContainer = document.getElementById('recruiter-container');
                 if (recruiterContainer) recruiterContainer.classList.remove('hidden');
             }
         } else if (user.role === ROLES.CANDIDATE) {
-            if (!pathname.endsWith('candidate.html')) {
+            if (!isCandidatePage) {
                 window.location.href = 'candidate.html';
             } else {
                 const candidateContainer = document.getElementById('candidate-container');
@@ -54,8 +59,13 @@ export async function checkAuthStatus() {
     } catch (error) {
         console.error("Auth status verification failed:", error);
         state.clearState();
-        if (!pathname.endsWith('index.html') && pathname !== '/') {
+        if (!isLandingPage) {
             window.location.href = 'index.html';
+        } else {
+            const landingContainer = document.getElementById('landing-container');
+            if (landingContainer) {
+                landingContainer.classList.remove('hidden');
+            }
         }
     }
 }

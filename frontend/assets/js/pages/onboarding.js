@@ -205,9 +205,9 @@ export function showOnboardingWizard() {
     const obFieldStudy = document.getElementById('ob-field-study');
     const obCurrentDomain = document.getElementById('ob-current-domain');
 
-    onboardingModal.classList.remove('hidden');
-    authModal.classList.add('hidden');
-    appContainer.classList.add('hidden');
+    if (onboardingModal) onboardingModal.classList.remove('hidden');
+    if (authModal) authModal.classList.add('hidden');
+    if (appContainer) appContainer.classList.add('hidden');
     
     currentStep = 1;
     selectedRole = null;

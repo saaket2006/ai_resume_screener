@@ -173,6 +173,16 @@ export async function signup(email, password) {
 }
 
 /**
+ * POST /api/auth/google
+ */
+export async function googleLogin(idToken) {
+    return request("/api/auth/google", {
+        method: "POST",
+        body: JSON.stringify({ id_token: idToken })
+    });
+}
+
+/**
  * GET /api/auth/me
  */
 export async function getMe() {

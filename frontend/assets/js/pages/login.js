@@ -2,6 +2,8 @@ import * as api from '../api.js';
 import * as state from '../state.js';
 import { checkAuthStatus } from '../auth.js';
 import { showError } from '../utils.js';
+import { signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { auth, googleProvider } from '../firebase-init.js?v=5';
 
 let initialized = false;
 
@@ -96,6 +98,35 @@ export function initLoginPage() {
             btnText.textContent = "Sign In";
         }
     });
+
+    // Google Sign-In Event Binding
+    const googleLoginBtn = document.getElementById('google-login-btn');
+    if (googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', async () => {
+            const btnText = googleLoginBtn.querySelector('span');
+            const originalText = btnText ? btnText.textContent : "Continue with Google";
+            if (btnText) btnText.textContent = "Connecting to Google...";
+            googleLoginBtn.disabled = true;
+            authErrorMsg.classList.add('hidden');
+
+            try {
+                // Firebase popup sign-in
+                const result = await signInWithPopup(auth, googleProvider);
+                // Retrieve Firebase ID Token
+                const idToken = await result.user.getIdToken();
+                // Call backend custom google login route
+                const data = await api.googleLogin(idToken);
+                state.setToken(data.access_token);
+                // Trigger route authentication routing checks
+                await checkAuthStatus();
+            } catch (error) {
+                console.error("Google authentication failed: ", error);
+                showError(authErrorMsg, "Google authentication failed: " + error.message);
+                googleLoginBtn.disabled = false;
+                if (btnText) btnText.textContent = originalText;
+            }
+        });
+    }
 
     initialized = true;
 }

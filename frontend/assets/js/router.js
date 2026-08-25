@@ -86,7 +86,7 @@ export function handleCandidateRouting(hash) {
 export function handleRouting() {
     const user = state.getUser();
     const hash = window.location.hash;
-    const pathname = window.location.pathname;
+    const pathname = window.location.pathname.toLowerCase();
 
     if (!user) {
         if (hash === ROUTES.LOGIN || hash === ROUTES.SIGNUP) {
@@ -101,14 +101,14 @@ export function handleRouting() {
         return;
     }
 
-    if (pathname.endsWith('recruiter.html')) {
+    if (pathname.includes('recruiter')) {
         const currentHash = hash || ROUTES.DASHBOARD;
         if (currentHash.startsWith("#/candidate")) {
             window.location.hash = ROUTES.DASHBOARD;
             return;
         }
         handleRecruiterRouting(currentHash);
-    } else if (pathname.endsWith('candidate.html')) {
+    } else if (pathname.includes('candidate')) {
         const currentHash = hash || ROUTES.CANDIDATE_DASHBOARD;
         if (currentHash.startsWith("#/recruiter")) {
             window.location.hash = ROUTES.CANDIDATE_DASHBOARD;
