@@ -54,8 +54,7 @@ async def screen_resumes(
             request_id=str(uuid.uuid4()),
             profile_id=profile_id
         )
-        recommendation_result = await run_in_threadpool(
-            pipeline.run_analysis,
+        recommendation_result = await pipeline.run_analysis(
             filename=filename,
             content_bytes=contents,
             job_description=job_description,

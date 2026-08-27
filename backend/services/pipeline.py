@@ -204,7 +204,7 @@ class PipelineStage(ABC):
 class ResumeTextExtractionStage(PipelineStage):
     """Stage 1: Validates and extracts raw text from resume bytes."""
     
-    def execute(self, arg: Any) -> Any:
+    async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
         event = arg.event if is_context else arg
 
@@ -250,7 +250,7 @@ class ResumeTextExtractionStage(PipelineStage):
 class SkillExtractionStage(PipelineStage):
     """Stage 2: Extracts technical skills from raw text."""
     
-    def execute(self, arg: Any) -> Any:
+    async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
         event = arg.event if is_context else arg
         
@@ -280,7 +280,7 @@ class SkillExtractionStage(PipelineStage):
 class SemanticMatchingStage(PipelineStage):
     """Stage 3: Performs semantic skill matching using the Semantic Scoring Engine."""
     
-    def execute(self, arg: Any) -> Any:
+    async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
         event = arg.event if is_context else arg
         
@@ -360,7 +360,7 @@ class ScoringProfileResolutionStage(PipelineStage):
     def __init__(self, db: Optional[Session] = None):
         self.db = db
 
-    def execute(self, arg: Any) -> Any:
+    async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
         event = arg.event if is_context else arg
         
@@ -416,7 +416,7 @@ class ScoringProfileResolutionStage(PipelineStage):
 class ScoringStage(PipelineStage):
     """Stage 4: Scores candidate details (experience, education, projects, document similarity)."""
     
-    def execute(self, arg: Any) -> Any:
+    async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
         event = arg.event if is_context else arg
         
@@ -523,7 +523,7 @@ class ScoringStage(PipelineStage):
 class ExplanationBuildingStage(PipelineStage):
     """Stage 5: Builds structured score explanations (XAI)."""
     
-    def execute(self, arg: Any) -> Any:
+    async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
         event = arg.event if is_context else arg
         
@@ -660,7 +660,7 @@ class ExplanationBuildingStage(PipelineStage):
 class RecommendationBuildingStage(PipelineStage):
     """Stage 6: Generates deterministic recommendations for resume improvements."""
     
-    def execute(self, arg: Any) -> Any:
+    async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
         event = arg.event if is_context else arg
         
@@ -675,7 +675,7 @@ class RecommendationBuildingStage(PipelineStage):
             from backend.services.recommendations.builder import build_resume_recommendations
             
             # Build list of Pydantic Recommendation models
-            recs = build_resume_recommendations(event.scoring)
+            recs = await build_resume_recommendations(event.scoring)
             
             # Serialize for JSON database storage with lifecycle and history tracking
             serialized_recs = []
@@ -812,13 +812,17 @@ class AnalysisPipeline:
         self.explanation_stage = ExplanationBuildingStage()
         self.recommendation_stage = RecommendationBuildingStage()
 
-    def run_stage_with_metrics(self, stage: PipelineStage, context: AnalysisContext) -> AnalysisContext:
+    async def run_stage_with_metrics(self, stage: PipelineStage, context: AnalysisContext) -> AnalysisContext:
         stage_name = stage.__class__.__name__
         start_time = time.time()
         start_dt = datetime.datetime.utcnow().isoformat() + "Z"
         status = "success"
         try:
-            context = stage.execute(context)
+            import inspect
+            if inspect.iscoroutinefunction(stage.execute):
+                context = await stage.execute(context)
+            else:
+                context = stage.execute(context)
             if hasattr(context.event, "status") and context.event.status != "success":
                 status = "error"
         except Exception as e:
@@ -836,8 +840,7 @@ class AnalysisPipeline:
                 "status": status
             }
         return context
-
-    def run_analysis(
+    async def run_analysis(
         self,
         filename: str,
         content_bytes: bytes,
@@ -861,24 +864,24 @@ class AnalysisPipeline:
             job_description=job_description,
             clean_jd=clean_jd
         )
-        context = self.run_stage_with_metrics(self.extraction_stage, context)
+        context = await self.run_stage_with_metrics(self.extraction_stage, context)
         
         # Stage 2: Skill Extraction
-        context = self.run_stage_with_metrics(self.skills_stage, context)
+        context = await self.run_stage_with_metrics(self.skills_stage, context)
         
         # Stage 3: Semantic Matching
-        context = self.run_stage_with_metrics(self.semantic_stage, context)
+        context = await self.run_stage_with_metrics(self.semantic_stage, context)
         
         # Stage 4: Scoring Profile Resolution
-        context = self.run_stage_with_metrics(self.profile_stage, context)
+        context = await self.run_stage_with_metrics(self.profile_stage, context)
         
         # Stage 5: Scoring
-        context = self.run_stage_with_metrics(self.scoring_stage, context)
+        context = await self.run_stage_with_metrics(self.scoring_stage, context)
         
         # Stage 6: Explanation Building
-        context = self.run_stage_with_metrics(self.explanation_stage, context)
+        context = await self.run_stage_with_metrics(self.explanation_stage, context)
         
         # Stage 7: Recommendation Building
-        context = self.run_stage_with_metrics(self.recommendation_stage, context)
+        context = await self.run_stage_with_metrics(self.recommendation_stage, context)
         
         return context.event

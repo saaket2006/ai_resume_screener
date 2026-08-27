@@ -1,14 +1,13 @@
 import os
 import json
 import logging
-import urllib.request
-import urllib.error
+import httpx
 from typing import List
 from backend.services.recommendations.models import Recommendation
 
 logger = logging.getLogger("resume_screener")
 
-def enhance_recommendations_with_llm(recommendations: List[Recommendation]) -> List[Recommendation]:
+async def enhance_recommendations_with_llm(recommendations: List[Recommendation]) -> List[Recommendation]:
     """
     Enhances the wording and formatting of recommendations using an LLM (Gemini or OpenAI)
     if API keys are configured.
@@ -46,9 +45,9 @@ def enhance_recommendations_with_llm(recommendations: List[Recommendation]) -> L
     try:
         enhanced_data = None
         if gemini_key:
-            enhanced_data = _call_gemini_api(prompt, gemini_key)
+            enhanced_data = await _call_gemini_api(prompt, gemini_key)
         elif openai_key:
-            enhanced_data = _call_openai_api(prompt, openai_key)
+            enhanced_data = await _call_openai_api(prompt, openai_key)
             
         if enhanced_data:
             # Map enhanced text back to recommendations
@@ -65,7 +64,7 @@ def enhance_recommendations_with_llm(recommendations: List[Recommendation]) -> L
         
     return recommendations
 
-def _call_gemini_api(prompt: str, api_key: str) -> List[dict]:
+async def _call_gemini_api(prompt: str, api_key: str) -> List[dict]:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
     data = {
         "contents": [
@@ -78,10 +77,9 @@ def _call_gemini_api(prompt: str, api_key: str) -> List[dict]:
     }
     
     headers = {"Content-Type": "application/json"}
-    req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-    
-    with urllib.request.urlopen(req, timeout=10) as response:
-        res_body = json.loads(response.read().decode("utf-8"))
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, json=data, headers=headers, timeout=10.0)
+        res_body = response.json()
         # Extract text response from Gemini structure
         candidates = res_body.get("candidates", [])
         if candidates:
@@ -94,7 +92,7 @@ def _call_gemini_api(prompt: str, api_key: str) -> List[dict]:
             return json.loads(text.strip())
     return []
 
-def _call_openai_api(prompt: str, api_key: str) -> List[dict]:
+async def _call_openai_api(prompt: str, api_key: str) -> List[dict]:
     url = "https://api.openai.com/v1/chat/completions"
     data = {
         "model": "gpt-3.5-turbo",
@@ -108,10 +106,9 @@ def _call_openai_api(prompt: str, api_key: str) -> List[dict]:
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
     }
-    req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-    
-    with urllib.request.urlopen(req, timeout=10) as response:
-        res_body = json.loads(response.read().decode("utf-8"))
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, json=data, headers=headers, timeout=10.0)
+        res_body = response.json()
         choices = res_body.get("choices", [])
         if choices:
             text = choices[0]["message"]["content"].strip()
