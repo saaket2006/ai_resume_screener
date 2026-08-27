@@ -2,8 +2,20 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import List, Dict
 import logging
+import functools
 
 logger = logging.getLogger("resume_screener")
+
+@functools.lru_cache(maxsize=128)
+def _get_tfidf_model(jd_skills_tuple):
+    """
+    Caches the TF-IDF vectorizer and JD matrix for a given set of JD skills.
+    jd_skills_tuple is expected to be a tuple of strings.
+    """
+    jd_skills_text = " ".join(jd_skills_tuple)
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_jd = vectorizer.fit_transform([jd_skills_text])
+    return vectorizer, tfidf_jd
 
 def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
     """
@@ -12,15 +24,9 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
     """
     if not jd_skills or not resumes:
         return []
-
-    # Join the pure JD skills into a single space-separated string block
-    jd_skills_text = " ".join(jd_skills)
-    
-    # Fit the Vectorizer exactly to the Job Description's required skills
-    vectorizer = TfidfVectorizer(stop_words='english')
     
     try:
-        tfidf_jd = vectorizer.fit_transform([jd_skills_text])
+        vectorizer, tfidf_jd = _get_tfidf_model(tuple(jd_skills))
         if len(vectorizer.vocabulary_) == 0:
             return resumes
             
