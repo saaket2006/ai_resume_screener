@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+from typing import Optional
 import time
 import logging
 from typing import List, Dict
@@ -5,11 +7,10 @@ from backend.services.nlp_service import preprocess_text
 from backend.services.skill_extractor import extract_skills
 from backend.services.scoring_service import rank_candidates
 from backend.services.pipeline import AnalysisPipeline
+from fastapi.concurrency import run_in_threadpool
 
 logger = logging.getLogger("resume_screener")
 
-from sqlalchemy.orm import Session
-from typing import List, Dict, Optional
 
 async def screen_resumes(
     job_description: str,
@@ -28,24 +29,24 @@ async def screen_resumes(
     if not job_description:
         logger.warning("Screening request rejected: Job description is empty")
         raise ValueError("Job description is required")
-        
+
     if not resumes:
         logger.warning("Screening request rejected: No resumes uploaded")
         raise ValueError("At least one resume must be uploaded")
-        
+
     # Process Job Description
-    clean_jd = preprocess_text(job_description)
-    jd_skills_objs = extract_skills(job_description)
+    clean_jd = await run_in_threadpool(preprocess_text, job_description)
+    jd_skills_objs = await run_in_threadpool(extract_skills, job_description)
     jd_skills = [s.canonical_name.lower() for s in jd_skills_objs]
     logger.info("JD skills extracted (%d): %s", len(jd_skills), ", ".join(jd_skills))
-    
+
     processed_resumes = []
     pipeline = AnalysisPipeline()
-    
+
     for resume in resumes:
         filename = resume.get("filename", "unknown_file")
         contents = resume.get("content", b"")
-        
+
         # Execute Stages 1-7 of the analysis pipeline
         import uuid
         from backend.services.pipeline import AnalysisContext
@@ -61,7 +62,7 @@ async def screen_resumes(
             db=db,
             context=context
         )
-        
+
         if recommendation_result.status != "success":
             logger.warning("Resume pipeline failed for '%s': %s", filename, recommendation_result.error_message)
             processed_resumes.append({
@@ -73,11 +74,11 @@ async def screen_resumes(
                 "missing_skills": sorted(jd_skills)
             })
             continue
-            
+
         # recommendation_result is the output of run_analysis (RecommendationBuiltEvent)
         scoring = recommendation_result.explanation.scoring
         matching = scoring.matching
-        
+
         processed_resumes.append({
             "filename": filename,
             "name": scoring.candidate_name,
@@ -99,16 +100,16 @@ async def screen_resumes(
             "pipeline_event": recommendation_result,
             "pipeline_context": context
         })
-        
+
         logger.info("Processed candidate: '%s' | Edu: %s | Exp: %d yrs | Internships: %d | Skills: %d matched, %d missing | Semantic Score: %.1f%%",
                     scoring.candidate_name, scoring.candidate_education, scoring.candidate_experience,
                     scoring.candidate_internships, len(matching.matched_serialized), len(matching.missing_serialized),
                     scoring.semantic_score)
-        
+
     # Rank candidates using scoring logic
-    ranked_candidates = rank_candidates(jd_skills, processed_resumes)
+    ranked_candidates = await run_in_threadpool(rank_candidates, jd_skills, processed_resumes)
     logger.info("Ranking complete — %d candidates scored", len(ranked_candidates))
-    
+
     # Clean up output and format the response structure
     final_response = []
     for cand in ranked_candidates:
@@ -138,7 +139,7 @@ async def screen_resumes(
             "pipeline_context": cand.get("pipeline_context")
         }
         final_response.append(cand_dict)
-        
+
     elapsed = round(time.time() - start_time, 2)
     for cand in final_response:
         logger.info("  #%d %-20s → Final: %.1f%% (Skill: %.1f | Exp: %.1f | Edu: %.1f | Proj: %.1f)",
@@ -149,6 +150,6 @@ async def screen_resumes(
     logger.info("=" * 60)
 
     return {
-        "results": final_response, 
+        "results": final_response,
         "jd_skills": sorted(jd_skills)
     }
