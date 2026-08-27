@@ -12,7 +12,7 @@ class Settings:
     
     # CORS Settings
     ALLOWED_ORIGINS: List[str] = [
-        origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",") if origin.strip()
+        origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "").split(",") if origin.strip()
     ]
     
     # Rate Limiting
@@ -32,10 +32,13 @@ class Settings:
     DATABASE_URL: str = os.getenv("DATABASE_URL", "")
     
     # JWT Authentication Settings
-    JWT_SECRET: str = os.getenv("JWT_SECRET", "supersecretjwtkeythatisreallylongandsecure")
+    JWT_SECRET: str = os.environ.get("JWT_SECRET")
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     JWT_EXPIRY_MINUTES: int = int(os.getenv("JWT_EXPIRY_MINUTES", "1440")) # Default 24 hours
     FIREBASE_PROJECT_ID: str = os.getenv("VITE_FIREBASE_PROJECT_ID", "ai-resume-screener-69d23")
 
 
 settings = Settings()
+
+if not settings.JWT_SECRET:
+    raise ValueError("JWT_SECRET environment variable is not set. It is required for security.")
