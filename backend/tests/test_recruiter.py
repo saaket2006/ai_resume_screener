@@ -73,3 +73,53 @@ def test_create_job_description_minimal():
     assert added_obj.description == "Write code"
     assert added_obj.company is None
     assert added_obj.optional_notes is None
+
+from backend.routers.recruiter import get_recruiter_stats
+from backend.models.models import ScanResult
+
+def test_get_recruiter_stats_malformed_experience():
+    # Setup mocks
+    mock_db = MagicMock(spec=Session)
+    mock_user = MagicMock(spec=User)
+    mock_user.id = 1
+    mock_user.email = "recruiter@test.com"
+
+    # Create mock scan results with malformed experience values
+    # One with a bad string, one with an uncastable object, one with a valid float
+    scan1 = MagicMock(spec=ScanResult)
+    scan1.ats_score = 80
+    scan1.analysis_metadata = {
+        "candidate": {
+            "experience": "Five years" # ValueError
+        }
+    }
+
+    scan2 = MagicMock(spec=ScanResult)
+    scan2.ats_score = 90
+    scan2.analysis_metadata = {
+        "candidate": {
+            "experience": {"years": 5} # TypeError
+        }
+    }
+
+    scan3 = MagicMock(spec=ScanResult)
+    scan3.ats_score = 70
+    scan3.analysis_metadata = {
+        "candidate": {
+            "experience": "5.5" # Valid
+        }
+    }
+
+    mock_db.query.return_value.join.return_value.filter.return_value.all.return_value = [scan1, scan2, scan3]
+
+    # Run function
+    result = get_recruiter_stats(
+        current_user=mock_user,
+        db=mock_db
+    )
+
+    # Assert results
+    assert result["total_candidates_screened"] == 3
+    assert result["average_ats_score"] == 80.0
+    # Average experience should only count the valid "5.5" string -> 5.5 / 1 = 5.5
+    assert result["average_experience_tenure"] == 5.5
