@@ -32,3 +32,29 @@ export function hideError(elem) {
     elem.textContent = "";
     elem.classList.add('hidden');
 }
+
+/**
+ * Safely escapes HTML special characters to prevent XSS.
+ */
+export function escapeHTML(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+/**
+ * Sanitizes a URL, ensuring it has an http or https protocol.
+ * Returns '#' if invalid.
+ */
+export function sanitizeUrl(urlStr) {
+    if (!urlStr) return '#';
+    try {
+        const parsedUrl = new URL(urlStr.startsWith('http') ? urlStr : 'https://' + urlStr);
+        if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+            return parsedUrl.href;
+        }
+    } catch (e) {
+        // invalid URL
+    }
+    return '#';
