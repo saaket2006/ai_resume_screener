@@ -1,3 +1,5 @@
+import { escapeHTML, sanitizeUrl } from '../utils.js';
+
 /**
  * Unified candidate layout rendering component.
  * Outputs exact same HTML markup structure, attributes, and classes to keep UI identical.
@@ -19,27 +21,29 @@ export function getCandidateRowHTML(cand) {
         fillClass = 'score-fill-med';
     }
 
-    const email = cand.email !== 'Not Provided' ? cand.email : '<span style="opacity:0.6">Not Provided</span>';
-    const phone = cand.phone !== 'Not Provided' ? cand.phone : '<span style="opacity:0.6">Not Provided</span>';
+    const email = cand.email !== 'Not Provided' ? escapeHTML(cand.email) : '<span style="opacity:0.6">Not Provided</span>';
+    const phone = cand.phone !== 'Not Provided' ? escapeHTML(cand.phone) : '<span style="opacity:0.6">Not Provided</span>';
     
+    const linkedinUrl = sanitizeUrl(cand.linkedin);
     const linkedin = cand.linkedin !== 'Not Provided' 
-        ? `<a href="${cand.linkedin.startsWith('http') ? cand.linkedin : 'https://' + cand.linkedin}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.linkedin}</a>` 
+        ? (linkedinUrl !== '#' ? `<a href="${linkedinUrl}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.linkedin)}</a>` : escapeHTML(cand.linkedin))
         : '<span style="opacity:0.6">LinkedIn Not Provided</span>';
 
+    const githubUrl = sanitizeUrl(cand.github);
     const github = cand.github !== 'Not Provided' 
-        ? `<a href="${cand.github.startsWith('http') ? cand.github : 'https://' + cand.github}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.github}</a>` 
+        ? (githubUrl !== '#' ? `<a href="${githubUrl}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.github)}</a>` : escapeHTML(cand.github))
         : '<span style="opacity:0.6">GitHub Not Provided</span>';
 
     return `
         <td><span class="rank-badge ${rankClass}">#${cand.rank}</span></td>
         <td>
-            <strong>${cand.name}</strong><br>
+            <strong>${escapeHTML(cand.name)}</strong><br>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4E7; ${email}</small>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4DE; ${phone}</small>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F517; ${linkedin}</small>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4BB; ${github}</small>
             <div class="candidate-stats">
-                <span class="stat-badge">&#x1F393; ${cand.education || 'None'}</span>
+                <span class="stat-badge">&#x1F393; ${escapeHTML(cand.education) || 'None'}</span>
                 <span class="stat-badge">&#x1F4BC; ${cand.experience || 0} Yrs</span>
                 <span class="stat-badge">&#x1F680; Proj: ${cand.projects || 0}/5</span>
             </div>
@@ -58,8 +62,8 @@ export function getCandidateRowHTML(cand) {
  * Returns candidate detail row HTML string for the legacy table.
  */
 export function getCandidateDetailRowHTML(cand) {
-    const matchedHtml = cand.matched_skills.map(s => `<span class="skill-tag matched">${s}</span>`).join('');
-    const missingHtml = cand.missing_skills.map(s => `<span class="skill-tag missing">${s}</span>`).join('');
+    const matchedHtml = cand.matched_skills.map(s => `<span class="skill-tag matched">${escapeHTML(s)}</span>`).join('');
+    const missingHtml = cand.missing_skills.map(s => `<span class="skill-tag missing">${escapeHTML(s)}</span>`).join('');
 
     const breakdownItems = [
         { label: 'Skill Match', value: cand.skill_score || 0, weight: '50%' },
@@ -125,8 +129,8 @@ export function getRecruiterCandidateCardHTML(cand) {
         scoreClass = 'med-score';
     }
 
-    const matchedTags = cand.matched_skills.slice(0, 5).map(s => `<span class="skill-tag matched">${s}</span>`).join('');
-    const missingTags = cand.missing_skills.slice(0, 5).map(s => `<span class="skill-tag missing">${s}</span>`).join('');
+    const matchedTags = cand.matched_skills.slice(0, 5).map(s => `<span class="skill-tag matched">${escapeHTML(s)}</span>`).join('');
+    const missingTags = cand.missing_skills.slice(0, 5).map(s => `<span class="skill-tag missing">${escapeHTML(s)}</span>`).join('');
 
     const candString = JSON.stringify(cand).replace(/'/g, "&apos;");
 
@@ -134,7 +138,7 @@ export function getRecruiterCandidateCardHTML(cand) {
         <div class="cand-left">
             <div class="cand-rank ${isTopRank}">#${cand.rank}</div>
             <div class="cand-info">
-                <h4 class="cand-name">${cand.name}</h4>
+                <h4 class="cand-name">${escapeHTML(cand.name)}</h4>
                 <div class="cand-skills-summary">
                     <div class="skills-row">
                         <span class="skills-row-label matched">Matched:</span>
