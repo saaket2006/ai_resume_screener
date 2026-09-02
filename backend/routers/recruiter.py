@@ -290,12 +290,16 @@ def get_recruiter_stats(
     """
     logger.info("Recruiter stats requested for user: %s", current_user.email)
     
-    scans = db.query(ScanResult).join(JobDescription).filter(JobDescription.owner_id == current_user.id).all()
+    from sqlalchemy import func
     
-    total_candidates = len(scans)
-    avg_score = 0.0
-    if total_candidates > 0:
-        avg_score = round(sum(s.ats_score for s in scans) / total_candidates, 1)
+    # 1. Calculate aggregates directly in the database
+    stats = db.query(
+        func.count(ScanResult.id),
+        func.avg(ScanResult.ats_score)
+    ).join(JobDescription).filter(JobDescription.owner_id == current_user.id).first()
+
+    total_candidates = stats[0] or 0
+    avg_score = round(stats[1], 1) if stats[1] is not None else 0.0
         
     # Intelligence statistics
     experience_sum = 0.0
@@ -305,8 +309,13 @@ def get_recruiter_stats(
     matched_skills_counts = {}
     improvement_counts = {}
     
-    for s in scans:
-        meta = s.analysis_metadata or {}
+    # 2. Fetch only the required JSON data for intelligence stats
+    metadata_records = db.query(ScanResult.analysis_metadata).join(
+        JobDescription
+    ).filter(JobDescription.owner_id == current_user.id).all()
+
+    for row in metadata_records:
+        meta = row[0] or {}
         candidate_info = meta.get("candidate", {})
         
         # 1. Experience
