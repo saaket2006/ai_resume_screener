@@ -1,3 +1,5 @@
+import { escapeHTML } from '../utils.js';
+
 /**
  * Unified candidate layout rendering component.
  * Outputs exact same HTML markup structure, attributes, and classes to keep UI identical.
@@ -19,29 +21,42 @@ export function getCandidateRowHTML(cand) {
         fillClass = 'score-fill-med';
     }
 
-    const email = cand.email !== 'Not Provided' ? cand.email : '<span style="opacity:0.6">Not Provided</span>';
-    const phone = cand.phone !== 'Not Provided' ? cand.phone : '<span style="opacity:0.6">Not Provided</span>';
+    const email = cand.email !== 'Not Provided' ? escapeHTML(cand.email) : '<span style="opacity:0.6">Not Provided</span>';
+    const phone = cand.phone !== 'Not Provided' ? escapeHTML(cand.phone) : '<span style="opacity:0.6">Not Provided</span>';
     
+    // For URL sanitization, ensure the href is safe (escapeHTML handles basic attribute escaping, but ideally we'd also check scheme)
+    let linkedinUrl = cand.linkedin;
+    if (linkedinUrl !== 'Not Provided') {
+        if (!linkedinUrl.startsWith('http://') && !linkedinUrl.startsWith('https://')) {
+            linkedinUrl = 'https://' + linkedinUrl;
+        }
+    }
     const linkedin = cand.linkedin !== 'Not Provided' 
-        ? `<a href="${cand.linkedin.startsWith('http') ? cand.linkedin : 'https://' + cand.linkedin}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.linkedin}</a>` 
+        ? `<a href="${escapeHTML(linkedinUrl)}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.linkedin)}</a>`
         : '<span style="opacity:0.6">LinkedIn Not Provided</span>';
 
+    let githubUrl = cand.github;
+    if (githubUrl !== 'Not Provided') {
+        if (!githubUrl.startsWith('http://') && !githubUrl.startsWith('https://')) {
+            githubUrl = 'https://' + githubUrl;
+        }
+    }
     const github = cand.github !== 'Not Provided' 
-        ? `<a href="${cand.github.startsWith('http') ? cand.github : 'https://' + cand.github}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.github}</a>` 
+        ? `<a href="${escapeHTML(githubUrl)}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.github)}</a>`
         : '<span style="opacity:0.6">GitHub Not Provided</span>';
 
     return `
         <td><span class="rank-badge ${rankClass}">#${cand.rank}</span></td>
         <td>
-            <strong>${cand.name}</strong><br>
+            <strong>${escapeHTML(cand.name)}</strong><br>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4E7; ${email}</small>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4DE; ${phone}</small>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F517; ${linkedin}</small>
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4BB; ${github}</small>
             <div class="candidate-stats">
-                <span class="stat-badge">&#x1F393; ${cand.education || 'None'}</span>
-                <span class="stat-badge">&#x1F4BC; ${cand.experience || 0} Yrs</span>
-                <span class="stat-badge">&#x1F680; Proj: ${cand.projects || 0}/5</span>
+                <span class="stat-badge">&#x1F393; ${escapeHTML(cand.education) || 'None'}</span>
+                <span class="stat-badge">&#x1F4BC; ${escapeHTML(cand.experience) || 0} Yrs</span>
+                <span class="stat-badge">&#x1F680; Proj: ${escapeHTML(cand.projects) || 0}/5</span>
             </div>
         </td>
         <td style="min-width: 150px;">
@@ -58,8 +73,8 @@ export function getCandidateRowHTML(cand) {
  * Returns candidate detail row HTML string for the legacy table.
  */
 export function getCandidateDetailRowHTML(cand) {
-    const matchedHtml = cand.matched_skills.map(s => `<span class="skill-tag matched">${s}</span>`).join('');
-    const missingHtml = cand.missing_skills.map(s => `<span class="skill-tag missing">${s}</span>`).join('');
+    const matchedHtml = cand.matched_skills.map(s => `<span class="skill-tag matched">${escapeHTML(s)}</span>`).join('');
+    const missingHtml = cand.missing_skills.map(s => `<span class="skill-tag missing">${escapeHTML(s)}</span>`).join('');
 
     const breakdownItems = [
         { label: 'Skill Match', value: cand.skill_score || 0, weight: '50%' },
@@ -76,8 +91,8 @@ export function getCandidateDetailRowHTML(cand) {
         return `
             <div class="breakdown-item">
                 <div class="breakdown-label">
-                    <span>${item.label}</span>
-                    <span class="breakdown-weight">(${item.weight})</span>
+                    <span>${escapeHTML(item.label)}</span>
+                    <span class="breakdown-weight">(${escapeHTML(item.weight)})</span>
                     <span class="breakdown-value">${val}%</span>
                 </div>
                 <div class="score-container breakdown-bar">
@@ -125,16 +140,19 @@ export function getRecruiterCandidateCardHTML(cand) {
         scoreClass = 'med-score';
     }
 
-    const matchedTags = cand.matched_skills.slice(0, 5).map(s => `<span class="skill-tag matched">${s}</span>`).join('');
-    const missingTags = cand.missing_skills.slice(0, 5).map(s => `<span class="skill-tag missing">${s}</span>`).join('');
+    const matchedTags = cand.matched_skills.slice(0, 5).map(s => `<span class="skill-tag matched">${escapeHTML(s)}</span>`).join('');
+    const missingTags = cand.missing_skills.slice(0, 5).map(s => `<span class="skill-tag missing">${escapeHTML(s)}</span>`).join('');
 
-    const candString = JSON.stringify(cand).replace(/'/g, "&apos;");
+    // candString is safely escaped by JSON.stringify but could be risky if directly injected in onclick attribute
+    // replacing quotes with &quot; instead of &apos; is better practice or just escaping appropriately.
+    // However, stringifying it replaces single quotes with &apos; which was already there. We should properly escape HTML quotes.
+    const candString = escapeHTML(JSON.stringify(cand));
 
     return `
         <div class="cand-left">
             <div class="cand-rank ${isTopRank}">#${cand.rank}</div>
             <div class="cand-info">
-                <h4 class="cand-name">${cand.name}</h4>
+                <h4 class="cand-name">${escapeHTML(cand.name)}</h4>
                 <div class="cand-skills-summary">
                     <div class="skills-row">
                         <span class="skills-row-label matched">Matched:</span>
