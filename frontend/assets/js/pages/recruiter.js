@@ -5,6 +5,7 @@ import { updateStatisticCard } from '../components/statisticCard.js';
 import { populateRecruiterProfileUI } from '../components/profileSection.js';
 import { toggleButtonLoading } from '../components/loadingSpinner.js';
 import { MESSAGES } from '../constants.js';
+import { sanitizeUrl } from '../utils.js';
 
 let recUploadedFiles = [];
 let initialized = false;
@@ -401,15 +402,37 @@ window.showCandidateQuickView = (cand) => {
     qvCandPhone.textContent = cand.phone !== 'Not Provided' ? cand.phone : 'N/A';
     
     if (cand.linkedin !== 'Not Provided') {
-        const url = cand.linkedin.startsWith('http') ? cand.linkedin : 'https://' + cand.linkedin;
-        qvCandLinkedin.innerHTML = `<a href="${url}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.linkedin}</a>`;
+        const url = sanitizeUrl(cand.linkedin);
+        if (url !== '#') {
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.style.color = '#6366f1';
+            a.style.textDecoration = 'none';
+            a.textContent = cand.linkedin;
+            qvCandLinkedin.innerHTML = '';
+            qvCandLinkedin.appendChild(a);
+        } else {
+            qvCandLinkedin.textContent = cand.linkedin;
+        }
     } else {
         qvCandLinkedin.textContent = 'N/A';
     }
     
     if (cand.github !== 'Not Provided') {
-        const url = cand.github.startsWith('http') ? cand.github : 'https://' + cand.github;
-        qvCandGithub.innerHTML = `<a href="${url}" target="_blank" style="color: #6366f1; text-decoration: none;">${cand.github}</a>`;
+        const url = sanitizeUrl(cand.github);
+        if (url !== '#') {
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.style.color = '#6366f1';
+            a.style.textDecoration = 'none';
+            a.textContent = cand.github;
+            qvCandGithub.innerHTML = '';
+            qvCandGithub.appendChild(a);
+        } else {
+            qvCandGithub.textContent = cand.github;
+        }
     } else {
         qvCandGithub.textContent = 'N/A';
     }
@@ -427,9 +450,22 @@ window.showCandidateQuickView = (cand) => {
     }
     
     const allExtracted = cand.matched_skills.concat(cand.missing_skills);
-    qvCandExtractedSkills.innerHTML = allExtracted.map(s => `<span class="skill-tag">${s}</span>`).join('') || '<span style="color:#666">None</span>';
-    qvCandMatchedSkills.innerHTML = cand.matched_skills.map(s => `<span class="skill-tag matched">${s}</span>`).join('') || '<span style="color:#666">None</span>';
-    qvCandMissingSkills.innerHTML = cand.missing_skills.map(s => `<span class="skill-tag missing">${s}</span>`).join('') || '<span style="color:#666">None</span>';
+    // Sanitize skills via textContent assignment by creating elements
+    const createSkillTags = (skills, className) => {
+        if (!skills || skills.length === 0) return '<span style="color:#666">None</span>';
+        const container = document.createElement('div');
+        skills.forEach(s => {
+            const span = document.createElement('span');
+            span.className = className;
+            span.textContent = s;
+            container.appendChild(span);
+        });
+        return container.innerHTML; // Safe because we just set textContent
+    };
+
+    qvCandExtractedSkills.innerHTML = createSkillTags(allExtracted, 'skill-tag');
+    qvCandMatchedSkills.innerHTML = createSkillTags(cand.matched_skills, 'skill-tag matched');
+    qvCandMissingSkills.innerHTML = createSkillTags(cand.missing_skills, 'skill-tag missing');
     
     recQuickViewModal.classList.remove('hidden');
 };
