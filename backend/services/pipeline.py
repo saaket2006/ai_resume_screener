@@ -193,6 +193,14 @@ class PersistenceEvent(PipelineEvent):
 # 2. Pipeline Abstract / Concrete Stages
 # ==========================================
 
+class PipelineStageException(Exception):
+    """Exception raised for errors in a specific pipeline stage."""
+
+    def __init__(self, message: str, stage_name: str = "Unknown Stage"):
+        self.message = message
+        self.stage_name = stage_name
+        super().__init__(f"[{self.stage_name}] {self.message}")
+
 class PipelineStage(ABC):
     """Abstract base class representing a single pipeline stage."""
     
