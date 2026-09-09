@@ -69,6 +69,8 @@ def extract_experience(text: str) -> int:
     years = [int(match.group(1)) for match in matches]
     return max(years) if years else 0
 
+INTERN_PATTERN = re.compile(r'\bintern(?:s|ship|ships)?\b')
+
 def extract_relevant_internships(text: str, jd_skills: list[str]) -> int:
     """
     Heuristically extract the number of internships that match the JD skills.
@@ -86,7 +88,7 @@ def extract_relevant_internships(text: str, jd_skills: list[str]) -> int:
     jd_skills_lower = [skill.lower() for skill in jd_skills]
     
     for chunk in chunks:
-        if re.search(r'\bintern(?:s|ship|ships)?\b', chunk):
+        if INTERN_PATTERN.search(chunk):
             # Check if any JD skill is in this chunk
             if any(skill in chunk for skill in jd_skills_lower):
                 internship_count += 1

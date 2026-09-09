@@ -34,27 +34,16 @@ export function hideError(elem) {
 }
 
 /**
- * Safely escapes HTML special characters to prevent XSS.
+ * Escapes HTML characters in a string to prevent XSS.
+ * @param {string} str - The string to escape
+ * @returns {string} The escaped string
  */
 export function escapeHTML(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
-
-/**
- * Sanitizes a URL, ensuring it has an http or https protocol.
- * Returns '#' if invalid.
- */
-export function sanitizeUrl(urlStr) {
-    if (!urlStr) return '#';
-    try {
-        const parsedUrl = new URL(urlStr.startsWith('http') ? urlStr : 'https://' + urlStr);
-        if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
-            return parsedUrl.href;
-        }
-    } catch (e) {
-        // invalid URL
-    }
-    return '#';

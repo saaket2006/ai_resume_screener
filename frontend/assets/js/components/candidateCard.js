@@ -1,4 +1,4 @@
-import { escapeHTML, sanitizeUrl } from '../utils.js';
+import { escapeHTML } from '../utils.js';
 
 /**
  * Unified candidate layout rendering component.
@@ -24,14 +24,25 @@ export function getCandidateRowHTML(cand) {
     const email = cand.email !== 'Not Provided' ? escapeHTML(cand.email) : '<span style="opacity:0.6">Not Provided</span>';
     const phone = cand.phone !== 'Not Provided' ? escapeHTML(cand.phone) : '<span style="opacity:0.6">Not Provided</span>';
     
-    const linkedinUrl = sanitizeUrl(cand.linkedin);
+    // For URL sanitization, ensure the href is safe (escapeHTML handles basic attribute escaping, but ideally we'd also check scheme)
+    let linkedinUrl = cand.linkedin;
+    if (linkedinUrl !== 'Not Provided') {
+        if (!linkedinUrl.startsWith('http://') && !linkedinUrl.startsWith('https://')) {
+            linkedinUrl = 'https://' + linkedinUrl;
+        }
+    }
     const linkedin = cand.linkedin !== 'Not Provided' 
-        ? (linkedinUrl !== '#' ? `<a href="${linkedinUrl}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.linkedin)}</a>` : escapeHTML(cand.linkedin))
+        ? `<a href="${escapeHTML(linkedinUrl)}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.linkedin)}</a>`
         : '<span style="opacity:0.6">LinkedIn Not Provided</span>';
 
-    const githubUrl = sanitizeUrl(cand.github);
+    let githubUrl = cand.github;
+    if (githubUrl !== 'Not Provided') {
+        if (!githubUrl.startsWith('http://') && !githubUrl.startsWith('https://')) {
+            githubUrl = 'https://' + githubUrl;
+        }
+    }
     const github = cand.github !== 'Not Provided' 
-        ? (githubUrl !== '#' ? `<a href="${githubUrl}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.github)}</a>` : escapeHTML(cand.github))
+        ? `<a href="${escapeHTML(githubUrl)}" target="_blank" style="color: #6366f1; text-decoration: none;">${escapeHTML(cand.github)}</a>`
         : '<span style="opacity:0.6">GitHub Not Provided</span>';
 
     return `
@@ -44,8 +55,8 @@ export function getCandidateRowHTML(cand) {
             <small style="color:var(--text-secondary); display:block; margin-top:2px;">&#x1F4BB; ${github}</small>
             <div class="candidate-stats">
                 <span class="stat-badge">&#x1F393; ${escapeHTML(cand.education) || 'None'}</span>
-                <span class="stat-badge">&#x1F4BC; ${cand.experience || 0} Yrs</span>
-                <span class="stat-badge">&#x1F680; Proj: ${cand.projects || 0}/5</span>
+                <span class="stat-badge">&#x1F4BC; ${escapeHTML(cand.experience) || 0} Yrs</span>
+                <span class="stat-badge">&#x1F680; Proj: ${escapeHTML(cand.projects) || 0}/5</span>
             </div>
         </td>
         <td style="min-width: 150px;">
@@ -80,8 +91,8 @@ export function getCandidateDetailRowHTML(cand) {
         return `
             <div class="breakdown-item">
                 <div class="breakdown-label">
-                    <span>${item.label}</span>
-                    <span class="breakdown-weight">(${item.weight})</span>
+                    <span>${escapeHTML(item.label)}</span>
+                    <span class="breakdown-weight">(${escapeHTML(item.weight)})</span>
                     <span class="breakdown-value">${val}%</span>
                 </div>
                 <div class="score-container breakdown-bar">
@@ -132,7 +143,10 @@ export function getRecruiterCandidateCardHTML(cand) {
     const matchedTags = cand.matched_skills.slice(0, 5).map(s => `<span class="skill-tag matched">${escapeHTML(s)}</span>`).join('');
     const missingTags = cand.missing_skills.slice(0, 5).map(s => `<span class="skill-tag missing">${escapeHTML(s)}</span>`).join('');
 
-    const candString = JSON.stringify(cand).replace(/'/g, "&apos;");
+    // candString is safely escaped by JSON.stringify but could be risky if directly injected in onclick attribute
+    // replacing quotes with &quot; instead of &apos; is better practice or just escaping appropriately.
+    // However, stringifying it replaces single quotes with &apos; which was already there. We should properly escape HTML quotes.
+    const candString = escapeHTML(JSON.stringify(cand));
 
     return `
         <div class="cand-left">
