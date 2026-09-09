@@ -39,3 +39,6 @@ def test_signup_existing_email(client, db_session):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()["detail"] == "Email already registered"
 
+    # Ensure add and commit are not called
+    db_session.add.assert_not_called()
+    db_session.commit.assert_not_called()
