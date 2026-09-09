@@ -1,0 +1,13 @@
+🔒 [Security Fix] Restrict overly permissive CORS configuration
+
+🎯 **What:**
+The CORS configuration in `backend/main.py` previously allowed all HTTP methods (`allow_methods=["*"]`) and all headers (`allow_headers=["*"]`). This has been updated to use secure, explicit lists of permitted methods and headers.
+
+⚠️ **Risk:**
+When combined with dynamic or loosely configured `ALLOWED_ORIGINS` (which might allow unintended origins in certain environments) and `allow_credentials=True`, allowing any header and method could expose the API to Cross-Site Request Forgery (CSRF) and other Cross-Origin attacks. Attackers could potentially perform unauthorized state-changing operations (like DELETE or PUT) or exploit custom headers via malicious sites.
+
+🛡️ **Solution:**
+Modified `backend/main.py` to:
+- Restrict `allow_methods` to `["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]`.
+- Restrict `allow_headers` to `["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"]`.
+This follows the principle of least privilege while allowing standard RESTful and authentication interactions to function properly.
