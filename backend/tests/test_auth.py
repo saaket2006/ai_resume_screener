@@ -1,5 +1,4 @@
 from fastapi import status
-from datetime import datetime, timezone
 from backend.models.models import User
 from backend.models.enums import UserRole
 from backend.dependencies.auth_utils import get_password_hash
@@ -16,19 +15,20 @@ def test_signup_success(client, db_session):
     assert data["role"] == "CANDIDATE"
     assert data["profile_completed"] is False
 
-    # Check if user is in DB
+    # Verify user was created in db
     user = db_session.query(User).filter(User.email == "newuser@example.com").first()
     assert user is not None
+    assert user.email == "newuser@example.com"
 
 def test_signup_existing_email(client, db_session):
-    # Insert existing user
-    user = User(
+    # Create existing user
+    existing_user = User(
         email="existing@example.com",
-        hashed_password=get_password_hash("securepassword"),
+        hashed_password=get_password_hash("password123"),
         role=UserRole.CANDIDATE,
         profile_completed=False
     )
-    db_session.add(user)
+    db_session.add(existing_user)
     db_session.commit()
 
     response = client.post(
