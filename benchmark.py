@@ -9,16 +9,26 @@ os.environ["DATABASE_URL"] = "postgres://fake:fake@fake:5432/fake"
 import sys
 import unittest.mock as mock
 
+import sqlalchemy
+real_create_engine = sqlalchemy.create_engine
+
 with mock.patch("sqlalchemy.create_engine") as mock_engine:
     from backend.database.database import Base
     from backend.models.models import JobDescription, Resume, ScanResult, User
     from backend.services.pipeline import PersistenceStage, AnalysisContext
     from backend.models.enums import ResumeStatus
-    from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
+    from sqlalchemy.pool import StaticPool
 
-    engine = create_engine("sqlite:///:memory:")
+    engine = real_create_engine(
+        "sqlite:///:memory:",
+        poolclass=StaticPool,
+        connect_args={"check_same_thread": False}
+    )
     # Fix the issue with auto-increment in sqlite
+    for table in Base.metadata.tables.values():
+        table.kwargs['sqlite_autoincrement'] = True
+
     Base.metadata.create_all(bind=engine)
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
