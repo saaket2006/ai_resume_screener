@@ -47,3 +47,29 @@ export function escapeHTML(str) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 }
+
+/**
+ * Sanitizes a URL string to ensure it is safe (http/https) and formats protocol-less URLs.
+ * Returns '#' if the URL is invalid or unsafe (e.g. javascript:).
+ * @param {string} url - The URL to sanitize
+ * @returns {string} Safe URL or '#'
+ */
+export function sanitizeUrl(url) {
+    if (!url || typeof url !== 'string') return '#';
+    const trimmed = url.trim();
+    if (!trimmed || trimmed === 'Not Provided' || trimmed === 'N/A') return '#';
+    
+    // Disallow dangerous schemes
+    if (/^(javascript|data|vbscript):/i.test(trimmed)) {
+        return '#';
+    }
+    
+    // If already http or https
+    if (/^https?:\/\//i.test(trimmed)) {
+        return trimmed;
+    }
+    
+    // If starts with www. or domain-like string, prepend https://
+    return 'https://' + trimmed;
+}
+
