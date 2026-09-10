@@ -1,4 +1,5 @@
 {
+  "name": "nipun-platform",
   "dependencies": {
     "cors": "^2.8.6",
     "firebase": "^12.11.0"

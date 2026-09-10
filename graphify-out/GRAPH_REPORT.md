@@ -1,16 +1,16 @@
 # Graph Report - ai_resume_screener  (2026-09-10)
 
 ## Corpus Check
-- 123 files · ~132,777 words
+- 123 files · ~132,780 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 918 nodes · 2142 edges · 67 communities (59 shown, 8 thin omitted)
+- 919 nodes · 2143 edges · 67 communities (59 shown, 8 thin omitted)
 - Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 273 edges (avg confidence: 0.52)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a694877c`
+- Built from commit: `dcf768ae`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,7 +19,7 @@
 - test_estimator.py
 - build_score_components
 - Skill
-- test_remediation.py
+- extract_education
 - google_login
 - JobDescription
 - gsap.min.js
@@ -34,7 +34,7 @@
 - s
 - recruiter.js
 - Tween
-- devDependencies
+- package.json
 - candidate.js
 - app.js
 - _d
@@ -45,7 +45,7 @@
 - animations.js
 - test_user
 - cb
-- gb
+- test_remediation.py
 - Oa
 - bf
 - skill_expander.py
@@ -108,12 +108,12 @@ Cohesion: 0.07
 Nodes (46): build_score_components(), Any, Builds the structured ScoreComponent list using the candidate's scored…, _resolve_status(), Any, Helper to construct a dict representation of StructuredExplanations., Generates structured multi-level explanations (SUMMARY, DETAILED, TECHNICAL)…, effective_exp_title() (+38 more)
 
 ### Community 3 - "Skill"
-Cohesion: 0.05
-Nodes (44): preprocess_text(), Cleans text by: - Lowercasing - Removing punctuation - Removing stopwords -…, _get_tfidf_model(), rank_candidates(), Caches the TF-IDF vectorizer and JD matrix for a given set of JD skills.…, Ranks resumes against a job description using TF-IDF and Cosine Similarity. To…, Session, Core business logic to screen and rank candidate resumes against a job… (+36 more)
+Cohesion: 0.08
+Nodes (27): get_weight(), Returns the matching weight for the given match type., MatchReason, MatchResult, BaseModel, Universal domain object representing a semantic match between a required skill…, Evaluates relationship type, confidence, and matches between two Skill objects.…, resolve_relationship() (+19 more)
 
-### Community 4 - "test_remediation.py"
-Cohesion: 0.05
-Nodes (58): anyio, extract_text(), extract_text_from_docx(), extract_text_from_pdf(), Extract text from a DOCX file, including paragraphs and tables., Route to appropriate extractor based on extension., Extract text from a PDF file., extract_education() (+50 more)
+### Community 4 - "extract_education"
+Cohesion: 0.08
+Nodes (40): extract_education(), extract_email(), extract_experience(), extract_github(), extract_linkedin(), extract_name(), extract_phone(), extract_projects() (+32 more)
 
 ### Community 5 - "google_login"
 Cohesion: 0.19
@@ -125,7 +125,7 @@ Nodes (31): JobDescription, archive_job_description(), create_job_description(),
 
 ### Community 7 - "gsap.min.js"
 Cohesion: 0.06
-Nodes (14): Ec(), ee(), Fc(), Jd(), Kd(), Ld(), ma(), Md() (+6 more)
+Nodes (16): ee(), Jd(), Kd(), Ld(), ma(), Md(), na(), Od() (+8 more)
 
 ### Community 8 - "models/models.py"
 Cohesion: 0.11
@@ -160,20 +160,20 @@ Cohesion: 0.40
 Nodes (5): initNavbar(), ROUTES, clearCandidateWorkspaceState(), renderFileList(), clearState()
 
 ### Community 16 - "s"
-Cohesion: 0.16
-Nodes (19): _a(), ac(), Bo(), db(), ea(), eb(), fa(), ga() (+11 more)
+Cohesion: 0.15
+Nodes (20): _a(), ac(), Bo(), db(), ea(), eb(), ga(), gb() (+12 more)
 
 ### Community 17 - "recruiter.js"
 Cohesion: 0.18
 Nodes (12): toggleButtonLoading(), populateRecruiterProfileUI(), updateStatisticCard(), clearRecruiterWorkspaceState(), initializeRecruiterScreen(), initRecruiterPage(), loadJobDescriptionsDropdown(), loadScoringProfilesDropdown() (+4 more)
 
 ### Community 18 - "Tween"
-Cohesion: 0.17
-Nodes (16): _assertThisInitialized(), gc(), ka(), qa(), t(), tb(), Timeline(), Tween() (+8 more)
+Cohesion: 0.15
+Nodes (18): _assertThisInitialized(), Ec(), Fc(), gc(), ka(), qa(), t(), tb() (+10 more)
 
-### Community 19 - "devDependencies"
-Cohesion: 0.13
-Nodes (14): autoprefixer, cors, firebase, dependencies, cors, firebase, devDependencies, autoprefixer (+6 more)
+### Community 19 - "package.json"
+Cohesion: 0.12
+Nodes (15): autoprefixer, cors, firebase, dependencies, cors, firebase, devDependencies, autoprefixer (+7 more)
 
 ### Community 20 - "candidate.js"
 Cohesion: 0.17
@@ -184,8 +184,8 @@ Cohesion: 0.26
 Nodes (11): clearCandidateState(), handleFiles(), renderFileList(), renderResults(), updateResumeCountDisplay(), uploadedFiles, getCandidateDetailRowHTML(), getCandidateRowHTML() (+3 more)
 
 ### Community 22 - "_d"
-Cohesion: 0.19
-Nodes (13): be(), _d(), ia(), ie(), je(), ke(), le(), oe() (+5 more)
+Cohesion: 0.29
+Nodes (10): be(), _d(), fa(), ia(), ie(), je(), ke(), le() (+2 more)
 
 ### Community 23 - "onboarding.js"
 Cohesion: 0.21
@@ -215,17 +215,17 @@ Nodes (7): client(), db_session(), Create a new database session for a test., Cr
 Cohesion: 0.29
 Nodes (7): Ab(), Bb(), cb(), Context(), Ew(), fb(), zb()
 
-### Community 30 - "gb"
-Cohesion: 0.33
-Nodes (6): gb(), hb(), lb(), oa(), ob(), Wa()
+### Community 30 - "test_remediation.py"
+Cohesion: 0.07
+Nodes (35): anyio, extract_text(), extract_text_from_docx(), extract_text_from_pdf(), Extract text from a DOCX file, including paragraphs and tables., Route to appropriate extractor based on extension., Extract text from a PDF file., build_analysis_metadata() (+27 more)
 
 ### Community 31 - "Oa"
 Cohesion: 0.53
 Nodes (6): Bb(), Ja(), Ka(), La(), Oa(), z()
 
 ### Community 32 - "bf"
-Cohesion: 0.33
-Nodes (6): bf(), cf(), df(), kf(), mf(), N()
+Cohesion: 0.22
+Nodes (10): bf(), cf(), df(), ef(), kf(), lf(), M(), mf() (+2 more)
 
 ### Community 33 - "skill_expander.py"
 Cohesion: 0.40
@@ -264,19 +264,19 @@ Cohesion: 0.67
 Nodes (3): get_onboarding_status(), get, Returns the user's onboarding completion status and role.
 
 ## Knowledge Gaps
-- **27 isolated node(s):** `Settings`, `uploadedFiles`, `sidebarLinkIds`, `COMPANY_TYPES`, `CANDIDATE_STATUS_VALUES` (+22 more)
+- **28 isolated node(s):** `Settings`, `uploadedFiles`, `sidebarLinkIds`, `COMPANY_TYPES`, `CANDIDATE_STATUS_VALUES` (+23 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `s()` connect `s` to `gsap.min.js`, `Tween`, `app.js`, `cb`, `gb`?**
+- **Why does `s()` connect `s` to `bf`, `gsap.min.js`, `Tween`, `app.js`, `cb`?**
   _High betweenness centrality (0.063) - this node is a cross-community bridge._
 - **Why does `User` connect `User` to `stages.py`, `get_onboarding_status`, `env.py`, `google_login`, `JobDescription`, `models/models.py`, `routers/test_auth.py`, `UserRole`, `legacy_process_resumes`, `test_user`?**
   _High betweenness centrality (0.042) - this node is a cross-community bridge._
 - **Why does `XaiEngine` connect `stages.py` to `build_score_components`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `User` (e.g. with `CompanyType` and `ResumeStatus`) actually correct?**
   _`User` has 5 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 18 inferred relationships involving `PipelineStage` (e.g. with `AnalysisPipeline` and `ResumeStatus`) actually correct?**

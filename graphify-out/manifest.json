@@ -465,8 +465,8 @@
     "semantic_hash": "c0c60c871523e9a17daf731c9e96f58f"
   },
   "package.json": {
-    "mtime": 1787333937.131871,
-    "ast_hash": "aaaa2a0ded9d51b62ef3ca38112e3557",
+    "mtime": 1789019744.5625012,
+    "ast_hash": "5b709cb26fc0e2c28c39f6c7055b5774",
     "semantic_hash": ""
   },
   "tailwind.config.js": {
@@ -605,8 +605,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1789013154.432203,
-    "ast_hash": "ce396104047ba2a82e69c36ebe7c0eac",
+    "mtime": 1789019724.2675264,
+    "ast_hash": "62a181d966b7a3dd0cd1ccd24880362d",
     "semantic_hash": ""
   },
   "frontend/candidate.html": {
@@ -615,8 +615,8 @@
     "semantic_hash": ""
   },
   "frontend/index.html": {
-    "mtime": 1789017034.094648,
-    "ast_hash": "a7a86c2bba2347e9e0bcbc193189ede4",
+    "mtime": 1789019734.1260695,
+    "ast_hash": "932d62d21f10014c17907352125ae79f",
     "semantic_hash": ""
   },
   "frontend/onboarding.html": {
@@ -635,8 +635,8 @@
     "semantic_hash": ""
   },
   "requirements.txt": {
-    "mtime": 1789017200.5001886,
-    "ast_hash": "120b8322e3d739a2648249ec11180979",
+    "mtime": 1789017351.4428103,
+    "ast_hash": "afd29a857fad70576dbb4f7d462a5c00",
     "semantic_hash": ""
   },
   "frontend/assets/nipun_logo.svg": {

@@ -113,8 +113,8 @@ Follow these steps to run the complete FastAPI backend and static frontend local
 Navigate to the project root and create a virtual environment:
 ```bash
 # Clone the repository
-git clone https://github.com/saaket2006/ai_resume_screener.git
-cd ai_resume_screener
+git clone https://github.com/saaket2006/nipun-platform.git
+cd nipun-platform
 
 # Create virtual environment
 python -m venv venv
