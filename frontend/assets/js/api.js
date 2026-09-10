@@ -183,6 +183,26 @@ export async function googleLogin(idToken) {
 }
 
 /**
+ * POST /api/auth/forgot-password
+ */
+export async function forgotPassword(email) {
+    return request(API_ENDPOINTS.FORGOT_PASSWORD, {
+        method: "POST",
+        body: JSON.stringify({ email })
+    });
+}
+
+/**
+ * POST /api/auth/reset-password
+ */
+export async function resetPassword(token, newPassword) {
+    return request(API_ENDPOINTS.RESET_PASSWORD, {
+        method: "POST",
+        body: JSON.stringify({ token, new_password: newPassword })
+    });
+}
+
+/**
  * GET /api/auth/me
  */
 export async function getMe() {

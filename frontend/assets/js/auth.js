@@ -16,7 +16,7 @@ export async function checkAuthStatus() {
 
     if (!token) {
         if (!isLandingPage) {
-            window.location.href = 'index.html';
+            window.location.href = 'index.html' + (window.location.hash || '');
         } else {
             const landingContainer = document.getElementById('landing-container');
             if (landingContainer) {

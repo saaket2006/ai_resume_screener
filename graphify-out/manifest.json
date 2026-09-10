@@ -50,8 +50,8 @@
     "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
   },
   "backend/config.py": {
-    "mtime": 1789013154.4358597,
-    "ast_hash": "f6cfced446ea38130dcac02b8d5baaca",
+    "mtime": 1789028024.859124,
+    "ast_hash": "3898cebe695cc28c1305258662dc09d1",
     "semantic_hash": ""
   },
   "backend/database/database.py": {
@@ -90,9 +90,9 @@
     "semantic_hash": "95c3103460cace0190f86e10029cdc55"
   },
   "backend/models/models.py": {
-    "mtime": 1785194413.7125437,
-    "ast_hash": "bbefa9e36e4447264937a1f42bb25ee9",
-    "semantic_hash": "bbefa9e36e4447264937a1f42bb25ee9"
+    "mtime": 1789028040.443058,
+    "ast_hash": "4e3a0ecc47c20af082b7ef69257618b1",
+    "semantic_hash": ""
   },
   "backend/routers/__init__.py": {
     "mtime": 1785194413.7125437,
@@ -100,8 +100,8 @@
     "semantic_hash": "3d68452b3e549d3597c92ba89208fda6"
   },
   "backend/routers/auth.py": {
-    "mtime": 1789013154.4374273,
-    "ast_hash": "31cd99b6ce959af5ef1be16ea3e3faeb",
+    "mtime": 1789028108.7090354,
+    "ast_hash": "ed0d9e9c62cc6dd8c1eba9531eb4ec51",
     "semantic_hash": ""
   },
   "backend/routers/candidate.py": {
@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "backend/schemas/schemas.py": {
-    "mtime": 1785590489.2381468,
-    "ast_hash": "086fc8a9dc5e1d8283b5415a063febfc",
-    "semantic_hash": "086fc8a9dc5e1d8283b5415a063febfc"
+    "mtime": 1789028085.1371233,
+    "ast_hash": "97c040009795c845883158a4bd48233e",
+    "semantic_hash": ""
   },
   "backend/services/__init__.py": {
     "mtime": 1773072781.1224003,
@@ -335,18 +335,18 @@
     "semantic_hash": ""
   },
   "frontend/assets/js/api.js": {
-    "mtime": 1787643476.5015936,
-    "ast_hash": "2d38c8a79946b4dc14827c9b483cdfba",
+    "mtime": 1789028408.5539124,
+    "ast_hash": "fa788498f319516338317c0f9b9f348c",
     "semantic_hash": ""
   },
   "frontend/assets/js/app.js": {
-    "mtime": 1787648788.1184762,
+    "mtime": 1789027325.7035084,
     "ast_hash": "704d19bb41b2a2356c5b13b2fe8d9250",
     "semantic_hash": ""
   },
   "frontend/assets/js/auth.js": {
-    "mtime": 1787648782.0979602,
-    "ast_hash": "4c4a49ea7ec86efdeb0a0920166adcad",
+    "mtime": 1789035178.8261461,
+    "ast_hash": "7867f289c20b3eada9fd7a6bb74b0697",
     "semantic_hash": ""
   },
   "frontend/assets/js/components/candidateCard.js": {
@@ -370,7 +370,7 @@
     "semantic_hash": "2a0f796621d85c80ee27de358037e291"
   },
   "frontend/assets/js/components/navbar.js": {
-    "mtime": 1786460613.3900845,
+    "mtime": 1789027325.7008405,
     "ast_hash": "1fa6aac942b02a1d12a7eaa7cfb1bda4",
     "semantic_hash": ""
   },
@@ -390,9 +390,9 @@
     "semantic_hash": "bbba0e37468f8672e6e7adb9246226e9"
   },
   "frontend/assets/js/constants.js": {
-    "mtime": 1785590489.247992,
-    "ast_hash": "19095767a5b0a51bddbad5e5368acea3",
-    "semantic_hash": "19095767a5b0a51bddbad5e5368acea3"
+    "mtime": 1789028396.736189,
+    "ast_hash": "d514446de9b2a262eb520335e0e5a34d",
+    "semantic_hash": ""
   },
   "frontend/assets/js/landing.js": {
     "mtime": 1787645164.6258876,
@@ -410,8 +410,8 @@
     "semantic_hash": ""
   },
   "frontend/assets/js/pages/login.js": {
-    "mtime": 1787646414.1475868,
-    "ast_hash": "417409d785dd4932c1f698103d133b57",
+    "mtime": 1789035167.576146,
+    "ast_hash": "1e9c5ed41221f413d56b3e98e50a696a",
     "semantic_hash": ""
   },
   "frontend/assets/js/pages/onboarding.js": {
@@ -425,13 +425,13 @@
     "semantic_hash": ""
   },
   "frontend/assets/js/pages/signup.js": {
-    "mtime": 1785194413.7568917,
+    "mtime": 1789027325.7280354,
     "ast_hash": "89d8854b4ccfac4e3a19f5601f41073e",
-    "semantic_hash": "89d8854b4ccfac4e3a19f5601f41073e"
+    "semantic_hash": ""
   },
   "frontend/assets/js/router.js": {
-    "mtime": 1787648793.559772,
-    "ast_hash": "f21b04ccd8b351bb3d08775eceb5fc87",
+    "mtime": 1789035141.9819825,
+    "ast_hash": "fed6dbc9f73860b5f71791903fcdbee2",
     "semantic_hash": ""
   },
   "frontend/assets/js/state.js": {
@@ -440,7 +440,7 @@
     "semantic_hash": "5098a551234b6b3face7be5e926533ca"
   },
   "frontend/assets/js/utils.js": {
-    "mtime": 1789016168.1534169,
+    "mtime": 1789027325.7296782,
     "ast_hash": "4dd4cbaf33a921899809b10b67b73036",
     "semantic_hash": ""
   },
@@ -505,8 +505,8 @@
     "semantic_hash": ""
   },
   "backend/tests/conftest.py": {
-    "mtime": 1788945873.9986556,
-    "ast_hash": "e839303e16b91b13752926ab78816729",
+    "mtime": 1789028322.9868526,
+    "ast_hash": "0eed310a5da27be571055a7955a460b4",
     "semantic_hash": ""
   },
   "backend/tests/routers/__init__.py": {
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "frontend/assets/js/firebase-init.js": {
-    "mtime": 1787646409.510095,
-    "ast_hash": "78bfd166af19a5cba765c8e4fe581767",
+    "mtime": 1789028604.524831,
+    "ast_hash": "76d23d3cfb953e5c0c04efcfab00779f",
     "semantic_hash": ""
   },
   "frontend/firebase-config.example.js": {
@@ -615,8 +615,8 @@
     "semantic_hash": ""
   },
   "frontend/index.html": {
-    "mtime": 1789019734.1260695,
-    "ast_hash": "932d62d21f10014c17907352125ae79f",
+    "mtime": 1789028484.1289737,
+    "ast_hash": "309779d7cc2921a3e6c2c9955c57430c",
     "semantic_hash": ""
   },
   "frontend/onboarding.html": {
@@ -647,6 +647,21 @@
   "frontend/assets/nipun_main.png": {
     "mtime": 1787644411.7571487,
     "ast_hash": "ae5f0423cf2bec182e9fae0231abb2ff",
+    "semantic_hash": ""
+  },
+  "alembic/versions/b4f8c92d1e5a_add_password_reset_tokens.py": {
+    "mtime": 1789028049.528654,
+    "ast_hash": "cf1515907cd6ad797dd67f293da2d652",
+    "semantic_hash": ""
+  },
+  "backend/services/email_service.py": {
+    "mtime": 1789032119.584791,
+    "ast_hash": "6347d2f5391d9d9e51c2dbd353122fc7",
+    "semantic_hash": ""
+  },
+  "backend/tests/routers/test_password_reset.py": {
+    "mtime": 1789028208.7836397,
+    "ast_hash": "ef260f93da398d89e901a15d9383492e",
     "semantic_hash": ""
   }
 }

@@ -16,7 +16,9 @@ export const ROUTES = {
     CANDIDATE_SCREEN: "#/candidate/screen",
     CANDIDATE_PROFILE: "#/candidate/profile",
     LOGIN: "#/login",
-    SIGNUP: "#/signup"
+    SIGNUP: "#/signup",
+    FORGOT_PASSWORD: "#/forgot-password",
+    RESET_PASSWORD: "#/reset-password"
 };
 
 export const API_ENDPOINTS = {
@@ -32,7 +34,9 @@ export const API_ENDPOINTS = {
     CANDIDATE_PROCESS: "/api/candidate/process",
     CANDIDATE_RESUMES: "/api/candidate/resumes",
     PROFILES: "/api/recruiter/profiles",
-    JOBS: "/api/recruiter/jobs"
+    JOBS: "/api/recruiter/jobs",
+    FORGOT_PASSWORD: "/api/auth/forgot-password",
+    RESET_PASSWORD: "/api/auth/reset-password"
 };
 
 export const COMPANY_TYPES = [
@@ -68,5 +72,8 @@ export const MESSAGES = {
     CURRENT_DOMAIN_REQUIRED: "Current domain is required.",
     AUTH_LOST: "Authentication session lost. Please log in again.",
     PASSWORD_REQ: "Please meet all password requirements.",
-    SESSION_EXPIRED: "Session expired or invalid. Please log in again."
+    SESSION_EXPIRED: "Session expired or invalid. Please log in again.",
+    PASSWORD_RESET_SENT: "If an account exists for this email, a password reset link has been sent.",
+    PASSWORD_RESET_SUCCESS: "Your password has been successfully reset. Please log in with your new password.",
+    PASSWORD_MISMATCH: "Passwords do not match."
 };

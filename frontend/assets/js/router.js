@@ -11,6 +11,11 @@ import {
     initializeCandidateScreen,
     initializeCandidateProfile
 } from './pages/candidate.js';
+import {
+    showForgotPasswordView,
+    showResetPasswordView,
+    resetAuthModalToTabs
+} from './pages/login.js';
 
 /**
  * Handles recruiter workspace routing sub-views.
@@ -81,35 +86,84 @@ export function handleCandidateRouting(hash) {
 }
 
 /**
+ * Parses a hash string into its route path and URLSearchParams query parameters.
+ * Conceptually: '#/reset-password?token=abc123' -> { route: '#/reset-password', params: URLSearchParams }
+ */
+export function parseHash(hash = window.location.hash) {
+    if (!hash) return { route: '', params: new URLSearchParams() };
+    const [routePart, queryPart] = hash.split('?');
+    return {
+        route: routePart || '',
+        params: new URLSearchParams(queryPart || '')
+    };
+}
+
+/**
  * Central routing router entry point. Enforces role-based route access limits.
  */
 export function handleRouting() {
     const user = state.getUser();
-    const hash = window.location.hash;
+    const { route, params } = parseHash(window.location.hash);
     const pathname = window.location.pathname.toLowerCase();
 
+    // 1. Password Reset: #/reset-password?token=<TOKEN>
+    if (route === ROUTES.RESET_PASSWORD) {
+        const authModal = document.getElementById('auth-modal');
+        if (authModal) {
+            authModal.classList.remove('hidden');
+            const token = params.get('token') || '';
+            showResetPasswordView(token);
+        }
+        return;
+    }
+
+    // 2. Forgot Password: #/forgot-password
+    if (route === ROUTES.FORGOT_PASSWORD) {
+        const authModal = document.getElementById('auth-modal');
+        if (authModal) {
+            authModal.classList.remove('hidden');
+            showForgotPasswordView();
+        }
+        return;
+    }
+
+    // 3. Unauthenticated User Routes (Login / Sign Up)
     if (!user) {
-        if (hash === ROUTES.LOGIN || hash === ROUTES.SIGNUP) {
+        if (route === ROUTES.LOGIN || route === ROUTES.SIGNUP) {
             const authModal = document.getElementById('auth-modal');
             if (authModal) {
                 authModal.classList.remove('hidden');
-                const tabId = hash === ROUTES.LOGIN ? 'tab-login' : 'tab-signup';
-                const tabBtn = document.getElementById(tabId);
-                if (tabBtn) tabBtn.click();
+                resetAuthModalToTabs();
+                const isLogin = route === ROUTES.LOGIN;
+                const tabLogin = document.getElementById('tab-login');
+                const tabSignup = document.getElementById('tab-signup');
+                const loginPlane = document.getElementById('login-plane');
+                const signupPlane = document.getElementById('signup-plane');
+                if (tabLogin) tabLogin.classList.toggle('active', isLogin);
+                if (tabSignup) tabSignup.classList.toggle('active', !isLogin);
+                if (loginPlane) {
+                    loginPlane.classList.toggle('hidden', !isLogin);
+                    loginPlane.classList.toggle('active-plane', isLogin);
+                }
+                if (signupPlane) {
+                    signupPlane.classList.toggle('hidden', isLogin);
+                    signupPlane.classList.toggle('active-plane', !isLogin);
+                }
             }
         }
         return;
     }
 
+    // 4. Authenticated Workspace Routes
     if (pathname.includes('recruiter')) {
-        const currentHash = hash || ROUTES.DASHBOARD;
+        const currentHash = route || ROUTES.DASHBOARD;
         if (currentHash.startsWith("#/candidate")) {
             window.location.hash = ROUTES.DASHBOARD;
             return;
         }
         handleRecruiterRouting(currentHash);
     } else if (pathname.includes('candidate')) {
-        const currentHash = hash || ROUTES.CANDIDATE_DASHBOARD;
+        const currentHash = route || ROUTES.CANDIDATE_DASHBOARD;
         if (currentHash.startsWith("#/recruiter")) {
             window.location.hash = ROUTES.CANDIDATE_DASHBOARD;
             return;

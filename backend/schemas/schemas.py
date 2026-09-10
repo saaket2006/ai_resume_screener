@@ -75,3 +75,16 @@ class OnboardingSubmission(BaseModel):
     question_1: str = Field(..., min_length=1)
     question_2: str = Field(..., min_length=1)
     question_3: str = Field(..., min_length=1)
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ForgotPasswordResponse(BaseModel):
+    message: str
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(..., min_length=1)
+    new_password: str = Field(..., min_length=8)
+
+class ResetPasswordResponse(BaseModel):
+    message: str

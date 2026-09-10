@@ -420,3 +420,40 @@ input[type="password"]::-webkit-password-toggle {
     color: #fff;
     transform: scale(1.1);
 }
+
+/* Password Reset Styles */
+.forgot-password-link {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: inline-block;
+}
+
+.forgot-password-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.auth-success-message {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+.secondary-link {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.secondary-link:hover {
+    color: #fff;
+}

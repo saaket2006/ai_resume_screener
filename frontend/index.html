@@ -605,7 +605,8 @@
     <!-- Auth Modal -->
     <div id="auth-modal" class="auth-modal-overlay hidden">
         <div class="glass-card auth-card">
-            <div class="auth-tabs">
+            <button type="button" class="auth-close-btn" id="auth-close-btn" aria-label="Close modal">&times;</button>
+            <div class="auth-tabs" id="auth-tabs-container">
                 <button class="auth-tab active" id="tab-login">Login</button>
                 <button class="auth-tab" id="tab-signup">Sign Up</button>
             </div>
@@ -630,6 +631,9 @@
                                 <span>✕</span>
                             </button>
                         </div>
+                    </div>
+                    <div style="text-align: right; margin-top: -0.5rem; margin-bottom: 1rem;">
+                        <a href="#/forgot-password" class="forgot-password-link" id="forgot-password-link">Forgot password?</a>
                     </div>
                     <button type="submit" class="glow-btn" id="email-login-btn">
                         <span>Sign In</span>
@@ -669,7 +673,71 @@
                 </form>
             </div>
 
-            <div class="auth-divider">
+            <!-- FORGOT PASSWORD CONTENT -->
+            <div id="forgot-password-plane" class="auth-plane hidden">
+                <h2>Reset Password</h2>
+                <p>Enter your email and we'll send you a recovery link</p>
+                <form id="forgot-password-form">
+                    <div class="form-group">
+                        <input type="email" id="forgot-email" name="email" autocomplete="username" required
+                            placeholder="Email Address" class="auth-input">
+                    </div>
+                    <button type="submit" class="glow-btn" id="forgot-submit-btn">
+                        <span>Send Reset Link</span>
+                    </button>
+                    <div style="text-align: center; margin-top: 1.25rem;">
+                        <a href="#/login" id="back-to-login-link" class="secondary-link">&larr; Back to Sign In</a>
+                    </div>
+                </form>
+                <div id="forgot-password-feedback" class="auth-success-message hidden" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- RESET PASSWORD CONTENT -->
+            <div id="reset-password-plane" class="auth-plane hidden">
+                <h2>Set New Password</h2>
+                <p>Create a strong new password for your account</p>
+                <form id="reset-password-form">
+                    <input type="hidden" id="reset-token-input" value="">
+                    <div class="form-group">
+                        <div class="password-input-wrapper">
+                            <input type="password" id="reset-new-password" name="new_password" autocomplete="new-password"
+                                required placeholder="New Password" class="auth-input">
+                            <button type="button" class="toggle-password-btn" data-target="reset-new-password">
+                                <span>👁️</span>
+                            </button>
+                            <button type="button" class="clear-password-btn" data-target="reset-new-password">
+                                <span>✕</span>
+                            </button>
+                        </div>
+                        <div class="password-constraints" id="reset-password-constraints">
+                            <p id="reset-constraint-length">Min 8 characters</p>
+                            <p id="reset-constraint-number">At least 1 number</p>
+                            <p id="reset-constraint-special">At least 1 special character (@$!%*?&)</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="password-input-wrapper">
+                            <input type="password" id="reset-confirm-password" name="confirm_password" autocomplete="new-password"
+                                required placeholder="Confirm New Password" class="auth-input">
+                            <button type="button" class="toggle-password-btn" data-target="reset-confirm-password">
+                                <span>👁️</span>
+                            </button>
+                            <button type="button" class="clear-password-btn" data-target="reset-confirm-password">
+                                <span>✕</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="glow-btn" id="reset-submit-btn">
+                        <span>Update Password</span>
+                    </button>
+                    <div style="text-align: center; margin-top: 1.25rem;">
+                        <a href="#/login" id="reset-back-to-login-link" class="secondary-link">&larr; Back to Sign In</a>
+                    </div>
+                </form>
+                <div id="reset-password-feedback" class="auth-success-message hidden" style="margin-top: 1rem;"></div>
+            </div>
+
+            <div class="auth-divider" id="auth-modal-divider">
                 <span>OR</span>
             </div>
 

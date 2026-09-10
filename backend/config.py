@@ -52,6 +52,19 @@ class Settings:
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     JWT_EXPIRY_MINUTES: int = int(os.getenv("JWT_EXPIRY_MINUTES", "1440")) # Default 24 hours
     FIREBASE_PROJECT_ID: str = os.getenv("VITE_FIREBASE_PROJECT_ID", os.getenv("FIREBASE_PROJECT_ID", "nipun-platform"))
+    
+    # Email & SMTP Settings
+    EMAIL_USER: str = os.getenv("EMAIL_USER", "")
+    EMAIL_PASS: str = os.getenv("EMAIL_PASS", "")
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    
+    # Frontend Base URL (for reset links)
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://nipun-platform.web.app")
+    
+    # Password Reset Security Settings
+    PASSWORD_RESET_EXPIRY_MINUTES: int = int(os.getenv("PASSWORD_RESET_EXPIRY_MINUTES", "30"))
+    LOG_RESET_TOKENS: bool = os.getenv("LOG_RESET_TOKENS", "False").lower() in ("true", "1", "yes")
 
 
 settings = Settings()

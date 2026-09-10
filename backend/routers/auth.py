@@ -1,18 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from datetime import timedelta
+import datetime
 import logging
 import urllib.request
 import json
+import secrets
+import hashlib
 import jwt as pyjwt
 from pydantic import BaseModel
 
 from backend.database.database import get_db
-from backend.models.models import User
+from backend.models.models import User, PasswordResetToken
 from backend.models.enums import UserRole
-from backend.schemas.schemas import UserCreate, UserLogin, Token, UserResponse
+from backend.schemas.schemas import (
+    UserCreate, UserLogin, Token, UserResponse,
+    ForgotPasswordRequest, ForgotPasswordResponse,
+    ResetPasswordRequest, ResetPasswordResponse
+)
 from backend.dependencies.auth_utils import get_password_hash, verify_password, create_access_token
 from backend.dependencies.auth_deps import get_current_user
+from backend.services.email_service import send_password_reset_email
 from backend.config import settings
 from backend.limiter import limiter
 
@@ -184,3 +192,87 @@ def google_login(request: Request, payload: GoogleLoginRequest, db: Session = De
     except Exception as e:
         logger.error("Google auth handler failed: %s", e)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@router.post("/forgot-password", response_model=ForgotPasswordResponse)
+@limiter.limit("5/minute")
+def forgot_password(request: Request, payload: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    """
+    Generates a secure, single-use password reset token and dispatches a reset link.
+    Guarantees email enumeration protection by returning an identical response regardless
+    of whether the account exists.
+    """
+    logger.info("Password reset requested for email: %s", payload.email)
+    user = db.query(User).filter(User.email == payload.email).first()
+
+    if user:
+        # Generate cryptographically secure random token (32 bytes = 256 bits entropy)
+        raw_token = secrets.token_urlsafe(32)
+        token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
+        expires_at = datetime.datetime.utcnow() + timedelta(minutes=settings.PASSWORD_RESET_EXPIRY_MINUTES)
+
+        # Invalidate any prior unused reset tokens for this user
+        db.query(PasswordResetToken).filter(
+            PasswordResetToken.user_id == user.id,
+            PasswordResetToken.is_used == False
+        ).update({"is_used": True})
+
+        reset_record = PasswordResetToken(
+            user_id=user.id,
+            token_hash=token_hash,
+            expires_at=expires_at,
+            is_used=False
+        )
+        db.add(reset_record)
+        db.commit()
+
+        # Build dynamic reset link using configured frontend URL
+        reset_link = f"{settings.FRONTEND_URL.rstrip('/')}/#/reset-password?token={raw_token}"
+        send_password_reset_email(user.email, reset_link)
+    else:
+        logger.info("Password reset requested for non-existent email: %s (enumeration protected)", payload.email)
+
+    return ForgotPasswordResponse(
+        message="If an account exists for this email, a password reset link has been sent."
+    )
+
+
+@router.post("/reset-password", response_model=ResetPasswordResponse)
+@limiter.limit("5/minute")
+def reset_password(request: Request, payload: ResetPasswordRequest, db: Session = Depends(get_db)):
+    """
+    Validates a secure reset token, updates the user's password using existing bcrypt utility,
+    and invalidates the token.
+    """
+    logger.info("Password reset submission attempt")
+    token_hash = hashlib.sha256(payload.token.strip().encode("utf-8")).hexdigest()
+
+    token_record = db.query(PasswordResetToken).filter(
+        PasswordResetToken.token_hash == token_hash
+    ).first()
+
+    now = datetime.datetime.utcnow()
+    if not token_record or token_record.is_used or token_record.expires_at < now:
+        logger.warning("Invalid, expired, or already-used reset token provided.")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token."
+        )
+
+    user = db.query(User).filter(User.id == token_record.user_id).first()
+    if not user:
+        logger.warning("Reset token referenced non-existent user ID: %s", token_record.user_id)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token."
+        )
+
+    # Hash new password using the existing bcrypt password-hashing utility
+    user.hashed_password = get_password_hash(payload.new_password)
+    token_record.is_used = True
+    db.commit()
+
+    logger.info("Successfully reset password for user: %s", user.email)
+    return ResetPasswordResponse(
+        message="Password has been successfully reset. Please log in with your new password."
+    )
