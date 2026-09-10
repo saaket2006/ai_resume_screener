@@ -5,7 +5,7 @@ from backend.services.pipeline.events import (
     ExplanationBuiltEvent, RecommendationBuiltEvent, PersistenceEvent
 )
 from backend.services.pipeline.stages import (
-    PipelineStage, ResumeTextExtractionStage, SkillExtractionStage,
+    PipelineStage, PipelineStageException, ResumeTextExtractionStage, SkillExtractionStage,
     SemanticMatchingStage, ScoringProfileResolutionStage, ScoringStage,
     ExplanationBuildingStage, RecommendationBuildingStage, PersistenceStage
 )

@@ -43,46 +43,47 @@ def rank_candidates(jd_skills: List[str], resumes: List[Dict]) -> List[Dict]:
     
     ranked_results = []
     for idx, resume in enumerate(resumes):
-        # 1. Base Skill Score (0 to 100)
-        # Use semantic_score if available (new analyses), fallback to TF-IDF score (historical compatibility)
-        if "semantic_score" in resume:
-            skill_score = float(resume["semantic_score"])
+        # 1. If scores were already computed by the pipeline's ScoringStage, reuse them canonically
+        if "similarity_score" in resume and "skill_score" in resume:
+            final_score = float(resume["similarity_score"])
+            skill_score = float(resume["skill_score"])
+            exp_score = float(resume.get("experience_score", 0.0))
+            edu_score = float(resume.get("education_score", 0.0))
+            proj_score = float(resume.get("projects_score", 0.0))
         else:
-            skill_score = float(cosine_similarities[idx]) * 100
-        
-        # 2. Experience Score (Max 10 years for 100%)
-        # Add 0.5 years equivalent for each relevant internship (matching JD skills)
-        exp_years = resume.get("experience", 0)
-        internships = resume.get("internships", 0)
-        
-        effective_exp_years = exp_years + (internships * 0.5)
-        
-        exp_score = min((effective_exp_years / 10.0) * 100, 100)
-        
-        # 3. Education Score
-        education = resume.get("education", "None")
-        if education == "PhD":
-            edu_score = 100
-        elif education == "Master":
-            edu_score = 80
-        elif education == "Bachelor":
-            edu_score = 60
-        else:
-            edu_score = 20
+            # Standalone fallback calculation for external callers / benchmark scripts
+            if "semantic_score" in resume:
+                skill_score = float(resume["semantic_score"])
+            else:
+                skill_score = float(cosine_similarities[idx]) * 100
             
-        # 4. Projects Score (extract_projects returns 0-5)
-        proj_score = (resume.get("projects", 0) / 5.0) * 100
-        
-        # Apply Weights dynamically from resolved scoring profile weights (Part 5)
-        meta = resume.get("analysis_metadata", {})
-        weights = meta.get("component_weights", {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10})
-        
-        skills_w = weights.get("skills", 0.50)
-        experience_w = weights.get("experience", 0.25)
-        education_w = weights.get("education", 0.15)
-        projects_w = weights.get("projects", 0.10)
-        
-        final_score = (skill_score * skills_w) + (exp_score * experience_w) + (edu_score * education_w) + (proj_score * projects_w)
+            exp_years = resume.get("experience", 0)
+            internships = resume.get("internships", 0)
+            effective_exp_years = exp_years + (internships * 0.5)
+            exp_score = min((effective_exp_years / 10.0) * 100, 100)
+            
+            education = resume.get("education", "None")
+            if education == "PhD":
+                edu_score = 100
+            elif education == "Master":
+                edu_score = 80
+            elif education == "Bachelor":
+                edu_score = 60
+            else:
+                edu_score = 20
+                
+            proj_score = (resume.get("projects", 0) / 5.0) * 100
+            
+            meta = resume.get("analysis_metadata", {})
+            weights = meta.get("component_weights", {"skills": 0.50, "experience": 0.25, "education": 0.15, "projects": 0.10})
+            
+            skills_w = weights.get("skills", 0.50)
+            experience_w = weights.get("experience", 0.25)
+            education_w = weights.get("education", 0.15)
+            projects_w = weights.get("projects", 0.10)
+            
+            final_score = (skill_score * skills_w) + (exp_score * experience_w) + (edu_score * education_w) + (proj_score * projects_w)
+
         logger.debug("  Scoring '%s': Skill=%.1f Exp=%.1f Edu=%.1f Proj=%.1f → Final=%.1f",
                      resume.get("name", "Unknown"), skill_score, exp_score, edu_score, proj_score, final_score)
         

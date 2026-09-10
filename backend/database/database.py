@@ -21,15 +21,17 @@ def create_db_engine(url: str):
 
 engine = create_db_engine(DATABASE_URL)
 
-# Attempt connection to the configured database.
-try:
-    logger.info("Connecting to database: %s", DATABASE_URL)
-    # Test connection immediately
-    with engine.connect() as conn:
-        pass
-    logger.info("Database connection established successfully.")
-except Exception as e:
-    logger.error("Database connection failed on startup. Application will start, but database operations will fail. Error: %s", e)
+def check_db_connection() -> bool:
+    """Tests connection to the configured database on demand (e.g. startup or health check)."""
+    try:
+        logger.info("Testing database connection...")
+        with engine.connect() as conn:
+            pass
+        logger.info("Database connection established successfully.")
+        return True
+    except Exception as e:
+        logger.error("Database connection check failed: %s", e)
+        return False
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

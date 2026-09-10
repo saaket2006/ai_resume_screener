@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from datetime import timedelta
 import logging
@@ -14,13 +14,15 @@ from backend.schemas.schemas import UserCreate, UserLogin, Token, UserResponse
 from backend.dependencies.auth_utils import get_password_hash, verify_password, create_access_token
 from backend.dependencies.auth_deps import get_current_user
 from backend.config import settings
+from backend.limiter import limiter
 
 logger = logging.getLogger("resume_screener")
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def signup(user_in: UserCreate, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+def signup(request: Request, user_in: UserCreate, db: Session = Depends(get_db)):
     """Registers a new user inside the database with profile_completed = False and UserRole.UNASSIGNED."""
     logger.info("Sign up attempt for email: %s", user_in.email)
     existing_user = db.query(User).filter(User.email == user_in.email).first()
@@ -45,7 +47,8 @@ def signup(user_in: UserCreate, db: Session = Depends(get_db)):
     return user
 
 @router.post("/login", response_model=Token)
-def login(credentials: UserLogin, db: Session = Depends(get_db)):
+@limiter.limit("15/minute")
+def login(request: Request, credentials: UserLogin, db: Session = Depends(get_db)):
     """Authenticates a user and issues a JWT token containing email and role."""
     logger.info("Login attempt for email: %s", credentials.email)
     user = db.query(User).filter(User.email == credentials.email).first()
@@ -143,7 +146,8 @@ def verify_firebase_token(id_token: str) -> dict:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Token verification failed: {str(e)}")
 
 @router.post("/google", response_model=Token)
-def google_login(payload: GoogleLoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("15/minute")
+def google_login(request: Request, payload: GoogleLoginRequest, db: Session = Depends(get_db)):
     """Verifies Firebase Google ID Token and issues a local backend JWT token."""
     logger.info("Google/Firebase login attempt")
     try:

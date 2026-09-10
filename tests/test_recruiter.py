@@ -7,9 +7,9 @@ def test_get_recruiter_stats_empty_scans():
     # Mock user
     mock_user = User(id=1, email="test@example.com")
 
-    # Mock db session
+    # Mock db session aggregates and records
     mock_db = MagicMock()
-    # Ensure that db.query(...).join(...).filter(...).all() returns an empty list
+    mock_db.query.return_value.join.return_value.filter.return_value.first.return_value = (0, None)
     mock_db.query.return_value.join.return_value.filter.return_value.all.return_value = []
 
     # Call the function

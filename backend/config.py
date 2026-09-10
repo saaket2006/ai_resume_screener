@@ -11,9 +11,25 @@ class Settings:
     DEBUG: bool = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
     
     # CORS Settings
-    ALLOWED_ORIGINS: List[str] = [
-        origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "").split(",") if origin.strip()
-    ]
+    _raw_origins: str = os.getenv("ALLOWED_ORIGINS", "")
+    ALLOWED_ORIGINS: List[str] = (
+        [origin.strip() for origin in _raw_origins.split(",") if origin.strip()]
+        if _raw_origins.strip()
+        else [
+            "http://localhost:3000",
+            "http://localhost:5000",
+            "http://localhost:5500",
+            "http://localhost:8000",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:5000",
+            "http://127.0.0.1:5500",
+            "http://127.0.0.1:8000",
+            "https://ai-resume-screener-69d23.web.app",
+            "https://ai-resume-screener-69d23.firebaseapp.com",
+            "https://nipun-platform.web.app",
+            "https://nipun-platform.firebaseapp.com",
+        ]
+    )
     
     # Rate Limiting
     RATE_LIMIT: str = os.getenv("RATE_LIMIT", "5/minute")
@@ -22,7 +38,7 @@ class Settings:
     MAX_FILE_SIZE: int = int(os.getenv("MAX_FILE_SIZE", str(5 * 1024 * 1024))) # Default 5MB
     
     ALLOWED_EXTENSIONS: Set[str] = {
-        ext.strip().lower() for ext in os.getenv("ALLOWED_EXTENSIONS", ".pdf,.docx,.doc").split(",") if ext.strip()
+        ext.strip().lower() for ext in os.getenv("ALLOWED_EXTENSIONS", ".pdf,.docx").split(",") if ext.strip()
     }
     
     # Log Level
@@ -35,7 +51,7 @@ class Settings:
     JWT_SECRET: str = os.environ.get("JWT_SECRET")
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     JWT_EXPIRY_MINUTES: int = int(os.getenv("JWT_EXPIRY_MINUTES", "1440")) # Default 24 hours
-    FIREBASE_PROJECT_ID: str = os.getenv("VITE_FIREBASE_PROJECT_ID", "ai-resume-screener-69d23")
+    FIREBASE_PROJECT_ID: str = os.getenv("VITE_FIREBASE_PROJECT_ID", os.getenv("FIREBASE_PROJECT_ID", "nipun-platform"))
 
 
 settings = Settings()

@@ -81,13 +81,13 @@ DEFAULT_PROFILES = [
 
 def seed_default_profiles(db: Session):
     """
-    Checks if scoring profiles exist in the database; if not, seeds the default profiles.
+    Checks if scoring profiles exist in the database; if not, seeds missing default profiles idempotently.
     """
     try:
-        count = db.query(ScoringProfile).count()
-        if count == 0:
-            logger.info("Seeding default scoring profiles...")
-            for prof in DEFAULT_PROFILES:
+        seeded_count = 0
+        for prof in DEFAULT_PROFILES:
+            existing = db.query(ScoringProfile).filter(ScoringProfile.name == prof["name"]).first()
+            if not existing:
                 profile = ScoringProfile(
                     name=prof["name"],
                     description=prof["description"],
@@ -98,10 +98,12 @@ def seed_default_profiles(db: Session):
                     is_default=prof["is_default"]
                 )
                 db.add(profile)
+                seeded_count += 1
+        if seeded_count > 0:
             db.commit()
-            logger.info("Successfully seeded default scoring profiles.")
+            logger.info("Successfully seeded %d missing default scoring profiles.", seeded_count)
         else:
-            logger.debug("Scoring profiles already exist (%d found). Skipping seeding.", count)
+            logger.debug("All default scoring profiles already exist. Skipping seeding.")
     except Exception as e:
         db.rollback()
         logger.error("Failed to seed default scoring profiles: %s", e)

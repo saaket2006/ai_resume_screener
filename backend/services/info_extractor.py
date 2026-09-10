@@ -40,23 +40,41 @@ def extract_phone(text: str) -> str:
     match_alt = re.search(pattern_alt, text)
     return match_alt.group(0).strip() if match_alt else "Not Provided"
 
+DISQUALIFIED_NAME_WORDS = {
+    'engineer', 'developer', 'architect', 'scientist', 'analyst', 'manager',
+    'lead', 'consultant', 'specialist', 'designer', 'administrator', 'director',
+    'officer', 'intern', 'assistant', 'associate', 'programmer', 'coder',
+    'summary', 'experience', 'education', 'skills', 'projects', 'profile',
+    'objective', 'certifications', 'contact', 'curriculum', 'vitae', 'resume',
+    'portfolio', 'references', 'employment', 'technical', 'competencies',
+    'qualification', 'qualifications', 'background', 'activities', 'honors',
+    'awards', 'languages', 'hobbies', 'interests', 'phone', 'email', 'linkedin',
+    'github', 'address', 'city', 'state', 'zip', 'country', 'details', 'about'
+}
+
 def extract_name(text: str) -> str:
     """
     Attempt to extract a candidate's name.
-    As a heuristic for unstructured resumes, we assume the name is in the first few non-empty lines, typical of header sections.
+    As a heuristic for unstructured resumes, we assume the name is in the first few non-empty lines,
+    typical of header sections, while rejecting common job titles and section headers.
     """
     lines = [line.strip() for line in text.split('\n') if line.strip()]
-    
-    # We'll take the first line that looks like a name (2-3 words capitalized or entirely capitalized)
-    for line in lines[:5]:
+
+    for line in lines[:8]:
         # Strip common header junk like "Resume" or "CV"
         clean_line = re.sub(r'^(RESUME|CV|CURRICULUM VITAE)$', '', line, flags=re.IGNORECASE).strip()
-        
-        # If it has 2 to 4 words and is mostly letters
-        if 1 < len(clean_line.split()) < 5 and re.match(r'^[A-Za-z\s\-\.]+$', clean_line):
-           # Extra split to avoid huge lines passing through
-           return clean_line
-           
+        if not clean_line:
+            continue
+
+        # If it has 2 to 4 words and is mostly letters/dashes/periods
+        words = clean_line.split()
+        if 1 < len(words) < 5 and re.match(r'^[A-Za-z\s\-\.]+$', clean_line):
+            # Check whether any word in the line is an obvious job title or section heading keyword
+            lower_words = [w.lower().strip('.,-') for w in words]
+            if any(w in DISQUALIFIED_NAME_WORDS for w in lower_words):
+                continue
+            return clean_line
+
     return "Not Provided"
 
 def extract_experience(text: str) -> int:
@@ -98,18 +116,56 @@ def extract_relevant_internships(text: str, jd_skills: list[str]) -> int:
 def extract_education(text: str) -> str:
     """
     Heuristically extract highest degree level.
-    Returns standard labels for weighting.
+    Returns standard labels for weighting ("PhD", "Master", "Bachelor", "None").
+    Carefully handles acronyms like M.E., B.E., M.S. to prevent false positives
+    from ordinary English words like 'me', 'be', or tool names like 'MS Excel'.
     """
+    if not text:
+        return "None"
+
     text_lower = text.lower()
-    
-    # Check highest levels first
-    if re.search(r'\b(ph\.?d|doctorate)\b', text_lower):
+
+    # 1. PhD / Doctorate
+    if re.search(r'\b(ph\.?d|doctorate|doctor\s+of\s+philosophy)\b', text_lower):
         return "PhD"
-    if re.search(r'\b(master|m\.?s|m\.?a|mba|m\.?tech|m\.?e)\b', text_lower):
+
+    # Mask out Microsoft products to prevent false MS degree detection
+    cleaned_text = re.sub(
+        r'\bms\s+(?:excel|office|word|powerpoint|teams|azure|sql|access|dos|project|dynamics|visio|paint)\b',
+        ' ',
+        text_lower
+    )
+
+    # 2. Master Degree
+    # Unambiguous full words & clear acronyms
+    if re.search(r'\b(masters?|mba|m\.?tech|master\s+of\s+[a-z]+)\b', cleaned_text):
         return "Master"
-    if re.search(r'\b(bachelor|b\.?s|b\.?a|b\.?tech|b\.?e|undergraduate)\b', text_lower):
+    # Dotted abbreviations: M.S., M.S, M.A., M.A, M.E., M.E (never matches plain "me" or "ms")
+    if re.search(r'\b(m\.s\.|m\.s|m\.a\.|m\.a|m\.e\.|m\.e)\b', cleaned_text):
+        return "Master"
+    # Undotted MS / ME with explicit degree context (e.g. "MS in Computer Science", "ME Computer Science")
+    if re.search(r'\b(ms|me)\s+(?:in|of)\s+[a-z]+', cleaned_text):
+        return "Master"
+    if re.search(r'\b(ms|me)\s+(?:computer|software|data|electrical|mechanical|civil|aerospace|biomedical|chemical|engineering|science|it|cs|ai|ml)\b', cleaned_text):
+        return "Master"
+    if re.search(r'(?:degree\s+(?:of|in)|completed\s+(?:my\s+)?|pursuing\s+(?:a\s+)?|holding\s+(?:a\s+)?|holds\s+(?:a\s+)?)\s*(?:an?\s+)?\b(ms|me)\b', cleaned_text):
+        return "Master"
+
+    # 3. Bachelor Degree
+    # Unambiguous full words & clear acronyms
+    if re.search(r'\b(bachelors?|b\.?tech|bachelor\s+of\s+[a-z]+|undergraduate)\b', cleaned_text):
         return "Bachelor"
-        
+    # Dotted abbreviations: B.S., B.S, B.A., B.A, B.E., B.E (never matches plain "be" or "bs")
+    if re.search(r'\b(b\.s\.|b\.s|b\.a\.|b\.a|b\.e\.|b\.e)\b', cleaned_text):
+        return "Bachelor"
+    # Undotted BE / BS with explicit degree context (e.g. "BE in Mechanical", "BE Computer Science")
+    if re.search(r'\b(be|bs)\s+(?:in|of)\s+[a-z]+', cleaned_text):
+        return "Bachelor"
+    if re.search(r'\b(be|bs)\s+(?:computer|software|data|electrical|mechanical|civil|aerospace|biomedical|chemical|engineering|science|it|cs)\b', cleaned_text):
+        return "Bachelor"
+    if re.search(r'(?:degree\s+(?:of|in)|completed\s+(?:my\s+)?|pursuing\s+(?:a\s+)?|holding\s+(?:a\s+)?|holds\s+(?:a\s+)?)\s*(?:an?\s+)?\b(be|bs)\b', cleaned_text):
+        return "Bachelor"
+
     return "None"
 
 def extract_projects(text: str) -> int:

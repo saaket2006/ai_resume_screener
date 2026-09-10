@@ -7,7 +7,7 @@ An end-to-end, high-performance AI Hiring Intelligence Platform designed to anal
 
 ---
 
-### 🌐 Live Website: [https://ai-resume-screener-69d23.web.app/](https://ai-resume-screener-69d23.web.app/)
+### 🌐 Live Website: [https://nipun-platform.web.app/](https://nipun-platform.web.app/)
 
 ---
 
@@ -18,18 +18,20 @@ An end-to-end, high-performance AI Hiring Intelligence Platform designed to anal
 * **GSAP-Driven Animation Engine**: Features smooth letter-by-letter fade-and-blur headline reveals, scroll-driven storytelling timelines, and stacking sticky card decks outlining core features.
 * **HTML Dashboard Mockup**: An interactive hero visual mockup built from HTML elements featuring mouse coordinate tilts, progress metrics, and floating badge panels.
 * **Simulated Run Playground**: A simulated environment letting visitors test the PDF extraction, token classification, and semantic matching engines.
-* **AI Processing Pipeline Overlay**: Redesigned loading screen featuring a full-screen Speed-Line layout. Displays the live status of the active pipeline stage:
-  `Resume Uploaded` → `Resume Parsing` → `Skill Extraction` → `Semantic Matching` → `Multi-Agent Analysis` → `Candidate Ranking` → `Explainability`
+* **AI Processing Pipeline Overlay**: Displays the live status of the active pipeline stage:
+  `Resume Parsing` → `Skill Extraction` → `Semantic Matching` → `Profile Resolution` → `Scoring` → `Explainability (XAI)` → `Recommendations` → `Persistence`
   with states: Completed (✓), Active (⬤), and Pending (○).
 
 ### ⚙️ Event-Driven Orchestration Pipeline
-Nipun carries request context via an `AnalysisContext` object carrying `request_id`, performance timings, and profile metadata across 6 decoupled stages:
+Nipun carries request context via an `AnalysisContext` object carrying `request_id`, performance timings, and profile metadata across 8 decoupled stages:
 1. **Resume Text Extraction**: Decodes layouts from PDF and DOCX files.
 2. **Skill Extraction**: spaCy Named Entity Recognition and custom regex-based heuristic tokens.
-3. **Semantic Matching**: Resolves aliases, acronyms (e.g. `K8s` ↔ `Kubernetes`), technology hierarchies, and industry namespaces (`future.medical`, `future.finance`).
-4. **Adaptive Scoring**: Computes component scores based on the selected recruiter profile coefficients.
-5. **Explanation Building (XAI)**: Generates detailed, presentation-independent reports containing reasons points were awarded or deducted.
-6. **Persistence Stage**: Commits records transactionally to the relational database.
+3. **Semantic Matching**: Resolves aliases, acronyms (e.g. `K8s` ↔ `Kubernetes`), technology hierarchies, and industry namespaces.
+4. **Scoring Profile Resolution**: Resolves target role coefficients and weights.
+5. **Adaptive Scoring**: Computes component scores based on profile coefficients.
+6. **Explanation Building (XAI)**: Generates detailed, presentation-independent reports containing reasons points were awarded or deducted.
+7. **Recommendation Building**: Generates and prioritizes actionable resume improvements with optional LLM enhancement.
+8. **Persistence Stage**: Commits records transactionally to the relational database.
 
 ### 🧠 Adaptive Scoring Profiles
 Recruiters can customize matching coefficients dynamically. Component weights are resolved per profile:
@@ -58,7 +60,7 @@ Provides candidates with prioritized steps to improve their resumes. Tracks tran
 ### 🛡️ System Resilience & Offline Support (New)
 * **Localized Assets**: Removed third-party CDN latency and layout breaks. Core libraries (`gsap.min.js`, `ScrollTrigger.min.js`, `lucide.min.js`) are served locally.
 * **Offline & Maintenance Banner**: Global fetch error interception displays a non-intrusive warning alert if the backend server is offline (e.g., during cold-starts on Render) or down for maintenance, auto-dismissing when connection is restored.
-* **Compiled Tailwind Stylesheet**: Employs locally compiled Tailwind v4 CSS, scanning layout and script files to export a production-minified styles file, removing runtime play CDN performance hits.
+* **Compiled Tailwind Stylesheet**: Employs locally compiled Tailwind v3 CSS, scanning layout and script files to export a production-minified styles file, removing runtime play CDN performance hits.
 
 ---
 
@@ -75,7 +77,7 @@ Provides candidates with prioritized steps to improve their resumes. Tracks tran
 │       ├── recommendations/    # Resume Improvement Engine (Lifecycles & Prioritization)
 │       ├── semantic/           # Skill Namespace Mappers & Synonym Resolver
 │       ├── xai/                # Explainable Scoring Engine
-│       └── pipeline.py         # 6-Stage Decoupled Orchestration Engine
+│       └── pipeline/           # 8-Stage Modular Orchestration Engine
 ├── frontend/
 │   ├── index.html              # Core HTML Structure, Landing page & Modals
 │   ├── assets/
@@ -142,12 +144,6 @@ JWT_SECRET="your-strong-randomly-generated-key"
 Run Alembic schema migrations on your database:
 ```bash
 alembic upgrade head
-```
-
-#### Migrate SQLite to PostgreSQL
-If you want to migrate legacy records from an old local SQLite database file to Supabase:
-```bash
-python scratch/migrate_to_supabase.py
 ```
 
 ### 4. Compile Tailwind CSS (Optional)

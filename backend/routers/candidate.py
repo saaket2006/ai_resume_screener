@@ -170,9 +170,11 @@ def get_candidate_resumes(
         score = None
         jd_title = None
         jd_summary = None
+        meta = {}
         if r.scan_results:
             scan = r.scan_results[0]
             score = scan.ats_score
+            meta = scan.analysis_metadata or {}
             if scan.job_description:
                 jd_title = scan.job_description.title
                 jd_summary = scan.job_description.description[:100] + ("..." if len(scan.job_description.description) > 100 else "")
@@ -184,7 +186,12 @@ def get_candidate_resumes(
             "uploaded_at": r.uploaded_at.isoformat(),
             "ats_score": score,
             "job_description_title": jd_title,
-            "job_description_summary": jd_summary
+            "job_description_summary": jd_summary,
+            "analysis_metadata": {
+                "profile_name": meta.get("profile_name") or "General Software Engineer",
+                "profile_version": meta.get("profile_version") or "1.0.0",
+                "engine_version": meta.get("engine_version") or meta.get("engine", {}).get("version") or "v1.0.0"
+            }
         })
 
     return response_data
@@ -244,6 +251,11 @@ def get_candidate_resume_details(
             "experience_score": score_categories.get("experience_score") if "experience_score" in score_categories else meta.get("experience_score", 0.0),
             "education_score": score_categories.get("education_score") if "education_score" in score_categories else meta.get("education_score", 0.0),
             "projects_score": score_categories.get("projects_score") if "projects_score" in score_categories else meta.get("projects_score", 0.0)
+        },
+        "analysis_metadata": {
+            "profile_name": meta.get("profile_name") or "General Software Engineer",
+            "profile_version": meta.get("profile_version") or "1.0.0",
+            "engine_version": meta.get("engine_version") or meta.get("engine", {}).get("version") or "v1.0.0"
         },
         "xai": meta.get("xai"),
         "recommendations": meta.get("recommendations")

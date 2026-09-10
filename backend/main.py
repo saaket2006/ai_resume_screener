@@ -37,31 +37,6 @@ except ValueError:
     )
     raise RuntimeError("JWT_EXPIRY_MINUTES must be a valid integer.")
 
-# Try importing DB and seeding default profiles on startup
-try:
-    from backend.database.database import engine, SessionLocal
-    from backend.services.policy.default_profiles import seed_default_profiles
-
-    # We only seed if the connection is actually valid
-    try:
-        with engine.connect() as conn:
-            db = SessionLocal()
-            try:
-                seed_default_profiles(db)
-                logger.info(
-                    "Startup Validation: Database seeded with default profiles successfully."
-                )
-            finally:
-                db.close()
-    except Exception as db_err:
-        logger.error(
-            "Could not seed default profiles because database connection is unavailable: %s",
-            db_err,
-        )
-
-except Exception as e:
-    logger.error("Startup Validation Error during database initialization: %s", e)
-
 # Initialize Rate Limiter
 from backend.limiter import limiter
 
@@ -73,6 +48,27 @@ from backend.schemas.schemas import UserProfileResponse
 from backend.dependencies.auth_deps import get_current_user
 
 app = FastAPI(title=settings.API_TITLE)
+
+@app.on_event("startup")
+def startup_event():
+    """Startup event handler: verify database connectivity and seed default profiles."""
+    try:
+        from backend.database.database import check_db_connection, SessionLocal
+        from backend.services.policy.default_profiles import seed_default_profiles
+
+        if check_db_connection():
+            db = SessionLocal()
+            try:
+                seed_default_profiles(db)
+                logger.info("Startup Validation: Database seeded with default profiles successfully.")
+            except Exception as e:
+                logger.error("Could not seed default profiles: %s", e)
+            finally:
+                db.close()
+        else:
+            logger.warning("Database connection unavailable at startup. Application will start in degraded mode.")
+    except Exception as e:
+        logger.error("Startup Validation Error during database initialization: %s", e)
 
 # Set up Rate Limiting Middleware
 app.state.limiter = limiter

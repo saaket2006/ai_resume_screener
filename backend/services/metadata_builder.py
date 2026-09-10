@@ -40,7 +40,7 @@ def build_analysis_metadata(
             "document_type": document_type
         },
         "skills": {
-            "extracted": candidate_result.get("matched_skills", []),  # All candidate skills
+            "extracted": candidate_result.get("extracted_skills", candidate_result.get("matched_skills", [])),
             "matched": candidate_result.get("matched_skills", []),
             "missing": candidate_result.get("missing_skills", [])
         },

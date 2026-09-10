@@ -24,7 +24,6 @@ backend/logs/
 # Database files
 *.db
 backend/database/*.db
-alembic
 
 # Scratch files/folders
 scratch/
@@ -44,6 +43,7 @@ frontend/firebase-config.js
 .DS_Store
 Thumbs.db
 
-# Graphs
-.codegraph
-graphify-out/cache/
+# Deployment and Graph Caches
+.firebase/
+.codegraph/
+graphify-out/

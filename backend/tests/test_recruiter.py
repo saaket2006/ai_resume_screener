@@ -110,7 +110,12 @@ def test_get_recruiter_stats_malformed_experience():
         }
     }
 
-    mock_db.query.return_value.join.return_value.filter.return_value.all.return_value = [scan1, scan2, scan3]
+    mock_db.query.return_value.join.return_value.filter.return_value.first.return_value = (3, 80.0)
+    mock_db.query.return_value.join.return_value.filter.return_value.all.return_value = [
+        (scan1.analysis_metadata,),
+        (scan2.analysis_metadata,),
+        (scan3.analysis_metadata,)
+    ]
 
     # Run function
     result = get_recruiter_stats(

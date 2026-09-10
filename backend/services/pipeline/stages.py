@@ -2,6 +2,7 @@
 import logging
 import json
 import traceback
+import datetime
 from typing import Any, Optional, Dict, List
 from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
@@ -32,6 +33,10 @@ from backend.services.pipeline.events import (
 )
 
 logger = logging.getLogger("resume_screener")
+
+class PipelineStageException(Exception):
+    """Exception raised by a pipeline stage during execution."""
+    pass
 
 class PipelineStage(ABC):
     """Abstract base class representing a single pipeline stage."""
@@ -433,7 +438,8 @@ class ExplanationBuildingStage(PipelineStage):
                 "education_score": event.education_score,
                 "projects_score": event.projects_score,
                 "matched_skills": event.matching.matched_serialized,
-                "missing_skills": event.matching.missing_serialized
+                "missing_skills": event.matching.missing_serialized,
+                "extracted_skills": [s.canonical_name for s in event.matching.skills.candidate_skills_objs]
             }
 
             # Generate base analysis_metadata schema

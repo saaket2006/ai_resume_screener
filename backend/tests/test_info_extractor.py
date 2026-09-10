@@ -33,3 +33,43 @@ def test_extract_experience_case_insensitivity():
     assert extract_experience("5 YEARS OF EXPERIENCE") == 5
     assert extract_experience("5 Years Of Experience") == 5
     assert extract_experience("5 Yrs Experience") == 5
+
+from backend.services.info_extractor import extract_education, extract_name
+
+def test_extract_education_remediation():
+    # Negative cases (ordinary English words or tool names)
+    assert extract_education("Contact me at...") == "None"
+    assert extract_education("I will be...") == "None"
+    assert extract_education("Skills: MS Excel, Python") == "None"
+    assert extract_education("Proficient in MS Word and MS Office.") == "None"
+
+    # Positive cases
+    assert extract_education("Master of Engineering") == "Master"
+    assert extract_education("M.E. Computer Science") == "Master"
+    assert extract_education("M.E Computer Science") == "Master"
+    assert extract_education("Bachelor of Engineering") == "Bachelor"
+    assert extract_education("B.E. Computer Science") == "Bachelor"
+    assert extract_education("B.E Computer Science") == "Bachelor"
+    assert extract_education("M.S. Computer Science") == "Master"
+    assert extract_education("Master of Science") == "Master"
+    assert extract_education("MBA") == "Master"
+    assert extract_education("B.Tech") == "Bachelor"
+    assert extract_education("M.Tech") == "Master"
+
+def test_extract_name_valid_and_invalid():
+    # Valid names
+    assert extract_name("John Doe\njohn@example.com") == "John Doe"
+    assert extract_name("Saaket Kumar\nsaaket@example.com") == "Saaket Kumar"
+    assert extract_name("Jane Smith\njane@example.com") == "Jane Smith"
+
+    # Invalid headings / job titles (should not be extracted as name)
+    assert extract_name("Software Engineer\njohn@example.com") == "Not Provided"
+    assert extract_name("Full Stack Developer\njohn@example.com") == "Not Provided"
+    assert extract_name("Professional Summary\nMotivated engineer...") == "Not Provided"
+    assert extract_name("Skills\nPython, Docker") == "Not Provided"
+    assert extract_name("Experience\nGoogle - 3 years") == "Not Provided"
+    assert extract_name("Education\nMIT - 2022") == "Not Provided"
+
+    # Name after a job title header
+    resume_with_header = "SOFTWARE ENGINEER\nJohn Doe\njohn@example.com"
+    assert extract_name(resume_with_header) == "John Doe"

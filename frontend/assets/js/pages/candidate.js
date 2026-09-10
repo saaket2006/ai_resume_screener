@@ -45,7 +45,7 @@ export function initCandidatePage() {
 
     function handleCandidateFile(file) {
         if (!file) return;
-        if (file.name.match(/\.(pdf|doc|docx)$/i)) {
+        if (file.name.match(/\.(pdf|docx)$/i)) {
             candUploadedFile = file;
             renderFileList();
             updateResumeCountDisplay();

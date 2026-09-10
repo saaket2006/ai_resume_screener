@@ -86,3 +86,14 @@ class AnalysisPipeline:
 
         # Stage 4: Scoring Profile Resolution
         context = await self.run_stage_with_metrics(self.profile_stage, context)
+
+        # Stage 5: Scoring
+        context = await self.run_stage_with_metrics(self.scoring_stage, context)
+
+        # Stage 6: Explanation Building
+        context = await self.run_stage_with_metrics(self.explanation_stage, context)
+
+        # Stage 7: Recommendation Building
+        context = await self.run_stage_with_metrics(self.recommendation_stage, context)
+
+        return context.event

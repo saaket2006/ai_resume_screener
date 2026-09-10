@@ -48,7 +48,7 @@ export function initRecruiterPage() {
 
     function handleRecFiles(files) {
         for (let file of files) {
-            if (file.name.match(/\.(pdf|doc|docx)$/i)) {
+            if (file.name.match(/\.(pdf|docx)$/i)) {
                 recUploadedFiles.push(file);
                 renderRecFileList();
             } else {
