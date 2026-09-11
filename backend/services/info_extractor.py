@@ -89,6 +89,8 @@ def extract_experience(text: str) -> int:
 
 INTERN_PATTERN = re.compile(r'\bintern(?:s|ship|ships)?\b')
 
+_skills_regex_cache = {}
+
 def extract_relevant_internships(text: str, jd_skills: list[str]) -> int:
     """
     Heuristically extract the number of internships that match the JD skills.
@@ -103,12 +105,22 @@ def extract_relevant_internships(text: str, jd_skills: list[str]) -> int:
     chunks = re.split(r'\n\s*\n', text_lower)
     
     internship_count = 0
-    jd_skills_lower = [skill.lower() for skill in jd_skills]
+
+    unique_skills = frozenset(skill.lower() for skill in jd_skills)
+    if unique_skills not in _skills_regex_cache:
+        # Sort by length descending to match longer phrases first if they overlap
+        sorted_skills = sorted(list(unique_skills), key=len, reverse=True)
+        # Using exact substring match without word boundaries to preserve original behavior
+        # where any(skill in chunk) was used.
+        pattern = re.compile('|'.join(map(re.escape, sorted_skills)))
+        _skills_regex_cache[unique_skills] = pattern
+
+    skills_pattern = _skills_regex_cache[unique_skills]
     
     for chunk in chunks:
         if INTERN_PATTERN.search(chunk):
             # Check if any JD skill is in this chunk
-            if any(skill in chunk for skill in jd_skills_lower):
+            if skills_pattern.search(chunk):
                 internship_count += 1
                 
     return internship_count
