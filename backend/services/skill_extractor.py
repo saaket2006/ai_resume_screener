@@ -25,6 +25,21 @@ def load_tech_skills() -> set:
 
 TECH_SKILLS = load_tech_skills()
 
+# Pre-compile the regex pattern for all TECH_SKILLS to optimize performance.
+# We sort the skills by length descending to ensure that longer skills (e.g. "C++")
+# match before shorter overlapping skills (e.g. "C"). We only care about the existence
+# though, so the order is mostly for correctness if using single regex group match.
+_sorted_tech_skills = sorted(TECH_SKILLS, key=len, reverse=True)
+if _sorted_tech_skills:
+    # Pattern explanation:
+    # (?<![a-zA-Z0-9\-]) : negative lookbehind to ensure the match isn't preceded by an alphanumeric or hyphen character
+    # (skill1|skill2|...) : match any of the skills
+    # (?![a-zA-Z0-9\-])  : negative lookahead to ensure the match isn't followed by an alphanumeric or hyphen character
+    _TECH_SKILLS_PATTERN = re.compile(
+        r'(?<![a-zA-Z0-9\-])(' + '|'.join(map(re.escape, _sorted_tech_skills)) + r')(?![a-zA-Z0-9\-])'
+    )
+else:
+    _TECH_SKILLS_PATTERN = re.compile(r'(?!)') # matches nothing if the list is empty
 
 def extract_raw_skill_strings(text: str) -> List[str]:
     """
@@ -34,13 +49,9 @@ def extract_raw_skill_strings(text: str) -> List[str]:
     skills = set()
     text_lower = text.lower()
     
-    # 1. Exact match from predefined comprehensive dictionary
-    for skill in TECH_SKILLS:
-        if skill in text_lower:
-            # Avoid partial matches inside other words (like "c" inside "react")
-            pattern = r'(?<![a-zA-Z0-9\-])' + re.escape(skill) + r'(?![a-zA-Z0-9\-])'
-            if re.search(pattern, text_lower):
-                skills.add(skill)
+    # 1. Exact match from predefined comprehensive dictionary (optimized with single compiled regex)
+    for match in _TECH_SKILLS_PATTERN.finditer(text_lower):
+        skills.add(match.group(1))
     
     logger.debug("Dictionary skills found: %d", len(skills))
                 
