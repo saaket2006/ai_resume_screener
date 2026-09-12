@@ -204,6 +204,7 @@ class ScoringProfileResolutionStage(PipelineStage):
 
     def __init__(self, db: Optional[Session] = None):
         self.db = db
+        self._profile_cache = {}
 
     async def execute(self, arg: Any) -> Any:
         is_context = isinstance(arg, AnalysisContext)
@@ -221,30 +222,55 @@ class ScoringProfileResolutionStage(PipelineStage):
             if is_context:
                 profile_id = arg.profile_id
 
-            # If DB session is provided, resolve from DB
-            resolved = None
-            if self.db and profile_id is not None:
-                resolved = self.db.query(ScoringProfile).filter(ScoringProfile.id == profile_id).first()
-            elif self.db:
-                # Resolve default profile
-                resolved = self.db.query(ScoringProfile).filter(ScoringProfile.is_default == True).first()
-
-            if resolved:
-                output.profile_id = resolved.id
-                output.profile_name = resolved.name
-                # weights might be stringified JSON or dict
-                w = resolved.weights
-                if isinstance(w, str):
-                    import json
-                    w = json.loads(w)
-                output.weights = {k: float(v) for k, v in w.items()}
-                logger.info(f"Resolved scoring profile '{resolved.name}' with weights: {output.weights}")
+            # Check cache first
+            cache_key = profile_id if profile_id is not None else "default"
+            if cache_key in self._profile_cache:
+                cached = self._profile_cache[cache_key]
+                output.profile_id = cached["id"]
+                output.profile_name = cached["name"]
+                output.weights = cached["weights"]
+                logger.info(f"Using cached scoring profile '{cached['name']}' with weights: {cached['weights']}")
             else:
-                # Built-in fallback
-                output.profile_id = None
-                output.profile_name = "General Software Engineer"
-                output.weights = default_scoring_profile_policy.default_weights
-                logger.info("Using default general software engineer weights (Fallback)")
+                # If DB session is provided, resolve from DB
+                resolved = None
+                if self.db and profile_id is not None:
+                    resolved = self.db.query(ScoringProfile).filter(ScoringProfile.id == profile_id).first()
+                elif self.db:
+                    # Resolve default profile
+                    resolved = self.db.query(ScoringProfile).filter(ScoringProfile.is_default == True).first()
+
+                if resolved:
+                    output.profile_id = resolved.id
+                    output.profile_name = resolved.name
+                    # weights might be stringified JSON or dict
+                    w = resolved.weights
+                    if isinstance(w, str):
+                        import json
+                        w = json.loads(w)
+                    output.weights = {k: float(v) for k, v in w.items()}
+
+                    # Cache the result
+                    self._profile_cache[cache_key] = {
+                        "id": output.profile_id,
+                        "name": output.profile_name,
+                        "weights": output.weights
+                    }
+
+                    logger.info(f"Resolved scoring profile '{resolved.name}' with weights: {output.weights}")
+                else:
+                    # Built-in fallback
+                    output.profile_id = None
+                    output.profile_name = "General Software Engineer"
+                    output.weights = default_scoring_profile_policy.default_weights
+
+                    # Cache the fallback result too, so we don't query the DB again if it failed
+                    self._profile_cache[cache_key] = {
+                        "id": output.profile_id,
+                        "name": output.profile_name,
+                        "weights": output.weights
+                    }
+
+                    logger.info("Using default general software engineer weights (Fallback)")
 
         except Exception as e:
             logger.error("Scoring profile resolution failed: %s. Falling back to default.", e)
